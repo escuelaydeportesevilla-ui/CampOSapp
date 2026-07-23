@@ -3256,6 +3256,12 @@
             background:#fee;color:#c0392b;font-size:13px;display:flex;align-items:center;
             justify-content:center;font-weight:700;cursor:pointer;" title="Eliminar proyecto">×</div>`;
 
+      const editBtn = p.base ? '' :
+        `<div onclick="event.stopPropagation();editProject('${p.id}')"
+          style="position:absolute;top:8px;right:34px;width:22px;height:22px;border-radius:50%;
+            background:#eef4e8;color:#2D5016;font-size:11px;display:flex;align-items:center;
+            justify-content:center;cursor:pointer;" title="Editar proyecto (ver/cambiar URL, PIN...)">✏️</div>`;
+
       card.innerHTML = `
         <div style="width:44px;height:44px;border-radius:12px;background:#2D5016;
           display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🏕</div>
@@ -3268,11 +3274,30 @@
             '<div style="font-size:11px;color:#e07a3b;margin-top:3px;">⚠️ Sin URL de Apps Script configurada</div>' : ''}
         </div>
         <div style="font-size:20px;opacity:.3;">›</div>
+        ${editBtn}
         ${deleteBtn}
       `;
       card.addEventListener('click', () => selectProject(p));
       list.appendChild(card);
     });
+  }
+
+  let _editingProjectId = null;
+
+  function editProject(id) {
+    const p = getProjects().find(x => x.id === id);
+    if (!p) return;
+    _editingProjectId = id;
+    document.getElementById('newProjForm').style.display = 'block';
+    document.getElementById('npNombre').value    = p.nombre || '';
+    document.getElementById('npEntidad').value   = p.entidad || '';
+    document.getElementById('npFechaInicio').value = p.fechaInicio || '';
+    document.getElementById('npFechaFin').value  = p.fechaFin || '';
+    document.getElementById('npScriptUrl').value = p.scriptUrl && p.scriptUrl.startsWith('http') ? p.scriptUrl : '';
+    document.getElementById('npPin').value       = p.pin || '';
+    const btn = document.getElementById('btnCreateProj');
+    if (btn) btn.textContent = '💾 Guardar cambios';
+    document.getElementById('newProjForm').scrollIntoView({ behavior:'smooth', block:'center' });
   }
 
   function deleteProject(id) {
@@ -3362,7 +3387,19 @@
 
   function openNewProjectForm() {
     const form = document.getElementById('newProjForm');
-    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    const abrir = form.style.display === 'none';
+    form.style.display = abrir ? 'block' : 'none';
+    if (abrir && !_editingProjectId) {
+      document.getElementById('npNombre').value = '';
+      document.getElementById('npEntidad').value = '';
+      document.getElementById('npFechaInicio').value = '';
+      document.getElementById('npFechaFin').value = '';
+      document.getElementById('npScriptUrl').value = '';
+      document.getElementById('npPin').value = '';
+      const btn = document.getElementById('btnCreateProj');
+      if (btn) btn.textContent = '➕ Crear proyecto';
+    }
+    if (!abrir) _editingProjectId = null;
   }
 
   const PALETAS = {
@@ -3414,25 +3451,33 @@
     }
 
     const newProject = {
-      id: 'proj_' + Date.now(),
+      id: _editingProjectId || ('proj_' + Date.now()),
       nombre, entidad,
       fechaInicio: fi, fechaFin: ff,
       scriptUrl, activo: 'activo', base: false,
       paleta: _paletaSel,
       pin: pin,
-      paleta: _paletaSel
     };
 
     const projects = getProjects();
-    projects.push(newProject);
+    if (_editingProjectId) {
+      const i = projects.findIndex(p => p.id === _editingProjectId);
+      if (i > -1) projects[i] = { ...projects[i], ...newProject };
+    } else {
+      projects.push(newProject);
+    }
     saveProjects(projects);
 
+    const editando = !!_editingProjectId;
+    _editingProjectId = null;
     document.getElementById('newProjForm').style.display = 'none';
     document.getElementById('npNombre').value = '';
     document.getElementById('npEntidad').value = '';
     document.getElementById('npScriptUrl').value = '';
+    const btn = document.getElementById('btnCreateProj');
+    if (btn) btn.textContent = '➕ Crear proyecto';
     renderProjectList(getProjects());
-    alert('Proyecto creado. Selecciónalo para comenzar.');
+    alert(editando ? 'Proyecto actualizado.' : 'Proyecto creado. Selecciónalo para comenzar.');
   }
 
 
