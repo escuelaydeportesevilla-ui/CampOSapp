@@ -3285,9 +3285,25 @@
 
   let _editingProjectId = null;
 
+  // Pide el PIN del proyecto (si tiene) y devuelve true/false. Los proyectos base o sin PIN pasan directo.
+  function verificarPin_(project) {
+    if (project.base || !project.pin) return true;
+    let intento = null;
+    for (let i = 0; i < 3; i++) {
+      intento = prompt((i === 0
+        ? '🔒 PIN de acceso a "' + project.nombre + '":'
+        : '❌ PIN incorrecto. Inténtalo de nuevo (' + (3 - i) + ' intentos):'));
+      if (intento === null) return false;            // canceló
+      if (intento.trim() === String(project.pin)) return true;
+    }
+    alert('PIN incorrecto. Acceso denegado a este proyecto.');
+    return false;
+  }
+
   function editProject(id) {
     const p = getProjects().find(x => x.id === id);
     if (!p) return;
+    if (!verificarPin_(p)) return;
     _editingProjectId = id;
     document.getElementById('newProjForm').style.display = 'block';
     document.getElementById('npNombre').value    = p.nombre || '';
@@ -3302,29 +3318,17 @@
   }
 
   function deleteProject(id) {
+    const p = getProjects().find(x => x.id === id);
+    if (!p) return;
+    if (!verificarPin_(p)) return;
     if (!confirm('¿Eliminar este proyecto? Los datos del Google Sheet no se borran.')) return;
-    const projects = getProjects().filter(p => p.id !== id);
+    const projects = getProjects().filter(x => x.id !== id);
     saveProjects(projects);
     renderProjectList(getProjects());
   }
 
   function selectProject(project) {
-    // Doble filtro: PIN del proyecto (solo proyectos con PIN definido)
-    if (!project.base && project.pin) {
-      let intento = null;
-      for (let i = 0; i < 3; i++) {
-        intento = prompt((i === 0
-          ? '🔒 PIN de acceso a "' + project.nombre + '":'
-          : '❌ PIN incorrecto. Inténtalo de nuevo (' + (3 - i) + ' intentos):'));
-        if (intento === null) return;            // canceló
-        if (intento.trim() === String(project.pin)) { intento = 'OK'; break; }
-        intento = null;
-      }
-      if (intento !== 'OK') {
-        alert('PIN incorrecto. Acceso denegado a este proyecto.');
-        return;
-      }
-    }
+    if (!verificarPin_(project)) return;
     currentProject = project;
     window._activeScriptUrl = (project.scriptUrl && project.scriptUrl.startsWith('http'))
       ? project.scriptUrl : SCRIPT_URL;
