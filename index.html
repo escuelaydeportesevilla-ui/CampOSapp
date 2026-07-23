@@ -6837,7 +6837,11 @@ ${body}
     if (!confirm('¿Salir del proyecto? Se guardarán los cambios pendientes antes de salir.')) return;
     Object.keys(syncTimers).forEach(k => clearTimeout(syncTimers[k]));
     showSyncIndicator('👋 Saliendo…', 'loading');
-    setTimeout(() => showProjectSelector(), 400);
+    setTimeout(() => {
+      showProjectSelector();
+      const ind = document.getElementById('syncIndicator');
+      if (ind) ind.style.opacity = '0';
+    }, 400);
   }
 
   function autoSetFechaFin() {
