@@ -2651,7 +2651,8 @@
     g5:{ label:'5º de Primaria', edad:'10–11 años', color:'var(--g5)', hex:'#8E44AD', participantes:[] },
     g6:{ label:'6º de Primaria', edad:'11–12 años', color:'var(--g6)', hex:'#C0392B', participantes:[] },
     g7:{ label:'1º de ESO', edad:'12–13 años', color:'var(--g7,#1ABC9C)', hex:'#1ABC9C', participantes:[] },
-    g8:{ label:'2º de ESO', edad:'13–14 años', color:'var(--g8,#E67E22)', hex:'#E67E22', participantes:[] }
+    g8:{ label:'2º de ESO', edad:'13–14 años', color:'var(--g8,#E67E22)', hex:'#E67E22', participantes:[] },
+    sin_grupo:{ label:'Sin grupo asignado', edad:'', color:'#888', hex:'#888888', participantes:[] }
   };
 
 
@@ -2898,7 +2899,7 @@
     // ── Datos del participante (editables) ──
     document.getElementById('fApellidos').value = p.apellidos || '';
     document.getElementById('fNombre').value = p.nombre || '';
-    document.getElementById('fCurso').value = p.gid || 'g6';
+    document.getElementById('fCurso').value = p.gid || 'sin_grupo';
     document.getElementById('fGrupoClase').value = (p.grupo && p.grupo !== '❓') ? p.grupo : '';
     // Populate grupo campamento (from gruposCamp assignment, not text field)
     const gcampAsigFicha = gruposCamp.find(gc => (gc.alumnos||[]).includes(p.n));
@@ -3792,6 +3793,7 @@
             <option value="g6" ${p.gid==='g6'?'selected':''}>6º Prim.</option>
             <option value="g7" ${p.gid==='g7'?'selected':''}>1º ESO</option>
             <option value="g8" ${p.gid==='g8'?'selected':''}>2º ESO</option>
+            <option value="sin_grupo" ${p.gid==='sin_grupo'?'selected':''}>Sin grupo</option>
           </select>
         </td>
         <td><input value="${escHtml(p.grupo)}" placeholder="A/B/C/D" style="width:56px" onchange="updateAlumno(this,'grupo',${p.n},'${p.gid}')"/></td>
@@ -4242,7 +4244,7 @@
     // Generar combinaciones únicas de curso+letra que existen en los datos
     const claveSet = new Set();
     todos.forEach(p => {
-      const gid = p.gid || 'g6';
+      const gid = p.gid || 'sin_grupo';
       const letra = (p.grupo && p.grupo !== '❓') ? p.grupo.toUpperCase().trim() : null;
       if (letra) claveSet.add(gid + '_' + letra);
     });
@@ -6230,7 +6232,7 @@ ${body}
       // Aplicar actualizaciones de Sheets
       j.data.forEach(sheetP => {
         const n = parseInt(sheetP.n);
-        const gid = sheetP.gid || 'g6';
+        const gid = sheetP.gid || 'sin_grupo';
         // Parse activo: 'true'/true → true, 'false'/false → false, 'pendiente' → 'pendiente'
         const activoRaw = sheetP.activo;
         const activoVal = activoRaw === 'pendiente' || activoRaw === 'pending' ? 'pendiente'
@@ -6277,7 +6279,7 @@ ${body}
       const params = new URLSearchParams({
         action: 'saveParticipante', pwd: PASSWORD,
         n: p.n, apellidos: p.apellidos || '', nombre: p.nombre || '',
-        gid: p.gid || 'g6', grupo: p.grupo || '❓',
+        gid: p.gid || 'sin_grupo', grupo: p.grupo || '❓',
         grupoCamp: p.grupoCamp || '', monitorId: p.monitorId || '',
       });
       const r = await fetch(getActiveScriptUrl() + '?' + params.toString());
@@ -7416,6 +7418,7 @@ ${body}
               <option value="g6" ${p.gid==='g6'?'selected':''}>6º Prim.</option>
               <option value="g7" ${p.gid==='g7'?'selected':''}>1º ESO</option>
               <option value="g8" ${p.gid==='g8'?'selected':''}>2º ESO</option>
+              <option value="sin_grupo" ${p.gid==='sin_grupo'?'selected':''}>Sin grupo</option>
             </select>
           </div>
           <div>
