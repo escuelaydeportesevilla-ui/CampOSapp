@@ -2985,6 +2985,7 @@
       if (data.grupoCamp)     document.getElementById('fGrupoCamp').value = data.grupoCamp;
       let extra = {};
       if (data.datosExtra) { try { extra = JSON.parse(data.datosExtra); } catch(e){} }
+      autodescubrirCamposExtra_(extra);
       renderCamposExtraFicha(extra);
     } else {
       renderCamposExtraFicha({});
@@ -6933,6 +6934,26 @@ ${body}
     telefono: { label: 'Teléfono',     input: 'tel' },
     select:   { label: 'Lista de opciones', input: 'select' },
   };
+
+  // Convierte "rama_profesional_educativa" en "Rama profesional educativa"
+  function etiquetaDesdeId_(id) {
+    const s = id.replace(/_/g, ' ').trim();
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  // Si una ficha trae claves en datosExtra que no están definidas como campo personalizado
+  // (típico de una inscripción online recibida antes de configurar los campos a mano),
+  // se registran automáticamente para que aparezcan sin tener que crearlas una a una.
+  function autodescubrirCamposExtra_(extra) {
+    let huboNuevo = false;
+    Object.keys(extra || {}).forEach(k => {
+      if (!camposPersonalizados.some(c => c.id === k)) {
+        camposPersonalizados.push({ id: k, etiqueta: etiquetaDesdeId_(k), tipo: 'texto', obligatorio: false, opciones: '' });
+        huboNuevo = true;
+      }
+    });
+    if (huboNuevo) { guardarCamposPersonalizados_(); renderCamposPersonalizadosAdmin(); }
+  }
 
   function guardarCamposPersonalizados_() {
     sheetsSet('camposPersonalizados', camposPersonalizados);

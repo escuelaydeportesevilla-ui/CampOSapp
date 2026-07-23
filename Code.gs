@@ -15,13 +15,14 @@
  */
 
 const PASSWORD = 'campos2026'; // debe coincidir con PASSWORD en campos.html
+const INSCRIPCION_PWD = 'inscripcion2026'; // clave del formulario público — distinta de PASSWORD, cámbiala por proyecto
 
 const SHEET_PARTICIPANTES = 'Participantes';
 const SHEET_FICHAS        = 'Fichas';
 const SHEET_CONFIG        = 'Config';
 
 const COLS_PARTICIPANTES = ['n','gid','apellidos','nombre','grupo','grupoCamp','monitorId','activo'];
-const COLS_FICHAS = ['n','apellidos','nombre','curso','grupo','contacto','tel1','tel2','codigoAN','alergias','medicacion','observaciones','grupoCamp','modificadoPor','actualizado'];
+const COLS_FICHAS = ['n','apellidos','nombre','curso','grupo','contacto','tel1','tel2','codigoAN','alergias','medicacion','observaciones','grupoCamp','datosExtra','modificadoPor','actualizado'];
 const COLS_CONFIG = ['key','value'];
 
 /* ═══════════════ SETUP (ejecutar una vez a mano) ═══════════════ */
@@ -65,6 +66,12 @@ function doGet(e) {
 function doPost(e) {
   try {
     const body = JSON.parse(e.postData.contents || '{}');
+
+    if (body.action === 'saveInscripcion') {
+      if (body.pwd !== INSCRIPCION_PWD) return json_({ ok: false, error: 'pwd' });
+      return json_(saveInscripcion_(body));
+    }
+
     if (body.pwd !== PASSWORD) return json_({ ok: false, error: 'pwd' });
 
     switch (body.action) {
@@ -72,7 +79,7 @@ function doPost(e) {
       case 'saveAllParticipantes':  return json_({ ok: saveAllParticipantes_(body.lista) });
       default:
         // Sin "action" => guardado de ficha individual (apellidos, nombre, curso, grupo,
-        // contacto, tel1, tel2, codigoAN, alergias, medicacion, observaciones, grupoCamp)
+        // contacto, tel1, tel2, codigoAN, alergias, medicacion, observaciones, grupoCamp, datosExtra)
         return json_({ ok: saveFicha_(body) });
     }
   } catch (err) {
@@ -99,6 +106,52 @@ function getFicha_(n) {
   return rows.find(r => String(r.n) === String(n)) || null;
 }
 
+function siguienteN_() {
+  const sh = hoja_(SHEET_PARTICIPANTES);
+  const idx = indiceColumnas_(sh);
+  const numFilas = sh.getLastRow() - 1;
+  if (numFilas <= 0) return 1;
+  const col = sh.getRange(2, idx.n + 1, numFilas, 1).getValues();
+  let max = 0;
+  col.forEach(r => { const v = Number(r[0]); if (!isNaN(v) && v > max) max = v; });
+  return max + 1;
+}
+
+function saveInscripcion_(data) {
+  const n = siguienteN_();
+
+  saveParticipante_({
+    n: n,
+    gid: data.gid || '',
+    apellidos: data.apellidos || '',
+    nombre: data.nombre || '',
+    grupo: data.grupo || '❓',
+    grupoCamp: data.grupoCamp || '',
+    monitorId: '',
+    activo: 'pendiente',
+  });
+
+  saveFicha_({
+    n: n,
+    apellidos: data.apellidos || '',
+    nombre: data.nombre || '',
+    curso: data.curso || '',
+    grupo: data.grupo || '',
+    contacto: data.contacto || '',
+    tel1: data.tel1 || '',
+    tel2: data.tel2 || '',
+    codigoAN: data.codigoAN || '',
+    alergias: data.alergias || '',
+    medicacion: data.medicacion || '',
+    observaciones: data.observaciones || '',
+    grupoCamp: data.grupoCamp || '',
+    datosExtra: data.datosExtra || null,
+    modificadoPor: 'Inscripción online',
+  });
+
+  return { ok: true, n: n };
+}
+
 function saveFicha_(data) {
   const sh = hoja_(SHEET_FICHAS);
   const idx = indiceColumnas_(sh);
@@ -119,6 +172,7 @@ function saveFicha_(data) {
     medicacion: data.medicacion || '',
     observaciones: data.observaciones || '',
     grupoCamp: data.grupoCamp || '',
+    datosExtra: data.datosExtra ? JSON.stringify(data.datosExtra) : '',
     modificadoPor: data.modificadoPor || '',
     actualizado: new Date().toISOString(),
   };
@@ -138,13 +192,15 @@ function saveParticipante_(p) {
   const filaExistente = buscarFila_(sh, idx.n, n);
   const registro = {
     n: p.n,
-    gid: p.gid || 'g6',
+    gid: p.gid || '',
     apellidos: p.apellidos || '',
     nombre: p.nombre || '',
     grupo: p.grupo || '❓',
     grupoCamp: p.grupoCamp || '',
     monitorId: p.monitorId || '',
-    activo: filaExistente ? undefined : true, // no pisar el estado activo si ya existía
+    // Si viene un estado explícito (ej. 'pendiente' desde una inscripción) se respeta.
+    // Si no viene nada y es fila nueva, se activa por defecto. Si ya existía, no se pisa.
+    activo: p.activo !== undefined ? p.activo : (filaExistente ? undefined : true),
   };
   escribirFila_(sh, COLS_PARTICIPANTES, registro, filaExistente);
   return true;
