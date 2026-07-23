@@ -2410,9 +2410,10 @@
     <h2 class="section-title">🧭 Recomendaciones</h2>
 
     <div class="rec-grid">
-      <div class="conclusion">
-        <p>Esta sección está pendiente de completar con las recomendaciones metodológicas de la temporada actual.</p>
-      </div>
+      <textarea id="recomendacionesText" oninput="onRecomendacionesInput(this)"
+        placeholder="Escribe aquí las recomendaciones metodológicas de la temporada…"
+        style="width:100%;min-height:320px;padding:18px;border-radius:14px;border:1.5px solid #d9ceb8;background:#faf7f2;font-family:inherit;font-size:14px;line-height:1.7;color:#333;resize:vertical;"></textarea>
+      <div style="margin-top:8px;font-size:12px;color:#2D5016;font-weight:600;opacity:0;transition:opacity .3s;" id="recomendacionesSavedMsg">✔ Guardado</div>
     </div>
 
   </div>
@@ -2423,13 +2424,15 @@
     <h2 class="section-title">📊 Evaluación</h2>
 
     <div class="eval-section">
-      <div class="conclusion">
-        <p>Esta sección está pendiente de completar con los resultados de la evaluación de la temporada actual.</p>
-      </div>
+      <textarea id="evaluacionText" oninput="onEvaluacionInput(this)"
+        placeholder="Escribe aquí los resultados de la evaluación de la temporada…"
+        style="width:100%;min-height:320px;padding:18px;border-radius:14px;border:1.5px solid #d9ceb8;background:#faf7f2;font-family:inherit;font-size:14px;line-height:1.7;color:#333;resize:vertical;"></textarea>
+      <div style="margin-top:8px;font-size:12px;color:#2D5016;font-weight:600;opacity:0;transition:opacity .3s;" id="evaluacionSavedMsg">✔ Guardado</div>
     </div>
 
   </div>
 
+</div>
 
 <!-- FOOTER -->
 <footer>
@@ -2473,6 +2476,8 @@
     if (id === 'obsalumnos') { renderObsAlumnos(); }
     if (id === 'programacion') { populateProgFiltros(); renderProg(); }
     if (id === 'edicion') { renderEditTable(); } // grupos camp may have changed
+    if (id === 'recomendaciones') { renderRecomendaciones(); }
+    if (id === 'evaluacion') { renderEvaluacion(); }
   }
 
   /* ── DATOS PARTICIPANTES ── */
@@ -4218,8 +4223,8 @@
     if (screen === 'edicion') renderMobEdicion();
     if (screen === 'obsalumnos') { renderMobObsAlumnos(); }
     if (screen === 'programacion') { populateProgFiltros(); renderMobProgLista(); }
-    if (screen === 'recomendaciones') { /* static HTML */ }
-    if (screen === 'evaluacion') { /* static HTML */ }
+    if (screen === 'recomendaciones') { renderRecomendaciones(); }
+    if (screen === 'evaluacion') { renderEvaluacion(); }
   }
 
   function mobBack() {
@@ -6514,6 +6519,49 @@ ${body}
     return window._activeScriptUrl || SCRIPT_URL;
   }
 
+  /* ── RECOMENDACIONES / EVALUACIÓN (texto libre editable) ── */
+  let recomendacionesTexto = '';
+  let evaluacionTexto = '';
+  let recEvalTimers = {};
+
+  function renderRecomendaciones() {
+    const el = document.getElementById('recomendacionesText');
+    if (el && el.value !== recomendacionesTexto) el.value = recomendacionesTexto;
+    const elMob = document.getElementById('recomendacionesTextMob');
+    if (elMob && elMob.value !== recomendacionesTexto) elMob.value = recomendacionesTexto;
+  }
+
+  function renderEvaluacion() {
+    const el = document.getElementById('evaluacionText');
+    if (el && el.value !== evaluacionTexto) el.value = evaluacionTexto;
+    const elMob = document.getElementById('evaluacionTextMob');
+    if (elMob && elMob.value !== evaluacionTexto) elMob.value = evaluacionTexto;
+  }
+
+  function onRecomendacionesInput(el) {
+    recomendacionesTexto = el.value;
+    renderRecomendaciones();
+    guardarRecEval_('recomendaciones', recomendacionesTexto, 'recomendacionesSavedMsg');
+  }
+
+  function onEvaluacionInput(el) {
+    evaluacionTexto = el.value;
+    renderEvaluacion();
+    guardarRecEval_('evaluacion', evaluacionTexto, 'evaluacionSavedMsg');
+  }
+
+  function guardarRecEval_(key, valor, msgId) {
+    try { localStorage.setItem(pKey('camp-' + key), JSON.stringify(valor)); } catch(e){}
+    clearTimeout(recEvalTimers[key]);
+    recEvalTimers[key] = setTimeout(() => {
+      sheetsSet(key, valor);
+      [msgId, msgId + 'Mob'].forEach(id => {
+        const m = document.getElementById(id);
+        if (m) { m.style.opacity = '1'; setTimeout(() => { m.style.opacity = '0'; }, 2000); }
+      });
+    }, 800);
+  }
+
   async function sheetsGet(key) {
     const url = getActiveScriptUrl();
     if (!url || url === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') {
@@ -6578,6 +6626,10 @@ ${body}
         if (j.data.obs)        obsData       = j.data.obs.length        ? j.data.obs        : obsData;
         if (j.data.prog)       progData      = j.data.prog.length       ? j.data.prog       : progData;
         if (j.data.obsAlumnos) obsAlumnos    = Object.keys(j.data.obsAlumnos).length ? j.data.obsAlumnos : obsAlumnos;
+        if (j.data.recomendaciones !== undefined) recomendacionesTexto = j.data.recomendaciones || '';
+        if (j.data.evaluacion !== undefined)      evaluacionTexto      = j.data.evaluacion || '';
+        renderRecomendaciones();
+        renderEvaluacion();
         // Cache local
         try {
           localStorage.setItem(pKey('camp-monitores'),  JSON.stringify(monitoresData));
@@ -6601,6 +6653,10 @@ ${body}
     try { const d = localStorage.getItem(pKey('camp-obs'));        if (d) obsData       = JSON.parse(d); } catch(e){}
     try { const d = localStorage.getItem(pKey('camp-prog'));       if (d) progData      = JSON.parse(d); } catch(e){}
     try { const d = localStorage.getItem(pKey('camp-obs-alumnos'));if (d) obsAlumnos    = JSON.parse(d); } catch(e){}
+    try { const d = localStorage.getItem(pKey('camp-recomendaciones')); if (d) recomendacionesTexto = JSON.parse(d); } catch(e){}
+    try { const d = localStorage.getItem(pKey('camp-evaluacion'));      if (d) evaluacionTexto      = JSON.parse(d); } catch(e){}
+    renderRecomendaciones();
+    renderEvaluacion();
   }
 
   // Indicador de sync en pantalla
@@ -9121,8 +9177,11 @@ ${body}
       <div class="mob-back" onclick="mobBack()">←</div>
       <div class="mob-topbar-title">🧭 Recomendaciones</div>
     </div>
-    <div style="padding:16px;font-size:13px;line-height:1.7;color:#444;">
-      <p>Esta sección está pendiente de completar con las recomendaciones de la temporada actual.</p>
+    <div style="padding:16px;">
+      <textarea id="recomendacionesTextMob" oninput="onRecomendacionesInput(this)"
+        placeholder="Escribe aquí las recomendaciones de la temporada…"
+        style="width:100%;min-height:60vh;padding:14px;border-radius:12px;border:1.5px solid #d9ceb8;background:#faf7f2;font-family:inherit;font-size:14px;line-height:1.7;color:#333;resize:vertical;"></textarea>
+      <div style="margin-top:8px;font-size:12px;color:#2D5016;font-weight:600;opacity:0;transition:opacity .3s;" id="recomendacionesSavedMsgMob">✔ Guardado</div>
     </div>
   </div>
 
@@ -9132,8 +9191,11 @@ ${body}
       <div class="mob-back" onclick="mobBack()">←</div>
       <div class="mob-topbar-title">📊 Evaluación</div>
     </div>
-    <div style="padding:16px;font-size:13px;line-height:1.7;color:#444;">
-      <p>Esta sección está pendiente de completar con los resultados de la evaluación de la temporada actual.</p>
+    <div style="padding:16px;">
+      <textarea id="evaluacionTextMob" oninput="onEvaluacionInput(this)"
+        placeholder="Escribe aquí los resultados de la evaluación de la temporada…"
+        style="width:100%;min-height:60vh;padding:14px;border-radius:12px;border:1.5px solid #d9ceb8;background:#faf7f2;font-family:inherit;font-size:14px;line-height:1.7;color:#333;resize:vertical;"></textarea>
+      <div style="margin-top:8px;font-size:12px;color:#2D5016;font-weight:600;opacity:0;transition:opacity .3s;" id="evaluacionSavedMsgMob">✔ Guardado</div>
     </div>
   </div>
 
