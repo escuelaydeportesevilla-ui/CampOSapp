@@ -1170,6 +1170,41 @@
     .mob-card.accent .mob-label { color: white; }
     .mob-card.accent .mob-sub { color: rgba(255,255,255,.6); }
 
+    /* ── ACORDEÓN DE CATEGORÍAS (pantalla principal móvil) ── */
+    .mob-cat-list { padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+    .mob-cat-btn {
+      display: flex; align-items: center; gap: 14px;
+      width: 100%; border: none; cursor: pointer;
+      padding: 18px 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--verde-bosque) 0%, var(--verde-medio, #4A7C2F) 100%);
+      box-shadow: 0 4px 14px rgba(45,80,22,.18);
+      transition: transform .15s ease, box-shadow .15s ease;
+      text-align: left;
+    }
+    .mob-cat-btn:active { transform: scale(0.97); }
+    .mob-cat-btn .mob-cat-icon {
+      font-size: 26px; line-height: 1;
+      width: 46px; height: 46px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,.18); border-radius: 14px;
+    }
+    .mob-cat-btn .mob-cat-text { flex: 1; }
+    .mob-cat-btn .mob-cat-title {
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 800;
+      color: white; letter-spacing: .3px;
+    }
+    .mob-cat-btn .mob-cat-count { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 1px; }
+    .mob-cat-chevron { font-size: 18px; color: rgba(255,255,255,.75); transition: transform .25s ease; flex-shrink: 0; }
+    .mob-cat-btn.open .mob-cat-chevron { transform: rotate(180deg); }
+
+    .mob-cat-panel {
+      max-height: 0; overflow: hidden;
+      transition: max-height .3s ease;
+    }
+    .mob-cat-panel.open { max-height: 900px; }
+    .mob-cat-panel .mob-grid { padding: 10px 0 0; grid-template-columns: 1fr 1fr 1fr; }
+
     /* Barra superior móvil */
     .mob-topbar {
       display: flex; align-items: center; gap: 10px;
@@ -1832,7 +1867,7 @@
 
       <div class="new-proj-form" id="newProjForm">
         <label>Nombre del proyecto *</label>
-        <input type="text" id="npNombre" placeholder="Ej. Campamento Verano 2027"/>
+        <input type="text" id="npNombre" placeholder="Ej. Campamento Verano"/>
         <label>Entidad organizadora</label>
         <input type="text" id="npEntidad" placeholder="Ej. Mi Entidad o Colegio"/>
         <div class="new-proj-date-row">
@@ -1846,7 +1881,7 @@
           </div>
         </div>
         <label>PIN de acceso al proyecto * (4-6 dígitos)</label>
-        <input type="tel" id="npPin" maxlength="6" placeholder="Ej. 2027" autocomplete="off"
+        <input type="tel" id="npPin" maxlength="6" placeholder="Ej. 1234" autocomplete="off"
           style="letter-spacing:4px;font-weight:700;"/>
         <p style="font-size:11px;color:#888;margin:2px 0 10px;line-height:1.4;">
           Se pedirá cada vez que alguien quiera entrar en este proyecto.
@@ -2010,7 +2045,7 @@
     <button class="desktop-nav-btn" onclick="showTab('evaluacion',event)" data-tab="evaluacion">
       <div class="dnav-icon">📊</div>
       <div class="dnav-label">Evaluación</div>
-      <div class="dnav-sub">2025</div>
+      <div class="dnav-sub">Resultados</div>
     </button>
 
   </div>
@@ -2029,7 +2064,7 @@
     <button class="tab-btn" onclick="showTab('historial',event)">📜 Historial</button>
     <button class="tab-btn" onclick="showTab('asistencia',event)">✅ Asistencia</button>
     <button class="tab-btn" onclick="showTab('guardia',event)">🔔 Guardia</button>
-    <button class="tab-btn" onclick="showTab('evaluacion',event)">📊 Evaluación 2025</button>
+    <button class="tab-btn" onclick="showTab('evaluacion',event)">📊 Evaluación</button>
     <button class="buscar-btn" onclick="openBuscar()">🔍 Buscar alumno</button>
   </div>
 
@@ -4202,6 +4237,18 @@
   // ══════════════════════════════════════════════════════════════
   let mobHistory = ['home'];
 
+
+  function toggleMobCat(cat, btn) {
+    const panel = document.getElementById('mobCat-' + cat);
+    const isOpen = panel.classList.contains('open');
+    // Cierra todas las demás categorías (solo una abierta a la vez)
+    document.querySelectorAll('.mob-cat-panel.open').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.mob-cat-btn.open').forEach(b => b.classList.remove('open'));
+    if (!isOpen) {
+      panel.classList.add('open');
+      btn.classList.add('open');
+    }
+  }
 
   function mobGo(screen) {
     document.querySelectorAll('.mob-screen').forEach(s => s.classList.remove('active'));
@@ -8767,7 +8814,7 @@ ${body}
       <div class="ficha-grid">
         <div class="ficha-field">
           <label>Código AN / Nº SS</label>
-          <input type="text" id="fCodigoAN" placeholder="Ej. AN-2026-001" />
+          <input type="text" id="fCodigoAN" placeholder="Ej. AN-0001" />
         </div>
         <div class="ficha-field ficha-full">
           <label>Alergias</label>
@@ -8819,103 +8866,157 @@ ${body}
       </div>
     </div>
 
-    <div class="mob-grid">
+    <div class="mob-cat-list">
 
       <!-- ALUMNOS -->
-      <div class="mob-section-label">👥 Alumnos</div>
-      <div class="mob-card accent" onclick="mobGo('alumnos')">
-        <div class="mob-icon">👥</div>
-        <div class="mob-label">Participantes</div>
-        <div class="mob-sub" id="mobSubTotal">Cargando…</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('edicion')">
-        <div class="mob-icon">✏️</div>
-        <div class="mob-label">Editar alumnos</div>
-        <div class="mob-sub">Lista completa</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('buscar')">
-        <div class="mob-icon">🔍</div>
-        <div class="mob-label">Buscar</div>
-        <div class="mob-sub">Por nombre</div>
+      <button class="mob-cat-btn" onclick="toggleMobCat('alumnos', this)">
+        <div class="mob-cat-icon">👥</div>
+        <div class="mob-cat-text">
+          <div class="mob-cat-title">Alumnos</div>
+          <div class="mob-cat-count">Participantes, edición, buscador</div>
+        </div>
+        <div class="mob-cat-chevron">▾</div>
+      </button>
+      <div class="mob-cat-panel" id="mobCat-alumnos">
+        <div class="mob-grid">
+          <div class="mob-card accent" onclick="mobGo('alumnos')">
+            <div class="mob-icon">👥</div>
+            <div class="mob-label">Participantes</div>
+            <div class="mob-sub" id="mobSubTotal">Cargando…</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('edicion')">
+            <div class="mob-icon">✏️</div>
+            <div class="mob-label">Editar alumnos</div>
+            <div class="mob-sub">Lista completa</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('buscar')">
+            <div class="mob-icon">🔍</div>
+            <div class="mob-label">Buscar</div>
+            <div class="mob-sub">Por nombre</div>
+          </div>
+        </div>
       </div>
 
       <!-- ORGANIZACIÓN -->
-      <div class="mob-section-label">🏕 Organización</div>
-      <div class="mob-card" onclick="mobGo('monitores')">
-        <div class="mob-icon">👤</div>
-        <div class="mob-label">Monitores</div>
-        <div class="mob-sub" id="mobMonCount">Equipo</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('grupos')">
-        <div class="mob-icon">🏕</div>
-        <div class="mob-label">Grupos</div>
-        <div class="mob-sub">Campamento</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('cabanas')">
-        <div class="mob-icon">🏠</div>
-        <div class="mob-label">Cabañas</div>
-        <div class="mob-sub">Alojamiento</div>
+      <button class="mob-cat-btn" onclick="toggleMobCat('organizacion', this)">
+        <div class="mob-cat-icon">🏕</div>
+        <div class="mob-cat-text">
+          <div class="mob-cat-title">Organización</div>
+          <div class="mob-cat-count">Monitores, grupos, cabañas</div>
+        </div>
+        <div class="mob-cat-chevron">▾</div>
+      </button>
+      <div class="mob-cat-panel" id="mobCat-organizacion">
+        <div class="mob-grid">
+          <div class="mob-card" onclick="mobGo('monitores')">
+            <div class="mob-icon">👤</div>
+            <div class="mob-label">Monitores</div>
+            <div class="mob-sub" id="mobMonCount">Equipo</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('grupos')">
+            <div class="mob-icon">🏕</div>
+            <div class="mob-label">Grupos</div>
+            <div class="mob-sub">Campamento</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('cabanas')">
+            <div class="mob-icon">🏠</div>
+            <div class="mob-label">Cabañas</div>
+            <div class="mob-sub">Alojamiento</div>
+          </div>
+        </div>
       </div>
 
       <!-- PROGRAMACIÓN -->
-      <div class="mob-section-label">📅 Programación</div>
-      <div class="mob-card accent" onclick="mobGo('programacion')">
-        <div class="mob-icon">📅</div>
-        <div class="mob-label">Programación</div>
-        <div class="mob-sub">Actividades</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('asistencia')">
-        <div class="mob-icon">✅</div>
-        <div class="mob-label">Asistencia</div>
-        <div class="mob-sub">Control diario</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('guardia')">
-        <div class="mob-icon">🔔</div>
-        <div class="mob-label">Guardia</div>
-        <div class="mob-sub">Turno actual</div>
+      <button class="mob-cat-btn" onclick="toggleMobCat('programacion', this)">
+        <div class="mob-cat-icon">📅</div>
+        <div class="mob-cat-text">
+          <div class="mob-cat-title">Programación</div>
+          <div class="mob-cat-count">Actividades, asistencia, guardia</div>
+        </div>
+        <div class="mob-cat-chevron">▾</div>
+      </button>
+      <div class="mob-cat-panel" id="mobCat-programacion">
+        <div class="mob-grid">
+          <div class="mob-card accent" onclick="mobGo('programacion')">
+            <div class="mob-icon">📅</div>
+            <div class="mob-label">Programación</div>
+            <div class="mob-sub">Actividades</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('asistencia')">
+            <div class="mob-icon">✅</div>
+            <div class="mob-label">Asistencia</div>
+            <div class="mob-sub">Control diario</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('guardia')">
+            <div class="mob-icon">🔔</div>
+            <div class="mob-label">Guardia</div>
+            <div class="mob-sub">Turno actual</div>
+          </div>
+        </div>
       </div>
 
-      <!-- INFORMES -->
-      <div class="mob-section-label">📋 Informes y seguimiento</div>
-      <div class="mob-card" onclick="mobGo('observaciones')">
-        <div class="mob-icon">📝</div>
-        <div class="mob-label">Notas coord.</div>
-        <div class="mob-sub">General</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('obsalumnos')">
-        <div class="mob-icon">🗒</div>
-        <div class="mob-label">Notas alumnos</div>
-        <div class="mob-sub">Individual</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('medico')">
-        <div class="mob-icon">🩺</div>
-        <div class="mob-label">Médico</div>
-        <div class="mob-sub">Fichas y alertas</div>
-      </div>
-      <div class="mob-card" onclick="mobGo('historial')">
-        <div class="mob-icon">📜</div>
-        <div class="mob-label">Historial</div>
-        <div class="mob-sub">Registro cambios</div>
+      <!-- INFORMES Y SEGUIMIENTO -->
+      <button class="mob-cat-btn" onclick="toggleMobCat('informes', this)">
+        <div class="mob-cat-icon">📋</div>
+        <div class="mob-cat-text">
+          <div class="mob-cat-title">Informes y seguimiento</div>
+          <div class="mob-cat-count">Notas, médico, historial</div>
+        </div>
+        <div class="mob-cat-chevron">▾</div>
+      </button>
+      <div class="mob-cat-panel" id="mobCat-informes">
+        <div class="mob-grid">
+          <div class="mob-card" onclick="mobGo('observaciones')">
+            <div class="mob-icon">📝</div>
+            <div class="mob-label">Notas coord.</div>
+            <div class="mob-sub">General</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('obsalumnos')">
+            <div class="mob-icon">🗒</div>
+            <div class="mob-label">Notas alumnos</div>
+            <div class="mob-sub">Individual</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('medico')">
+            <div class="mob-icon">🩺</div>
+            <div class="mob-label">Médico</div>
+            <div class="mob-sub">Fichas y alertas</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('historial')">
+            <div class="mob-icon">📜</div>
+            <div class="mob-label">Historial</div>
+            <div class="mob-sub">Registro cambios</div>
+          </div>
+        </div>
       </div>
 
       <!-- OTROS -->
-      <div class="mob-section-label">⚙️ Otros</div>
-      <div class="mob-card" onclick="mobGo('recomendaciones')">
-        <div class="mob-icon">🧭</div>
-        <div class="mob-label">Pedagógico</div>
-        <div class="mob-sub">Recomendaciones</div>
+      <button class="mob-cat-btn" onclick="toggleMobCat('otros', this)">
+        <div class="mob-cat-icon">⚙️</div>
+        <div class="mob-cat-text">
+          <div class="mob-cat-title">Otros</div>
+          <div class="mob-cat-count">Pedagógico, evaluación, ajustes</div>
+        </div>
+        <div class="mob-cat-chevron">▾</div>
+      </button>
+      <div class="mob-cat-panel" id="mobCat-otros">
+        <div class="mob-grid">
+          <div class="mob-card" onclick="mobGo('recomendaciones')">
+            <div class="mob-icon">🧭</div>
+            <div class="mob-label">Pedagógico</div>
+            <div class="mob-sub">Recomendaciones</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('evaluacion')">
+            <div class="mob-icon">📊</div>
+            <div class="mob-label">Evaluación</div>
+            <div class="mob-sub">Resultados</div>
+          </div>
+          <div class="mob-card" onclick="toggleDarkMode()" id="mobDarkBtn">
+            <div class="mob-icon" id="mobDarkIcon">🌙</div>
+            <div class="mob-label">Modo</div>
+            <div class="mob-sub">Oscuro/Claro</div>
+          </div>
+        </div>
       </div>
-      <div class="mob-card" onclick="mobGo('evaluacion')">
-        <div class="mob-icon">📊</div>
-        <div class="mob-label">Evaluación</div>
-        <div class="mob-sub">2025</div>
-      </div>
-      <div class="mob-card" onclick="toggleDarkMode()" id="mobDarkBtn">
-        <div class="mob-icon" id="mobDarkIcon">🌙</div>
-        <div class="mob-label">Modo</div>
-        <div class="mob-sub">Oscuro/Claro</div>
-      </div>
-
 
     </div>
   </div>
