@@ -2985,7 +2985,13 @@
       if (data.observaciones) document.getElementById('fObservaciones').value = data.observaciones;
       if (data.grupoCamp)     document.getElementById('fGrupoCamp').value = data.grupoCamp;
       let extra = {};
-      if (data.datosExtra) { try { extra = JSON.parse(data.datosExtra); } catch(e){} }
+      if (data.datosExtra) {
+        if (typeof data.datosExtra === 'string') {
+          try { extra = JSON.parse(data.datosExtra); } catch(e){}
+        } else if (typeof data.datosExtra === 'object') {
+          extra = data.datosExtra;
+        }
+      }
       autodescubrirCamposExtra_(extra);
       renderCamposExtraFicha(extra);
     } else {
@@ -9233,6 +9239,7 @@ ${body}
         <div class="ficha-field">
           <label>Curso escolar</label>
           <select id="fCurso">
+            <option value="sin_grupo">Sin grupo</option>
             <option value="g2">2º Primaria</option>
             <option value="g3">3º Primaria</option>
             <option value="g4">4º Primaria</option>
