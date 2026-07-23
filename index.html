@@ -1563,6 +1563,42 @@
   .dnav-label { font-size: 12px; font-weight: 700; color: var(--verde-bosque); line-height: 1.2; }
   .dnav-sub { font-size: 10px; opacity: .45; }
 
+  /* ── ACORDEÓN DE CATEGORÍAS (escritorio) ── */
+  .dnav-cat-row {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .dnav-cat-btn {
+    display: flex; align-items: center; gap: 12px;
+    flex: 1 1 190px;
+    border: none; cursor: pointer; text-align: left;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--verde-bosque) 0%, var(--verde-medio, #4A7C2F) 100%);
+    box-shadow: 0 4px 14px rgba(45,80,22,.16);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .dnav-cat-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(45,80,22,.24); }
+  .dnav-cat-btn .dnav-cat-icon {
+    font-size: 24px; line-height: 1;
+    width: 42px; height: 42px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,.18); border-radius: 12px;
+  }
+  .dnav-cat-btn .dnav-cat-text { flex: 1; min-width: 0; }
+  .dnav-cat-btn .dnav-cat-title { font-size: 14px; font-weight: 800; color: white; letter-spacing: .2px; }
+  .dnav-cat-btn .dnav-cat-count { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 1px; }
+  .dnav-cat-chevron { font-size: 16px; color: rgba(255,255,255,.75); transition: transform .25s ease; flex-shrink: 0; }
+  .dnav-cat-btn.open .dnav-cat-chevron { transform: rotate(180deg); }
+
+  .dnav-cat-panel {
+    max-height: 0; overflow: hidden;
+    transition: max-height .3s ease;
+    margin-bottom: 4px;
+  }
+  .dnav-cat-panel.open { max-height: 400px; margin-bottom: 20px; }
+  .dnav-cat-panel .desktop-nav { margin-bottom: 0; padding-top: 4px; }
+
   /* Ocultar tabs de texto en desktop, mostrar nav visual */
   .tabs { display: none !important; }
   .desktop-nav { display: grid; }
@@ -1962,93 +1998,149 @@
 <div class="main">
 
   <!-- NAVEGACIÓN DESKTOP -->
-  <div class="desktop-nav" id="desktopNav">
-    <!-- ── ALUMNOS ── -->
-    <div class="dnav-group-label">👥 Alumnos</div>
-    <button class="desktop-nav-btn active-nav" onclick="showTab('participantes',event)" data-tab="participantes">
-      <div class="dnav-icon">👥</div>
-      <div class="dnav-label">Participantes</div>
-      <div class="dnav-sub" id="dnav-sub-participantes">Cargando…</div>
+  <div class="dnav-cat-row" id="desktopNav">
+    <button class="dnav-cat-btn open" onclick="toggleDnavCat('alumnos', this)">
+      <div class="dnav-cat-icon">👥</div>
+      <div class="dnav-cat-text">
+        <div class="dnav-cat-title">Alumnos</div>
+        <div class="dnav-cat-count">Participantes, edición, buscador</div>
+      </div>
+      <div class="dnav-cat-chevron">▾</div>
     </button>
-    <button class="desktop-nav-btn" onclick="showTab('edicion',event)" data-tab="edicion">
-      <div class="dnav-icon">✏️</div>
-      <div class="dnav-label">Editar alumnos</div>
-      <div class="dnav-sub">Lista completa</div>
+    <button class="dnav-cat-btn" onclick="toggleDnavCat('organizacion', this)">
+      <div class="dnav-cat-icon">🏕</div>
+      <div class="dnav-cat-text">
+        <div class="dnav-cat-title">Organización</div>
+        <div class="dnav-cat-count">Monitores, grupos, cabañas</div>
+      </div>
+      <div class="dnav-cat-chevron">▾</div>
     </button>
-    <button class="desktop-nav-btn" onclick="openBuscar()" data-tab="buscar" style="border-style:dashed;">
-      <div class="dnav-icon">🔍</div>
-      <div class="dnav-label">Buscar alumno</div>
-      <div class="dnav-sub">Por nombre</div>
+    <button class="dnav-cat-btn" onclick="toggleDnavCat('programacion', this)">
+      <div class="dnav-cat-icon">📅</div>
+      <div class="dnav-cat-text">
+        <div class="dnav-cat-title">Programación</div>
+        <div class="dnav-cat-count">Actividades, asistencia, guardia</div>
+      </div>
+      <div class="dnav-cat-chevron">▾</div>
     </button>
-
-    <!-- ── ORGANIZACIÓN ── -->
-    <div class="dnav-group-label">🏕 Organización</div>
-    <button class="desktop-nav-btn" onclick="showTab('monitores',event)" data-tab="monitores">
-      <div class="dnav-icon">👤</div>
-      <div class="dnav-label">Monitores</div>
-      <div class="dnav-sub" id="dnav-sub-monitores">Equipo</div>
+    <button class="dnav-cat-btn" onclick="toggleDnavCat('informes', this)">
+      <div class="dnav-cat-icon">📋</div>
+      <div class="dnav-cat-text">
+        <div class="dnav-cat-title">Informes y seguimiento</div>
+        <div class="dnav-cat-count">Notas, historial</div>
+      </div>
+      <div class="dnav-cat-chevron">▾</div>
     </button>
-    <button class="desktop-nav-btn" onclick="showTab('grupos',event)" data-tab="grupos">
-      <div class="dnav-icon">🏕</div>
-      <div class="dnav-label">Grupos</div>
-      <div class="dnav-sub">Campamento</div>
+    <button class="dnav-cat-btn" onclick="toggleDnavCat('otros', this)">
+      <div class="dnav-cat-icon">⚙️</div>
+      <div class="dnav-cat-text">
+        <div class="dnav-cat-title">Otros</div>
+        <div class="dnav-cat-count">Pedagógico, evaluación</div>
+      </div>
+      <div class="dnav-cat-chevron">▾</div>
     </button>
-    <button class="desktop-nav-btn" onclick="showTab('cabanas',event)" data-tab="cabanas">
-      <div class="dnav-icon">🏠</div>
-      <div class="dnav-label">Cabañas</div>
-      <div class="dnav-sub">Alojamiento</div>
-    </button>
-
-    <!-- ── PROGRAMACIÓN ── -->
-    <div class="dnav-group-label">📅 Programación</div>
-    <button class="desktop-nav-btn" onclick="showTab('programacion',event)" data-tab="programacion">
-      <div class="dnav-icon">📅</div>
-      <div class="dnav-label">Programación</div>
-      <div class="dnav-sub">Actividades</div>
-    </button>
-    <button class="desktop-nav-btn" onclick="showTab('asistencia',event)" data-tab="asistencia">
-      <div class="dnav-icon">✅</div>
-      <div class="dnav-label">Asistencia</div>
-      <div class="dnav-sub" id="dnav-sub-asistencia">Control diario</div>
-    </button>
-    <button class="desktop-nav-btn" onclick="showTab('guardia',event)" data-tab="guardia">
-      <div class="dnav-icon">🔔</div>
-      <div class="dnav-label">Guardia</div>
-      <div class="dnav-sub">Turno actual</div>
-    </button>
-
-    <!-- ── INFORMES ── -->
-    <div class="dnav-group-label">📋 Informes y seguimiento</div>
-    <button class="desktop-nav-btn" onclick="showTab('observaciones',event)" data-tab="observaciones">
-      <div class="dnav-icon">📝</div>
-      <div class="dnav-label">Observaciones</div>
-      <div class="dnav-sub">Coordinación</div>
-    </button>
-    <button class="desktop-nav-btn" onclick="showTab('obsalumnos',event)" data-tab="obsalumnos">
-      <div class="dnav-icon">🗒</div>
-      <div class="dnav-label">Notas alumnos</div>
-      <div class="dnav-sub">Individual</div>
-    </button>
-    <button class="desktop-nav-btn" onclick="showTab('historial',event)" data-tab="historial">
-      <div class="dnav-icon">📜</div>
-      <div class="dnav-label">Historial</div>
-      <div class="dnav-sub">Registro cambios</div>
-    </button>
-
-    <!-- ── OTROS ── -->
-    <div class="dnav-group-label">⚙️ Otros</div>
-    <button class="desktop-nav-btn" onclick="showTab('recomendaciones',event)" data-tab="recomendaciones">
-      <div class="dnav-icon">🧭</div>
-      <div class="dnav-label">Recomendaciones</div>
-      <div class="dnav-sub">Pedagógicas</div>
-    </button>
-    <button class="desktop-nav-btn" onclick="showTab('evaluacion',event)" data-tab="evaluacion">
-      <div class="dnav-icon">📊</div>
-      <div class="dnav-label">Evaluación</div>
-      <div class="dnav-sub">Resultados</div>
-    </button>
-
   </div>
+
+  <!-- ALUMNOS -->
+  <div class="dnav-cat-panel open" id="dnavCat-alumnos">
+    <div class="desktop-nav">
+      <button class="desktop-nav-btn active-nav" onclick="showTab('participantes',event)" data-tab="participantes">
+        <div class="dnav-icon">👥</div>
+        <div class="dnav-label">Participantes</div>
+        <div class="dnav-sub" id="dnav-sub-participantes">Cargando…</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="showTab('edicion',event)" data-tab="edicion">
+        <div class="dnav-icon">✏️</div>
+        <div class="dnav-label">Editar alumnos</div>
+        <div class="dnav-sub">Lista completa</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="openBuscar()" data-tab="buscar" style="border-style:dashed;">
+        <div class="dnav-icon">🔍</div>
+        <div class="dnav-label">Buscar alumno</div>
+        <div class="dnav-sub">Por nombre</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- ORGANIZACIÓN -->
+  <div class="dnav-cat-panel" id="dnavCat-organizacion">
+    <div class="desktop-nav">
+      <button class="desktop-nav-btn" onclick="showTab('monitores',event)" data-tab="monitores">
+        <div class="dnav-icon">👤</div>
+        <div class="dnav-label">Monitores</div>
+        <div class="dnav-sub" id="dnav-sub-monitores">Equipo</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="showTab('grupos',event)" data-tab="grupos">
+        <div class="dnav-icon">🏕</div>
+        <div class="dnav-label">Grupos</div>
+        <div class="dnav-sub">Campamento</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="showTab('cabanas',event)" data-tab="cabanas">
+        <div class="dnav-icon">🏠</div>
+        <div class="dnav-label">Cabañas</div>
+        <div class="dnav-sub">Alojamiento</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- PROGRAMACIÓN -->
+  <div class="dnav-cat-panel" id="dnavCat-programacion">
+    <div class="desktop-nav">
+      <button class="desktop-nav-btn" onclick="showTab('programacion',event)" data-tab="programacion">
+        <div class="dnav-icon">📅</div>
+        <div class="dnav-label">Programación</div>
+        <div class="dnav-sub">Actividades</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="showTab('asistencia',event)" data-tab="asistencia">
+        <div class="dnav-icon">✅</div>
+        <div class="dnav-label">Asistencia</div>
+        <div class="dnav-sub" id="dnav-sub-asistencia">Control diario</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="showTab('guardia',event)" data-tab="guardia">
+        <div class="dnav-icon">🔔</div>
+        <div class="dnav-label">Guardia</div>
+        <div class="dnav-sub">Turno actual</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- INFORMES Y SEGUIMIENTO -->
+  <div class="dnav-cat-panel" id="dnavCat-informes">
+    <div class="desktop-nav">
+      <button class="desktop-nav-btn" onclick="showTab('observaciones',event)" data-tab="observaciones">
+        <div class="dnav-icon">📝</div>
+        <div class="dnav-label">Observaciones</div>
+        <div class="dnav-sub">Coordinación</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="showTab('obsalumnos',event)" data-tab="obsalumnos">
+        <div class="dnav-icon">🗒</div>
+        <div class="dnav-label">Notas alumnos</div>
+        <div class="dnav-sub">Individual</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="showTab('historial',event)" data-tab="historial">
+        <div class="dnav-icon">📜</div>
+        <div class="dnav-label">Historial</div>
+        <div class="dnav-sub">Registro cambios</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- OTROS -->
+  <div class="dnav-cat-panel" id="dnavCat-otros">
+    <div class="desktop-nav">
+      <button class="desktop-nav-btn" onclick="showTab('recomendaciones',event)" data-tab="recomendaciones">
+        <div class="dnav-icon">🧭</div>
+        <div class="dnav-label">Recomendaciones</div>
+        <div class="dnav-sub">Pedagógicas</div>
+      </button>
+      <button class="desktop-nav-btn" onclick="showTab('evaluacion',event)" data-tab="evaluacion">
+        <div class="dnav-icon">📊</div>
+        <div class="dnav-label">Evaluación</div>
+        <div class="dnav-sub">Resultados</div>
+      </button>
+    </div>
+  </div>
+
 
   <!-- TABS (ocultos, solo para compatibilidad) -->
   <div class="tabs" style="align-items:center;flex-wrap:wrap;">
@@ -2439,31 +2531,29 @@
     </div>
   </div>
 
-  <!-- TAB 2: RECOMENDACIONES (plantilla genérica — editar cada temporada) -->
+  <!-- TAB 2: RECOMENDACIONES -->
   <div id="tab-recomendaciones" class="tab-panel">
 
     <h2 class="section-title">🧭 Recomendaciones</h2>
 
-    <div class="rec-grid">
-      <textarea id="recomendacionesText" oninput="onRecomendacionesInput(this)"
-        placeholder="Escribe aquí las recomendaciones metodológicas de la temporada…"
-        style="width:100%;min-height:320px;padding:18px;border-radius:14px;border:1.5px solid #d9ceb8;background:#faf7f2;font-family:inherit;font-size:14px;line-height:1.7;color:#333;resize:vertical;"></textarea>
-      <div style="margin-top:8px;font-size:12px;color:#2D5016;font-weight:600;opacity:0;transition:opacity .3s;" id="recomendacionesSavedMsg">✔ Guardado</div>
+    <div style="margin-bottom:18px;">
+      <button class="obs-save-btn" onclick="addFichaLibre('recomendaciones')">➕ Nueva recomendación</button>
     </div>
+
+    <div class="obs-grid" id="recomendacionesGrid"></div>
 
   </div>
 
-  <!-- TAB 3: EVALUACIÓN (plantilla genérica — editar cada temporada) -->
+  <!-- TAB 3: EVALUACIÓN -->
   <div id="tab-evaluacion" class="tab-panel">
 
     <h2 class="section-title">📊 Evaluación</h2>
 
-    <div class="eval-section">
-      <textarea id="evaluacionText" oninput="onEvaluacionInput(this)"
-        placeholder="Escribe aquí los resultados de la evaluación de la temporada…"
-        style="width:100%;min-height:320px;padding:18px;border-radius:14px;border:1.5px solid #d9ceb8;background:#faf7f2;font-family:inherit;font-size:14px;line-height:1.7;color:#333;resize:vertical;"></textarea>
-      <div style="margin-top:8px;font-size:12px;color:#2D5016;font-weight:600;opacity:0;transition:opacity .3s;" id="evaluacionSavedMsg">✔ Guardado</div>
+    <div style="margin-bottom:18px;">
+      <button class="obs-save-btn" onclick="addFichaLibre('evaluacion')">➕ Nueva evaluación</button>
     </div>
+
+    <div class="obs-grid" id="evaluacionGrid"></div>
 
   </div>
 
@@ -2498,6 +2588,7 @@
     document.querySelectorAll('.desktop-nav-btn').forEach(b => b.classList.remove('active-nav'));
     const activeNavBtn = document.querySelector('.desktop-nav-btn[data-tab="' + id + '"]');
     if (activeNavBtn) activeNavBtn.classList.add('active-nav');
+    openDnavCatForTab(id);
     const panel = document.getElementById('tab-' + id);
     if (panel) panel.classList.add('active');
     const btn = ev && ev.target && ev.target.classList.contains('tab-btn') ? ev.target : null;
@@ -2511,8 +2602,8 @@
     if (id === 'obsalumnos') { renderObsAlumnos(); }
     if (id === 'programacion') { populateProgFiltros(); renderProg(); }
     if (id === 'edicion') { renderEditTable(); } // grupos camp may have changed
-    if (id === 'recomendaciones') { renderRecomendaciones(); }
-    if (id === 'evaluacion') { renderEvaluacion(); }
+    if (id === 'recomendaciones') { renderFichasLibres('recomendaciones'); }
+    if (id === 'evaluacion') { renderFichasLibres('evaluacion'); }
   }
 
   /* ── DATOS PARTICIPANTES ── */
@@ -4238,6 +4329,37 @@
   let mobHistory = ['home'];
 
 
+  const DNAV_CAT_DE_TAB = {
+    participantes: 'alumnos', edicion: 'alumnos', buscar: 'alumnos',
+    monitores: 'organizacion', grupos: 'organizacion', cabanas: 'organizacion',
+    programacion: 'programacion', asistencia: 'programacion', guardia: 'programacion',
+    observaciones: 'informes', obsalumnos: 'informes', historial: 'informes',
+    recomendaciones: 'otros', evaluacion: 'otros',
+  };
+
+  function toggleDnavCat(cat, btn) {
+    const panel = document.getElementById('dnavCat-' + cat);
+    const isOpen = panel.classList.contains('open');
+    document.querySelectorAll('.dnav-cat-panel.open').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.dnav-cat-btn.open').forEach(b => b.classList.remove('open'));
+    if (!isOpen) {
+      panel.classList.add('open');
+      btn.classList.add('open');
+    }
+  }
+
+  function openDnavCatForTab(id) {
+    const cat = DNAV_CAT_DE_TAB[id];
+    if (!cat) return;
+    document.querySelectorAll('.dnav-cat-panel.open').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.dnav-cat-btn.open').forEach(b => b.classList.remove('open'));
+    const panel = document.getElementById('dnavCat-' + cat);
+    const idx = ['alumnos','organizacion','programacion','informes','otros'].indexOf(cat);
+    const btn = document.querySelectorAll('.dnav-cat-btn')[idx];
+    if (panel) panel.classList.add('open');
+    if (btn) btn.classList.add('open');
+  }
+
   function toggleMobCat(cat, btn) {
     const panel = document.getElementById('mobCat-' + cat);
     const isOpen = panel.classList.contains('open');
@@ -4270,8 +4392,8 @@
     if (screen === 'edicion') renderMobEdicion();
     if (screen === 'obsalumnos') { renderMobObsAlumnos(); }
     if (screen === 'programacion') { populateProgFiltros(); renderMobProgLista(); }
-    if (screen === 'recomendaciones') { renderRecomendaciones(); }
-    if (screen === 'evaluacion') { renderEvaluacion(); }
+    if (screen === 'recomendaciones') { renderFichasLibres('recomendaciones'); }
+    if (screen === 'evaluacion') { renderFichasLibres('evaluacion'); }
   }
 
   function mobBack() {
@@ -6566,47 +6688,112 @@ ${body}
     return window._activeScriptUrl || SCRIPT_URL;
   }
 
-  /* ── RECOMENDACIONES / EVALUACIÓN (texto libre editable) ── */
-  let recomendacionesTexto = '';
-  let evaluacionTexto = '';
-  let recEvalTimers = {};
+  /* ── RECOMENDACIONES / EVALUACIÓN (fichas: editables, exportables, eliminables) ── */
+  const fichasLibres = { recomendaciones: [], evaluacion: [] };
+  const fichasLibresMeta = {
+    recomendaciones: { icono: '🧭', titulo: 'Recomendaciones', placeholder: 'Escribe aquí una recomendación…' },
+    evaluacion:      { icono: '📊', titulo: 'Evaluación',      placeholder: 'Escribe aquí un resultado de la evaluación…' },
+  };
 
-  function renderRecomendaciones() {
-    const el = document.getElementById('recomendacionesText');
-    if (el && el.value !== recomendacionesTexto) el.value = recomendacionesTexto;
-    const elMob = document.getElementById('recomendacionesTextMob');
-    if (elMob && elMob.value !== recomendacionesTexto) elMob.value = recomendacionesTexto;
+  // Convierte datos antiguos (un solo texto) al nuevo formato de fichas, sin perder lo ya escrito
+  function migrarFichasLibres_(tipo, dato) {
+    if (Array.isArray(dato)) return dato;
+    if (typeof dato === 'string' && dato.trim()) {
+      return [{ id: Date.now(), titulo: fichasLibresMeta[tipo].titulo, fecha: new Date().toISOString(), texto: dato }];
+    }
+    return [];
   }
 
-  function renderEvaluacion() {
-    const el = document.getElementById('evaluacionText');
-    if (el && el.value !== evaluacionTexto) el.value = evaluacionTexto;
-    const elMob = document.getElementById('evaluacionTextMob');
-    if (elMob && elMob.value !== evaluacionTexto) elMob.value = evaluacionTexto;
-  }
-
-  function onRecomendacionesInput(el) {
-    recomendacionesTexto = el.value;
-    renderRecomendaciones();
-    guardarRecEval_('recomendaciones', recomendacionesTexto, 'recomendacionesSavedMsg');
-  }
-
-  function onEvaluacionInput(el) {
-    evaluacionTexto = el.value;
-    renderEvaluacion();
-    guardarRecEval_('evaluacion', evaluacionTexto, 'evaluacionSavedMsg');
-  }
-
-  function guardarRecEval_(key, valor, msgId) {
-    try { localStorage.setItem(pKey('camp-' + key), JSON.stringify(valor)); } catch(e){}
-    clearTimeout(recEvalTimers[key]);
-    recEvalTimers[key] = setTimeout(() => {
-      sheetsSet(key, valor);
-      [msgId, msgId + 'Mob'].forEach(id => {
-        const m = document.getElementById(id);
-        if (m) { m.style.opacity = '1'; setTimeout(() => { m.style.opacity = '0'; }, 2000); }
+  function renderFichasLibres(tipo) {
+    const meta = fichasLibresMeta[tipo];
+    ['Grid', 'GridMob'].forEach(suf => {
+      const grid = document.getElementById(tipo + suf);
+      if (!grid) return;
+      grid.innerHTML = '';
+      if (!fichasLibres[tipo].length) {
+        grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;text-align:center;font-size:13px;opacity:.45;">Todavía no hay ninguna ficha. Pulsa "Nueva ${meta.titulo.toLowerCase()}" para crear la primera.</div>`;
+        return;
+      }
+      fichasLibres[tipo].forEach((f, i) => {
+        const div = document.createElement('div');
+        div.className = 'obs-card';
+        div.style.borderLeft = '4px solid var(--verde-medio)';
+        const fecha = f.fecha ? new Date(f.fecha).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' }) : '';
+        div.innerHTML = `
+          <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:4px;">
+            <input style="flex:1;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);border:none;background:transparent;outline:none;padding:0;" value="${escHtml(f.titulo)}" onchange="fichasLibres['${tipo}'][${i}].titulo=this.value"/>
+            <button onclick="exportarFichaLibre('${tipo}',${i})" title="Exportar / Imprimir" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🖨️</button>
+            <button onclick="deleteFichaLibre('${tipo}',${i})" title="Eliminar" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🗑</button>
+          </div>
+          <div class="obs-meta">${fecha}</div>
+          <textarea rows="6" placeholder="${meta.placeholder}" onchange="fichasLibres['${tipo}'][${i}].texto=this.value">${escHtml(f.texto)}</textarea>
+          <div style="display:flex;align-items:center;margin-top:8px;">
+            <button class="obs-save-btn" onclick="saveFichaLibre('${tipo}',${i})">Guardar</button>
+            <span class="obs-saved" id="${tipo}Saved${i}${suf}">✔ Guardado</span>
+          </div>
+        `;
+        grid.appendChild(div);
       });
-    }, 800);
+    });
+  }
+
+  function saveFichaLibre(tipo, i) {
+    const f = fichasLibres[tipo][i];
+    if (f) f.fecha = f.fecha || new Date().toISOString();
+    sheetsSet(tipo, fichasLibres[tipo]);
+    try { localStorage.setItem(pKey('camp-' + tipo), JSON.stringify(fichasLibres[tipo])); } catch(e){}
+    ['Grid', 'GridMob'].forEach(suf => {
+      const span = document.getElementById(tipo + 'Saved' + i + suf);
+      if (span) { span.style.opacity = '1'; setTimeout(() => span.style.opacity = '0', 2000); }
+    });
+  }
+
+  function addFichaLibre(tipo) {
+    fichasLibres[tipo].push({
+      id: Date.now(),
+      titulo: tipo === 'recomendaciones' ? 'Nueva recomendación' : 'Nueva evaluación',
+      fecha: new Date().toISOString(),
+      texto: ''
+    });
+    renderFichasLibres(tipo);
+    sheetsSet(tipo, fichasLibres[tipo]);
+    try { localStorage.setItem(pKey('camp-' + tipo), JSON.stringify(fichasLibres[tipo])); } catch(e){}
+    setTimeout(() => {
+      const grids = document.querySelectorAll('#' + tipo + 'Grid .obs-card, #' + tipo + 'GridMob .obs-card');
+      grids.length && grids[grids.length - 1].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+  }
+
+  function deleteFichaLibre(tipo, i) {
+    if (!confirm('¿Eliminar esta ficha? No se puede deshacer.')) return;
+    fichasLibres[tipo].splice(i, 1);
+    sheetsSet(tipo, fichasLibres[tipo]);
+    try { localStorage.setItem(pKey('camp-' + tipo), JSON.stringify(fichasLibres[tipo])); } catch(e){}
+    renderFichasLibres(tipo);
+  }
+
+  function exportarFichaLibre(tipo, i) {
+    const f = fichasLibres[tipo][i];
+    if (!f) return;
+    const meta = fichasLibresMeta[tipo];
+    const fecha = f.fecha ? new Date(f.fecha).toLocaleDateString('es-ES', { day:'2-digit', month:'long', year:'numeric' }) : '';
+    const win = window.open('', '_blank');
+    win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${escHtml(f.titulo)}</title>
+      <style>
+        body{font-family:'DM Sans',Arial,sans-serif;color:#2D2D2D;max-width:700px;margin:40px auto;padding:0 20px;}
+        h1{font-family:Georgia,serif;color:#2D5016;font-size:1.6rem;margin-bottom:2px;}
+        .meta{color:#888;font-size:13px;margin-bottom:24px;}
+        .texto{white-space:pre-wrap;line-height:1.7;font-size:14px;}
+        .cabecera{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#4A7C2F;font-weight:700;margin-bottom:6px;}
+        @media print { button{ display:none; } }
+      </style></head><body>
+      <div class="cabecera">${meta.icono} ${meta.titulo}</div>
+      <h1>${escHtml(f.titulo)}</h1>
+      <div class="meta">${fecha}</div>
+      <div class="texto">${escHtml(f.texto)}</div>
+      <button onclick="window.print()" style="margin-top:30px;padding:10px 24px;background:#2D5016;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;">🖨️ Imprimir / Guardar PDF</button>
+      </body></html>`);
+    win.document.close();
   }
 
   async function sheetsGet(key) {
@@ -6673,10 +6860,10 @@ ${body}
         if (j.data.obs)        obsData       = j.data.obs.length        ? j.data.obs        : obsData;
         if (j.data.prog)       progData      = j.data.prog.length       ? j.data.prog       : progData;
         if (j.data.obsAlumnos) obsAlumnos    = Object.keys(j.data.obsAlumnos).length ? j.data.obsAlumnos : obsAlumnos;
-        if (j.data.recomendaciones !== undefined) recomendacionesTexto = j.data.recomendaciones || '';
-        if (j.data.evaluacion !== undefined)      evaluacionTexto      = j.data.evaluacion || '';
-        renderRecomendaciones();
-        renderEvaluacion();
+        if (j.data.recomendaciones !== undefined) fichasLibres.recomendaciones = migrarFichasLibres_('recomendaciones', j.data.recomendaciones);
+        if (j.data.evaluacion !== undefined)      fichasLibres.evaluacion      = migrarFichasLibres_('evaluacion', j.data.evaluacion);
+        renderFichasLibres('recomendaciones');
+        renderFichasLibres('evaluacion');
         // Cache local
         try {
           localStorage.setItem(pKey('camp-monitores'),  JSON.stringify(monitoresData));
@@ -6700,10 +6887,10 @@ ${body}
     try { const d = localStorage.getItem(pKey('camp-obs'));        if (d) obsData       = JSON.parse(d); } catch(e){}
     try { const d = localStorage.getItem(pKey('camp-prog'));       if (d) progData      = JSON.parse(d); } catch(e){}
     try { const d = localStorage.getItem(pKey('camp-obs-alumnos'));if (d) obsAlumnos    = JSON.parse(d); } catch(e){}
-    try { const d = localStorage.getItem(pKey('camp-recomendaciones')); if (d) recomendacionesTexto = JSON.parse(d); } catch(e){}
-    try { const d = localStorage.getItem(pKey('camp-evaluacion'));      if (d) evaluacionTexto      = JSON.parse(d); } catch(e){}
-    renderRecomendaciones();
-    renderEvaluacion();
+    try { const d = localStorage.getItem(pKey('camp-recomendaciones')); if (d) fichasLibres.recomendaciones = migrarFichasLibres_('recomendaciones', JSON.parse(d)); } catch(e){}
+    try { const d = localStorage.getItem(pKey('camp-evaluacion'));      if (d) fichasLibres.evaluacion      = migrarFichasLibres_('evaluacion', JSON.parse(d)); } catch(e){}
+    renderFichasLibres('recomendaciones');
+    renderFichasLibres('evaluacion');
   }
 
   // Indicador de sync en pantalla
@@ -9283,10 +9470,8 @@ ${body}
       <div class="mob-topbar-title">🧭 Recomendaciones</div>
     </div>
     <div style="padding:16px;">
-      <textarea id="recomendacionesTextMob" oninput="onRecomendacionesInput(this)"
-        placeholder="Escribe aquí las recomendaciones de la temporada…"
-        style="width:100%;min-height:60vh;padding:14px;border-radius:12px;border:1.5px solid #d9ceb8;background:#faf7f2;font-family:inherit;font-size:14px;line-height:1.7;color:#333;resize:vertical;"></textarea>
-      <div style="margin-top:8px;font-size:12px;color:#2D5016;font-weight:600;opacity:0;transition:opacity .3s;" id="recomendacionesSavedMsgMob">✔ Guardado</div>
+      <button class="obs-save-btn" style="width:100%;margin-bottom:14px;" onclick="addFichaLibre('recomendaciones')">➕ Nueva recomendación</button>
+      <div class="obs-grid" id="recomendacionesGridMob"></div>
     </div>
   </div>
 
@@ -9297,10 +9482,8 @@ ${body}
       <div class="mob-topbar-title">📊 Evaluación</div>
     </div>
     <div style="padding:16px;">
-      <textarea id="evaluacionTextMob" oninput="onEvaluacionInput(this)"
-        placeholder="Escribe aquí los resultados de la evaluación de la temporada…"
-        style="width:100%;min-height:60vh;padding:14px;border-radius:12px;border:1.5px solid #d9ceb8;background:#faf7f2;font-family:inherit;font-size:14px;line-height:1.7;color:#333;resize:vertical;"></textarea>
-      <div style="margin-top:8px;font-size:12px;color:#2D5016;font-weight:600;opacity:0;transition:opacity .3s;" id="evaluacionSavedMsgMob">✔ Guardado</div>
+      <button class="obs-save-btn" style="width:100%;margin-bottom:14px;" onclick="addFichaLibre('evaluacion')">➕ Nueva evaluación</button>
+      <div class="obs-grid" id="evaluacionGridMob"></div>
     </div>
   </div>
 
