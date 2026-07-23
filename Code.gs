@@ -301,13 +301,10 @@ function buscarFila_(sh, colIdx, valor) {
 
 function escribirFila_(sh, columnas, registro, filaExistente) {
   const idx = indiceColumnas_(sh);
-  if (filaExistente) {
-    columnas.forEach(c => {
-      if (registro[c] === undefined) return; // no pisar la celda existente
-      sh.getRange(filaExistente, idx[c] + 1).setValue(registro[c]);
-    });
-  } else {
-    const fila = columnas.map(c => registro[c] !== undefined ? registro[c] : '');
-    sh.appendRow(fila);
-  }
+  const fila = filaExistente || (sh.getLastRow() + 1); // si es nueva, la siguiente libre
+  columnas.forEach(c => {
+    if (registro[c] === undefined) return;   // no pisar si no se especifica este campo
+    if (idx[c] === undefined) return;        // esa columna no existe en la hoja, se ignora
+    sh.getRange(fila, idx[c] + 1).setValue(registro[c]);
+  });
 }
