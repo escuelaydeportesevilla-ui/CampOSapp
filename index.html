@@ -49,6 +49,7 @@
     padding: 56px 40px 48px;
     position: relative;
     overflow: hidden;
+    isolation: isolate;
   }
 
   .hero::before {
@@ -6756,7 +6757,7 @@ ${body}
             <div class="obs-meta">${fecha}</div>
             <textarea id="fl-texto-${tipo}-${f.id}${suf}" rows="6" placeholder="${meta.placeholder}">${escHtml(f.texto)}</textarea>
             <div style="display:flex;align-items:center;margin-top:8px;">
-              <button class="obs-save-btn" onclick="guardarFichaLibre('${tipo}',${f.id})" title="Guardar">💾 Guardar</button>
+              <button class="obs-save-btn" onclick="guardarFichaLibre('${tipo}',${f.id},'${suf}')" title="Guardar">💾 Guardar</button>
               <span class="obs-saved" id="${tipo}Saved${f.id}${suf}">✔ Guardado</span>
             </div>
           `;
@@ -6782,15 +6783,13 @@ ${body}
     renderFichasLibres(tipo);
   }
 
-  function guardarFichaLibre(tipo, id) {
+  function guardarFichaLibre(tipo, id, suf) {
     const f = fichasLibres[tipo].find(x => x.id === id);
     if (!f) return;
-    ['Grid', 'GridMob'].forEach(suf => {
-      const tInput = document.getElementById('fl-titulo-' + tipo + '-' + id + suf);
-      const tArea  = document.getElementById('fl-texto-'  + tipo + '-' + id + suf);
-      if (tInput) f.titulo = tInput.value;
-      if (tArea)  f.texto  = tArea.value;
-    });
+    const tInput = document.getElementById('fl-titulo-' + tipo + '-' + id + suf);
+    const tArea  = document.getElementById('fl-texto-'  + tipo + '-' + id + suf);
+    if (tInput) f.titulo = tInput.value;
+    if (tArea)  f.texto  = tArea.value;
     f.fecha = f.fecha || new Date().toISOString();
     fichasLibresEnEdicion[tipo].delete(id);
     sheetsSet(tipo, fichasLibres[tipo]);
