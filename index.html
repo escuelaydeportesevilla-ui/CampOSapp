@@ -1969,6 +1969,19 @@
 <div id="statusBar" style="display:none;padding:8px 20px;font-size:12px;font-weight:600;color:white;text-align:center;position:sticky;top:0;z-index:2000;transition:background .3s;"></div>
 <!-- HERO -->
 <div class="hero">
+  <svg width="100%" height="100%" viewBox="0 0 640 420" preserveAspectRatio="none" style="position:absolute;inset:0;z-index:-1;opacity:0.16;pointer-events:none;">
+    <path d="M-20,30 Q160,75 340,30 T700,30" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,65 Q160,110 340,65 T700,65" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,100 Q160,145 340,100 T700,100" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,135 Q160,180 340,135 T700,135" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,170 Q160,215 340,170 T700,170" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,205 Q160,250 340,205 T700,205" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,240 Q160,285 340,240 T700,240" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,275 Q160,320 340,275 T700,275" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,310 Q160,355 340,310 T700,310" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,345 Q160,390 340,345 T700,345" stroke="white" stroke-width="1" fill="none"/>
+    <path d="M-20,380 Q160,425 340,380 T700,380" stroke="white" stroke-width="1" fill="none"/>
+  </svg>
   <div class="hero-badge" id="heroBadge">🏕 CampOS</div>
   <div style="position:absolute;top:16px;right:16px;display:flex;gap:8px;z-index:5;">
     <button onclick="actualizarApp()" title="Recargar datos"
@@ -6694,6 +6707,8 @@ ${body}
     recomendaciones: { icono: '🧭', titulo: 'Recomendaciones', placeholder: 'Escribe aquí una recomendación…' },
     evaluacion:      { icono: '📊', titulo: 'Evaluación',      placeholder: 'Escribe aquí un resultado de la evaluación…' },
   };
+  // ids de fichas actualmente en modo edición (por tipo)
+  const fichasLibresEnEdicion = { recomendaciones: new Set(), evaluacion: new Set() };
 
   // Convierte datos antiguos (un solo texto) al nuevo formato de fichas, sin perder lo ya escrito
   function migrarFichasLibres_(tipo, dato) {
@@ -6702,6 +6717,16 @@ ${body}
       return [{ id: Date.now(), titulo: fichasLibresMeta[tipo].titulo, fecha: new Date().toISOString(), texto: dato }];
     }
     return [];
+  }
+
+  // Convierte texto plano en párrafos legibles para el modo lectura
+  function formatearTextoFicha_(texto) {
+    if (!texto || !texto.trim()) {
+      return '<p style="opacity:.45;font-style:italic;">Sin contenido todavía. Pulsa ✏️ para escribir.</p>';
+    }
+    return texto.split(/\n\s*\n/).map(parrafo =>
+      '<p style="margin:0 0 12px;">' + escHtml(parrafo).replace(/\n/g, '<br>') + '</p>'
+    ).join('');
   }
 
   function renderFichasLibres(tipo) {
@@ -6714,47 +6739,74 @@ ${body}
         grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;text-align:center;font-size:13px;opacity:.45;">Todavía no hay ninguna ficha. Pulsa "Nueva ${meta.titulo.toLowerCase()}" para crear la primera.</div>`;
         return;
       }
-      fichasLibres[tipo].forEach((f, i) => {
+      fichasLibres[tipo].forEach((f) => {
         const div = document.createElement('div');
         div.className = 'obs-card';
         div.style.borderLeft = '4px solid var(--verde-medio)';
         const fecha = f.fecha ? new Date(f.fecha).toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' }) : '';
-        div.innerHTML = `
-          <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:4px;">
-            <input style="flex:1;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);border:none;background:transparent;outline:none;padding:0;" value="${escHtml(f.titulo)}" onchange="fichasLibres['${tipo}'][${i}].titulo=this.value"/>
-            <button onclick="exportarFichaLibre('${tipo}',${i})" title="Exportar / Imprimir" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🖨️</button>
-            <button onclick="deleteFichaLibre('${tipo}',${i})" title="Eliminar" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🗑</button>
-          </div>
-          <div class="obs-meta">${fecha}</div>
-          <textarea rows="6" placeholder="${meta.placeholder}" onchange="fichasLibres['${tipo}'][${i}].texto=this.value">${escHtml(f.texto)}</textarea>
-          <div style="display:flex;align-items:center;margin-top:8px;">
-            <button class="obs-save-btn" onclick="saveFichaLibre('${tipo}',${i})">Guardar</button>
-            <span class="obs-saved" id="${tipo}Saved${i}${suf}">✔ Guardado</span>
-          </div>
-        `;
+        const enEdicion = fichasLibresEnEdicion[tipo].has(f.id);
+
+        if (enEdicion) {
+          div.innerHTML = `
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:4px;">
+              <input id="fl-titulo-${tipo}-${f.id}${suf}" style="flex:1;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);border:none;background:transparent;outline:none;padding:0;" value="${escHtml(f.titulo)}"/>
+              <button onclick="exportarFichaLibre('${tipo}',${f.id})" title="Exportar / Imprimir" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🖨️</button>
+              <button onclick="deleteFichaLibre('${tipo}',${f.id})" title="Eliminar" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🗑</button>
+            </div>
+            <div class="obs-meta">${fecha}</div>
+            <textarea id="fl-texto-${tipo}-${f.id}${suf}" rows="6" placeholder="${meta.placeholder}">${escHtml(f.texto)}</textarea>
+            <div style="display:flex;align-items:center;margin-top:8px;">
+              <button class="obs-save-btn" onclick="guardarFichaLibre('${tipo}',${f.id})" title="Guardar">💾 Guardar</button>
+              <span class="obs-saved" id="${tipo}Saved${f.id}${suf}">✔ Guardado</span>
+            </div>
+          `;
+        } else {
+          div.innerHTML = `
+            <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:4px;">
+              <h3 style="flex:1;margin:0;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);">${escHtml(f.titulo)}</h3>
+              <button onclick="editarFichaLibre('${tipo}',${f.id})" title="Editar" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">✏️</button>
+              <button onclick="exportarFichaLibre('${tipo}',${f.id})" title="Exportar / Imprimir" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🖨️</button>
+              <button onclick="deleteFichaLibre('${tipo}',${f.id})" title="Eliminar" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🗑</button>
+            </div>
+            <div class="obs-meta">${fecha}</div>
+            <div style="font-size:14px;line-height:1.65;color:#333;">${formatearTextoFicha_(f.texto)}</div>
+          `;
+        }
         grid.appendChild(div);
       });
     });
   }
 
-  function saveFichaLibre(tipo, i) {
-    const f = fichasLibres[tipo][i];
-    if (f) f.fecha = f.fecha || new Date().toISOString();
+  function editarFichaLibre(tipo, id) {
+    fichasLibresEnEdicion[tipo].add(id);
+    renderFichasLibres(tipo);
+  }
+
+  function guardarFichaLibre(tipo, id) {
+    const f = fichasLibres[tipo].find(x => x.id === id);
+    if (!f) return;
+    ['Grid', 'GridMob'].forEach(suf => {
+      const tInput = document.getElementById('fl-titulo-' + tipo + '-' + id + suf);
+      const tArea  = document.getElementById('fl-texto-'  + tipo + '-' + id + suf);
+      if (tInput) f.titulo = tInput.value;
+      if (tArea)  f.texto  = tArea.value;
+    });
+    f.fecha = f.fecha || new Date().toISOString();
+    fichasLibresEnEdicion[tipo].delete(id);
     sheetsSet(tipo, fichasLibres[tipo]);
     try { localStorage.setItem(pKey('camp-' + tipo), JSON.stringify(fichasLibres[tipo])); } catch(e){}
-    ['Grid', 'GridMob'].forEach(suf => {
-      const span = document.getElementById(tipo + 'Saved' + i + suf);
-      if (span) { span.style.opacity = '1'; setTimeout(() => span.style.opacity = '0', 2000); }
-    });
+    renderFichasLibres(tipo);
   }
 
   function addFichaLibre(tipo) {
+    const id = Date.now();
     fichasLibres[tipo].push({
-      id: Date.now(),
+      id,
       titulo: tipo === 'recomendaciones' ? 'Nueva recomendación' : 'Nueva evaluación',
       fecha: new Date().toISOString(),
       texto: ''
     });
+    fichasLibresEnEdicion[tipo].add(id); // se crea directamente en modo edición
     renderFichasLibres(tipo);
     sheetsSet(tipo, fichasLibres[tipo]);
     try { localStorage.setItem(pKey('camp-' + tipo), JSON.stringify(fichasLibres[tipo])); } catch(e){}
@@ -6764,16 +6816,17 @@ ${body}
     }, 100);
   }
 
-  function deleteFichaLibre(tipo, i) {
+  function deleteFichaLibre(tipo, id) {
     if (!confirm('¿Eliminar esta ficha? No se puede deshacer.')) return;
-    fichasLibres[tipo].splice(i, 1);
+    fichasLibres[tipo] = fichasLibres[tipo].filter(f => f.id !== id);
+    fichasLibresEnEdicion[tipo].delete(id);
     sheetsSet(tipo, fichasLibres[tipo]);
     try { localStorage.setItem(pKey('camp-' + tipo), JSON.stringify(fichasLibres[tipo])); } catch(e){}
     renderFichasLibres(tipo);
   }
 
-  function exportarFichaLibre(tipo, i) {
-    const f = fichasLibres[tipo][i];
+  function exportarFichaLibre(tipo, id) {
+    const f = fichasLibres[tipo].find(x => x.id === id);
     if (!f) return;
     const meta = fichasLibresMeta[tipo];
     const fecha = f.fecha ? new Date(f.fecha).toLocaleDateString('es-ES', { day:'2-digit', month:'long', year:'numeric' }) : '';
