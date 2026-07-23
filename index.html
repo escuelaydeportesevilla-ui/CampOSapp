@@ -2152,6 +2152,11 @@
         <div class="dnav-label">Evaluación</div>
         <div class="dnav-sub">Resultados</div>
       </button>
+      <button class="desktop-nav-btn" onclick="showTab('camposextra',event)" data-tab="camposextra">
+        <div class="dnav-icon">🗂</div>
+        <div class="dnav-label">Campos extra</div>
+        <div class="dnav-sub">Ficha personalizada</div>
+      </button>
     </div>
   </div>
 
@@ -2571,7 +2576,24 @@
 
   </div>
 
+  <!-- TAB CAMPOS PERSONALIZADOS -->
+  <div id="tab-camposextra" class="tab-panel">
+
+    <h2 class="section-title">🗂 Campos personalizados</h2>
+    <p style="font-size:13px;color:#888;margin:-8px 0 18px;max-width:620px;">
+      Define aquí los datos extra que quieres recoger para <strong>este proyecto</strong> (por ejemplo DNI, email o nivel académico). Aparecerán como campos editables en la ficha de cada participante, y también podrás usarlos en el formulario público de inscripción.
+    </p>
+
+    <div style="margin-bottom:14px;">
+      <button class="obs-save-btn" onclick="addCampoPersonalizado()">➕ Añadir campo</button>
+    </div>
+
+    <div id="camposPersonalizadosAdmin" style="max-width:720px;"></div>
+
+  </div>
+
 </div>
+
 
 <!-- FOOTER -->
 <footer>
@@ -2618,6 +2640,7 @@
     if (id === 'edicion') { renderEditTable(); } // grupos camp may have changed
     if (id === 'recomendaciones') { renderFichasLibres('recomendaciones'); }
     if (id === 'evaluacion') { renderFichasLibres('evaluacion'); }
+    if (id === 'camposextra') { renderCamposPersonalizadosAdmin(); }
   }
 
   /* ── DATOS PARTICIPANTES ── */
@@ -2960,6 +2983,11 @@
       if (data.medicacion)    document.getElementById('fMedicacion').value = data.medicacion;
       if (data.observaciones) document.getElementById('fObservaciones').value = data.observaciones;
       if (data.grupoCamp)     document.getElementById('fGrupoCamp').value = data.grupoCamp;
+      let extra = {};
+      if (data.datosExtra) { try { extra = JSON.parse(data.datosExtra); } catch(e){} }
+      renderCamposExtraFicha(extra);
+    } else {
+      renderCamposExtraFicha({});
     }
 
     document.getElementById('fichaOverlay').classList.add('visible');
@@ -3046,6 +3074,7 @@
       medicacion:    document.getElementById('fMedicacion').value,
       observaciones: document.getElementById('fObservaciones').value,
       grupoCamp:     newGrupoCamp,
+      datosExtra:    leerCamposExtraFicha(),
     };
     await saveFichaData(n, data);
 
@@ -4348,7 +4377,7 @@
     monitores: 'organizacion', grupos: 'organizacion', cabanas: 'organizacion',
     programacion: 'programacion', asistencia: 'programacion', guardia: 'programacion',
     observaciones: 'informes', obsalumnos: 'informes', historial: 'informes',
-    recomendaciones: 'otros', evaluacion: 'otros',
+    recomendaciones: 'otros', evaluacion: 'otros', camposextra: 'otros',
   };
 
   function toggleDnavCat(cat, btn) {
@@ -6318,6 +6347,8 @@ ${body}
   //  OBSERVACIONES POR ALUMNO
   // ══════════════════════════════════════════════════════════════
   let obsAlumnos = JSON.parse(localStorage.getItem(pKey('camp-obs-alumnos')) || '{}');
+  let camposPersonalizados = JSON.parse(localStorage.getItem(pKey('camp-campos-personalizados')) || '[]');
+  let fichaDatosExtraActual = {};
   // Structure: { [n]: { apellidos, nombre, gid, notas: [{id, fecha, texto, mood, monitor}] } }
 
   function saveObsAlumnos() {
@@ -6848,6 +6879,118 @@ ${body}
     win.document.close();
   }
 
+  /* ── CAMPOS PERSONALIZADOS POR PROYECTO ── */
+  const TIPOS_CAMPO_EXTRA = {
+    texto:    { label: 'Texto corto',  input: 'text' },
+    parrafo:  { label: 'Texto largo',  input: 'textarea' },
+    fecha:    { label: 'Fecha',        input: 'date' },
+    email:    { label: 'Email',        input: 'email' },
+    telefono: { label: 'Teléfono',     input: 'tel' },
+    select:   { label: 'Lista de opciones', input: 'select' },
+  };
+
+  function guardarCamposPersonalizados_() {
+    sheetsSet('camposPersonalizados', camposPersonalizados);
+    try { localStorage.setItem(pKey('camp-campos-personalizados'), JSON.stringify(camposPersonalizados)); } catch(e){}
+  }
+
+  function addCampoPersonalizado() {
+    camposPersonalizados.push({ id: 'campo_' + Date.now(), etiqueta: '', tipo: 'texto', obligatorio: false, opciones: '' });
+    guardarCamposPersonalizados_();
+    renderCamposPersonalizadosAdmin();
+  }
+
+  function slugCampo_(texto) {
+    const base = String(texto || '').trim().toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // quitar acentos
+      .replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'campo';
+    let slug = base, n = 1;
+    while (camposPersonalizados.some(c => c.id === slug)) { slug = base + '_' + (++n); }
+    return slug;
+  }
+
+  function actualizarCampoPersonalizado(id, prop, valor) {
+    const c = camposPersonalizados.find(x => x.id === id);
+    if (!c) return;
+    c[prop] = valor;
+    // Generar el id legible solo la primera vez (mientras siga con el id por defecto "campo_...")
+    if (prop === 'etiqueta' && /^campo_\d+$/.test(c.id) && valor.trim()) {
+      c.id = slugCampo_(valor);
+    }
+    guardarCamposPersonalizados_();
+    renderCamposPersonalizadosAdmin();
+  }
+
+  function deleteCampoPersonalizado(id) {
+    if (!confirm('¿Eliminar este campo? Los datos ya guardados en fichas no se borran, pero dejarán de mostrarse.')) return;
+    camposPersonalizados = camposPersonalizados.filter(x => x.id !== id);
+    guardarCamposPersonalizados_();
+    renderCamposPersonalizadosAdmin();
+  }
+
+  function renderCamposPersonalizadosAdmin() {
+    const html = !camposPersonalizados.length
+      ? '<div style="padding:16px;text-align:center;font-size:13px;opacity:.45;">Todavía no has definido ningún campo personalizado para este proyecto.</div>'
+      : camposPersonalizados.map(c => `
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px;border:1.5px solid #d9ceb8;border-radius:12px;margin-bottom:8px;background:#faf7f2;">
+        <div style="width:100%;display:flex;justify-content:space-between;align-items:center;">
+          <input value="${escHtml(c.etiqueta)}" placeholder="Nombre del campo (ej. DNI)" style="flex:1;min-width:140px;padding:8px 10px;border-radius:8px;border:1px solid #d9ceb8;font-size:13px;"
+            onchange="actualizarCampoPersonalizado('${c.id}','etiqueta',this.value)"/>
+          <button onclick="deleteCampoPersonalizado('${c.id}')" title="Eliminar" style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;margin-left:8px;">🗑</button>
+        </div>
+        <div style="font-size:11px;font-family:monospace;color:#4A7C2F;background:#fff;padding:2px 8px;border-radius:6px;">id: ${escHtml(c.id)}</div>
+        <select style="padding:8px 10px;border-radius:8px;border:1px solid #d9ceb8;font-size:13px;" onchange="actualizarCampoPersonalizado('${c.id}','tipo',this.value)">
+          ${Object.entries(TIPOS_CAMPO_EXTRA).map(([k,v]) => `<option value="${k}" ${c.tipo===k?'selected':''}>${v.label}</option>`).join('')}
+        </select>
+        ${c.tipo === 'select' ? `<input value="${escHtml(c.opciones||'')}" placeholder="Opciones separadas por coma" style="flex:2;min-width:160px;padding:8px 10px;border-radius:8px;border:1px solid #d9ceb8;font-size:13px;" onchange="actualizarCampoPersonalizado('${c.id}','opciones',this.value)"/>` : ''}
+        <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer;">
+          <input type="checkbox" ${c.obligatorio?'checked':''} onchange="actualizarCampoPersonalizado('${c.id}','obligatorio',this.checked)"/> Obligatorio
+        </label>
+      </div>
+    `).join('');
+    ['camposPersonalizadosAdmin', 'camposPersonalizadosAdminMob'].forEach(cid => {
+      const cont = document.getElementById(cid);
+      if (cont) cont.innerHTML = html;
+    });
+  }
+
+  // Pinta los campos personalizados dentro de la ficha de un participante
+  function renderCamposExtraFicha(valores) {
+    fichaDatosExtraActual = valores || {};
+    const section = document.getElementById('fichaCamposExtraSection');
+    const cont = document.getElementById('fichaCamposExtra');
+    if (!section || !cont) return;
+    if (!camposPersonalizados.length) { section.style.display = 'none'; return; }
+    section.style.display = '';
+    cont.innerHTML = camposPersonalizados.map(c => {
+      const val = fichaDatosExtraActual[c.id] || '';
+      const meta = TIPOS_CAMPO_EXTRA[c.tipo] || TIPOS_CAMPO_EXTRA.texto;
+      let campoHtml;
+      if (meta.input === 'textarea') {
+        campoHtml = `<textarea id="fExtra-${c.id}">${escHtml(val)}</textarea>`;
+      } else if (meta.input === 'select') {
+        const opts = (c.opciones || '').split(',').map(o => o.trim()).filter(Boolean);
+        campoHtml = `<select id="fExtra-${c.id}"><option value="">— Selecciona —</option>${opts.map(o => `<option ${val===o?'selected':''}>${escHtml(o)}</option>`).join('')}</select>`;
+      } else {
+        campoHtml = `<input type="${meta.input}" id="fExtra-${c.id}" value="${escHtml(val)}"/>`;
+      }
+      return `<div class="ficha-field ficha-full">
+        <label>${escHtml(c.etiqueta || '(sin nombre)')}${c.obligatorio ? ' <span class="req">*</span>' : ''}</label>
+        ${campoHtml}
+      </div>`;
+    }).join('');
+  }
+
+  // Recoge los valores actuales de los campos personalizados de la ficha abierta
+  function leerCamposExtraFicha() {
+    const out = {};
+    camposPersonalizados.forEach(c => {
+      const el = document.getElementById('fExtra-' + c.id);
+      if (el) out[c.id] = el.value;
+    });
+    return out;
+  }
+
   async function sheetsGet(key) {
     const url = getActiveScriptUrl();
     if (!url || url === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') {
@@ -6912,6 +7055,8 @@ ${body}
         if (j.data.obs)        obsData       = j.data.obs.length        ? j.data.obs        : obsData;
         if (j.data.prog)       progData      = j.data.prog.length       ? j.data.prog       : progData;
         if (j.data.obsAlumnos) obsAlumnos    = Object.keys(j.data.obsAlumnos).length ? j.data.obsAlumnos : obsAlumnos;
+        if (j.data.camposPersonalizados) camposPersonalizados = j.data.camposPersonalizados;
+        renderCamposPersonalizadosAdmin();
         if (j.data.recomendaciones !== undefined) fichasLibres.recomendaciones = migrarFichasLibres_('recomendaciones', j.data.recomendaciones);
         if (j.data.evaluacion !== undefined)      fichasLibres.evaluacion      = migrarFichasLibres_('evaluacion', j.data.evaluacion);
         renderFichasLibres('recomendaciones');
@@ -6923,6 +7068,7 @@ ${body}
           localStorage.setItem(pKey('camp-obs'),         JSON.stringify(obsData));
           localStorage.setItem(pKey('camp-prog'),        JSON.stringify(progData));
           localStorage.setItem(pKey('camp-obs-alumnos'), JSON.stringify(obsAlumnos));
+          localStorage.setItem(pKey('camp-campos-personalizados'), JSON.stringify(camposPersonalizados));
         } catch(e){}
         showSyncIndicator('✔ Datos cargados', 'ok');
       }
@@ -6939,6 +7085,8 @@ ${body}
     try { const d = localStorage.getItem(pKey('camp-obs'));        if (d) obsData       = JSON.parse(d); } catch(e){}
     try { const d = localStorage.getItem(pKey('camp-prog'));       if (d) progData      = JSON.parse(d); } catch(e){}
     try { const d = localStorage.getItem(pKey('camp-obs-alumnos'));if (d) obsAlumnos    = JSON.parse(d); } catch(e){}
+    try { const d = localStorage.getItem(pKey('camp-campos-personalizados')); if (d) camposPersonalizados = JSON.parse(d); } catch(e){}
+    renderCamposPersonalizadosAdmin();
     try { const d = localStorage.getItem(pKey('camp-recomendaciones')); if (d) fichasLibres.recomendaciones = migrarFichasLibres_('recomendaciones', JSON.parse(d)); } catch(e){}
     try { const d = localStorage.getItem(pKey('camp-evaluacion'));      if (d) fichasLibres.evaluacion      = migrarFichasLibres_('evaluacion', JSON.parse(d)); } catch(e){}
     renderFichasLibres('recomendaciones');
@@ -9072,6 +9220,11 @@ ${body}
           <textarea id="fObservaciones" placeholder="Cualquier información relevante para el equipo de monitores…"></textarea>
         </div>
       </div>
+
+      <div id="fichaCamposExtraSection" style="display:none;">
+        <div class="ficha-section-title">🗂 Datos adicionales</div>
+        <div class="ficha-grid" id="fichaCamposExtra"></div>
+      </div>
     </div>
     <div class="ficha-footer">
       <span class="ficha-saved-msg" id="fichaSavedMsg">✔ Datos guardados</span>
@@ -9252,6 +9405,11 @@ ${body}
             <div class="mob-icon">📊</div>
             <div class="mob-label">Evaluación</div>
             <div class="mob-sub">Resultados</div>
+          </div>
+          <div class="mob-card" onclick="mobGo('camposextra')">
+            <div class="mob-icon">🗂</div>
+            <div class="mob-label">Campos extra</div>
+            <div class="mob-sub">Ficha personalizada</div>
           </div>
           <div class="mob-card" onclick="toggleDarkMode()" id="mobDarkBtn">
             <div class="mob-icon" id="mobDarkIcon">🌙</div>
@@ -9536,6 +9694,18 @@ ${body}
     <div style="padding:16px;">
       <button class="obs-save-btn" style="width:100%;margin-bottom:14px;" onclick="addFichaLibre('evaluacion')">➕ Nueva evaluación</button>
       <div class="obs-grid" id="evaluacionGridMob"></div>
+    </div>
+  </div>
+
+  <!-- PANTALLA CAMPOS PERSONALIZADOS -->
+  <div class="mob-screen" id="mob-camposextra">
+    <div class="mob-topbar">
+      <div class="mob-back" onclick="mobBack()">←</div>
+      <div class="mob-topbar-title">🗂 Campos personalizados</div>
+    </div>
+    <div style="padding:16px;">
+      <button class="obs-save-btn" style="width:100%;margin-bottom:14px;" onclick="addCampoPersonalizado()">➕ Añadir campo</button>
+      <div id="camposPersonalizadosAdminMob"></div>
     </div>
   </div>
 
