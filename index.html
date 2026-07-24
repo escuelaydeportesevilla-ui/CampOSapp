@@ -3638,17 +3638,6 @@
       const total = getAllEditParticipants().filter(p => p.activo !== 'pendiente' && p.activo !== 'pending').length;
       const mobSub = document.getElementById('mobSubTotal');
       if (mobSub) mobSub.textContent = total + ' inscritos';
-      const heroNum = document.querySelector('.hero-stat .num');
-      if (heroNum) {
-        const activeCount = getAllEditParticipants().length; // already filtered
-        const allCount = getAllEditParticipants(true).length;
-        heroNum.textContent = activeCount;
-        // Add inactive note if any
-        const heroLbl = document.querySelector('.hero-stat .lbl');
-        if (heroLbl && allCount > activeCount) {
-          heroLbl.textContent = 'Participantes (' + (allCount - activeCount) + ' inactivos)';
-        }
-      }
       const dnavPart = document.getElementById('dnav-sub-participantes');
       if (dnavPart) dnavPart.textContent = total + ' inscritos';
       const dnavMon = document.getElementById('dnav-sub-monitores');
@@ -3826,7 +3815,9 @@
             style="padding:4px 8px;border-radius:6px;border:none;background:#e8f4fd;color:#1a6fa0;font-size:13px;cursor:pointer;margin-right:4px;">🩺</button>
           <button onclick="saveAllAlumnos()" title="Guardar cambios"
             style="padding:4px 8px;border-radius:6px;border:none;background:#f0f7eb;color:#2D5016;font-size:13px;cursor:pointer;margin-right:4px;">💾</button>
-          <button class="tbl-del-btn" onclick="deleteAlumno(${p.n},'${p.gid}')" title="Eliminar">🗑</button>
+          <button class="tbl-del-btn" onclick="deleteAlumno(${p.n},'${p.gid}')" title="Baja (desactivar, no borra del Sheet)">🗑</button>
+          <button onclick="deleteAlumnoDefinitivo(${p.n},'${p.gid}')" title="Eliminar DEFINITIVAMENTE (borra la fila del Sheet, no se puede deshacer)"
+            style="padding:4px 6px;border-radius:6px;border:none;background:#fdecea;color:#c0392b;font-size:12px;cursor:pointer;margin-left:2px;">💥</button>
         </td>
       `;
 
@@ -3882,6 +3873,20 @@
     logCambio('alumno', 'Alumno eliminado (n=' + n + ')', '');
   }
 
+  // Borrado DEFINITIVO: además de quitarlo de la app, elimina la fila real en el Sheet (Participantes y Fichas).
+  // Pensado para limpiar registros de prueba o duplicados. No se puede deshacer.
+  function deleteAlumnoDefinitivo(n, gid) {
+    if (!confirm('⚠️ Esto BORRARÁ PARA SIEMPRE al alumno/a y su ficha, incluida la fila en el Google Sheet.\n\nNo hay forma de deshacerlo. ¿Continuar?')) return;
+    if (!confirm('Última confirmación: se eliminará de forma permanente. ¿Seguro?')) return;
+    gruposEdit[gid].participantes = gruposEdit[gid].participantes.filter(x => x.n !== n);
+    grupos[gid].participantes = grupos[gid].participantes.filter(x => x.n !== n);
+    deleteParticipanteHardSheets(n);
+    renderEditTable();
+    renderMobEdicion();
+    updateHeroStats();
+    logCambio('alumno', 'Alumno eliminado DEFINITIVAMENTE (n=' + n + ')', '');
+  }
+
   function addAlumno() {
     const gid  = document.getElementById('filtroGrupo')?.value || 'g6';
     const maxN = Math.max(...getAllEditParticipants(true).map(p => p.n), 200) + 1;
@@ -3910,8 +3915,8 @@
       return true;
     });
 
-    const totalActivos   = lista.filter(p => p.activo !== false).length;
-    const totalInactivos = lista.filter(p => p.activo === false).length;
+    const totalActivos   = lista.filter(p => { const ep=p.activo==='pendiente'||p.activo==='pending'; const ei=p.activo===false||p.activo==='false'; return !ep&&!ei; }).length;
+    const totalInactivos = lista.filter(p => p.activo === false || p.activo === 'false').length;
 
     const filas = lista.map((p, i) => {
       const g = gruposEdit[p.gid] || grupos[p.gid];
@@ -6304,6 +6309,16 @@ ${body}
     } catch(e) { console.error('Error eliminando participante:', e); return false; }
   }
 
+  // Borrado DEFINITIVO: quita la fila real del Sheet (Participantes y Fichas). No se puede deshacer.
+  async function deleteParticipanteHardSheets(n) {
+    if (!getActiveScriptUrl() || getActiveScriptUrl() === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') return true;
+    try {
+      const r = await fetch(getActiveScriptUrl() + '?action=deleteParticipanteHard&pwd=' + PASSWORD + '&n=' + n);
+      const j = await r.json();
+      return j.ok;
+    } catch(e) { console.error('Error eliminando participante definitivamente:', e); return false; }
+  }
+
   // Sincroniza toda la lista de golpe (útil al guardar cambios masivos)
   async function syncAllParticipantesSheets() {
     const _url = getActiveScriptUrl(); if (!_url || _url === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') return;
@@ -7254,18 +7269,8 @@ ${body}
       if (activeId === 'monitores')     renderMedResumen();
 
       // 4. Actualizar contadores
+      updateHeroStats();
       const total = getAllEditParticipants().filter(p => p.activo !== 'pendiente' && p.activo !== 'pending').length;
-      const heroNum = document.querySelector('.hero-stat .num');
-      if (heroNum) {
-        const activeCount = getAllEditParticipants().length; // already filtered
-        const allCount = getAllEditParticipants(true).length;
-        heroNum.textContent = activeCount;
-        // Add inactive note if any
-        const heroLbl = document.querySelector('.hero-stat .lbl');
-        if (heroLbl && allCount > activeCount) {
-          heroLbl.textContent = 'Participantes (' + (allCount - activeCount) + ' inactivos)';
-        }
-      }
       const dnavPart = document.getElementById('dnav-sub-participantes');
       if (dnavPart) dnavPart.textContent = total + ' inscritos';
       const dnavMon = document.getElementById('dnav-sub-monitores');

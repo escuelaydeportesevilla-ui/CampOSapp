@@ -56,6 +56,7 @@ function doGet(e) {
       case 'getParticipantes':  return json_({ ok: true, data: getParticipantes_() });
       case 'saveParticipante':  return json_({ ok: saveParticipante_(p) });
       case 'deleteParticipante':return json_({ ok: deleteParticipante_(p.n) });
+      case 'deleteParticipanteHard': return json_({ ok: deleteParticipanteDefinitivo_(p.n) });
       default: return json_({ ok: false, error: 'accion desconocida' });
     }
   } catch (err) {
@@ -212,6 +213,21 @@ function deleteParticipante_(n) {
   const fila = buscarFila_(sh, idx.n, String(n));
   if (!fila) return true; // no existía, nada que borrar
   sh.getRange(fila, idx.activo + 1).setValue(false);
+  return true;
+}
+
+// Borrado DEFINITIVO: quita la fila entera de Participantes y de Fichas. No se puede deshacer.
+function deleteParticipanteDefinitivo_(n) {
+  const shP = hoja_(SHEET_PARTICIPANTES);
+  const idxP = indiceColumnas_(shP);
+  const filaP = buscarFila_(shP, idxP.n, String(n));
+  if (filaP) shP.deleteRow(filaP);
+
+  const shF = hoja_(SHEET_FICHAS);
+  const idxF = indiceColumnas_(shF);
+  const filaF = buscarFila_(shF, idxF.n, String(n));
+  if (filaF) shF.deleteRow(filaF);
+
   return true;
 }
 
