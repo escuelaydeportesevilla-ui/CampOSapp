@@ -336,7 +336,7 @@
       codigoAN:     '',
       alergias:     '',
       medicacion:   '',
-      observaciones: (_obs ? _obs + '\n\n' : '') + 'RGPD: Aceptado ' + new Date().toLocaleString('es-ES'),
+      observaciones: '', // se deja libre para notas del propio equipo, no se mezcla con datos del inscrito
       // IDs iguales a los que verás en CampOS → Otros → Campos extra, tras crear estos mismos campos para este proyecto
       datosExtra: {
         dni_nie:            _dni,
@@ -346,6 +346,8 @@
         nivel_academico:    _nivel,
         situacion_laboral:  _situ,
         rama_profesional_educativa: _rama,
+        observaciones_inscrito: _obs,
+        rgpd_aceptado: new Date().toLocaleString('es-ES'),
       },
     };
 
