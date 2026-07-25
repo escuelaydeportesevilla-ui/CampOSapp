@@ -46,68 +46,109 @@
       radial-gradient(ellipse at 20% 50%, rgba(74,124,47,0.4) 0%, transparent 60%),
       radial-gradient(ellipse at 80% 20%, rgba(127,176,105,0.2) 0%, transparent 50%);
     color: var(--blanco);
-    padding: 56px 40px 48px;
+    padding: 18px 28px 16px;
     position: relative;
     overflow: hidden;
     isolation: isolate;
   }
 
-  .hero::before {
-    content: '🌲';
-    position: absolute;
-    font-size: 220px;
-    right: -20px;
-    top: -20px;
-    opacity: 0.08;
-    line-height: 1;
-    pointer-events: none;
+  .hero-row1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
   }
+
+  .hero-title-group {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+    cursor: pointer;
+  }
+
+  .hero-title-group:hover .hero-switch-hint { opacity: 1; }
 
   .hero-badge {
     display: inline-block;
     background: var(--verde-claro);
     color: var(--verde-bosque);
     font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 2px;
+    font-size: 10px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
-    padding: 5px 14px;
+    padding: 4px 10px;
     border-radius: 20px;
-    margin-bottom: 18px;
+    flex-shrink: 0;
   }
 
   .hero h1 {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-size: 1.5rem;
     font-weight: 900;
     line-height: 1.1;
-    margin-bottom: 10px;
+    margin: 0;
   }
 
   .hero h1 span { color: var(--verde-claro); }
 
   .hero-sub {
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 300;
-    opacity: 0.75;
-    margin-bottom: 32px;
-    letter-spacing: 0.3px;
+    opacity: 0.7;
+    letter-spacing: 0.2px;
+  }
+
+  .hero-switch-hint {
+    font-size: 13px;
+    opacity: 0.5;
+    transition: opacity .15s;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .hero-actions button {
+    background: rgba(255,255,255,.15);
+    border: none;
+    color: white;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
   }
 
   .hero-stats {
     display: flex;
-    gap: 32px;
+    gap: 8px;
     flex-wrap: wrap;
+    margin-top: 12px;
   }
 
   .hero-stat {
     display: flex;
-    flex-direction: column;
+    align-items: baseline;
+    gap: 6px;
+    background: rgba(255,255,255,.1);
+    border: none;
+    border-radius: 20px;
+    padding: 5px 12px 5px 10px;
+    cursor: pointer;
+    transition: background .15s;
+    color: inherit;
+    font-family: inherit;
   }
+
+  .hero-stat:hover { background: rgba(255,255,255,.2); }
 
   .hero-stat .num {
     font-family: 'Playfair Display', serif;
-    font-size: 2.6rem;
+    font-size: 1.05rem;
     font-weight: 900;
     color: var(--verde-claro);
     line-height: 1;
@@ -116,10 +157,9 @@
   .hero-stat .lbl {
     font-size: 11px;
     font-weight: 500;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    opacity: 0.65;
-    margin-top: 4px;
+    letter-spacing: .3px;
+    opacity: 0.8;
+
   }
 
   /* ── MAIN GRID ── */
@@ -752,10 +792,10 @@
   }
 
   @media (max-width: 600px) {
-    .hero { padding: 40px 20px 36px; }
+    .hero { padding: 16px 18px 14px; }
     .main { padding: 28px 16px 48px; }
     .eval-metricas { grid-template-columns: 1fr 1fr; }
-    .hero-stats { gap: 20px; }
+    .hero-stats { gap: 6px; }
   }
 
   /* ── BÚSQUEDA GLOBAL ── */
@@ -1118,9 +1158,8 @@
     /* Ocultar interfaz desktop, mostrar móvil */
     .main, .hero-stats { display: none !important; }
     footer { display: block !important; margin-top: 24px; }
-    .hero { padding: 28px 18px 24px; }
-    .hero h1 { font-size: 1.6rem; }
-    .hero-sub { margin-bottom: 0; }
+    .hero { padding: 16px 18px 14px; }
+    .hero h1 { font-size: 1.3rem; }
     .mobile-view { display: block; }
 
     /* Pantalla principal móvil */
@@ -1792,6 +1831,9 @@
   body.dark-mode select:focus,
   body.dark-mode textarea:focus { border-color: #5BA85C !important; }
   body.dark-mode .login-box { background: #1E2820; }
+  body.dark-mode .campo-personalizado-card { background: #1E2820 !important; border-color: #2A3830 !important; }
+  body.dark-mode .ficha-libre-texto { color: #C8D6C8 !important; }
+  body.dark-mode #pendientesBanner { background: #4A3410 !important; color: #F5D89A !important; border-color: #6B4C18 !important; }
   body.dark-mode .ficha-box,
   body.dark-mode .modal-box,
   body.dark-mode .export-modal { background: #1E2820; }
@@ -1970,42 +2012,40 @@
 <div id="statusBar" style="display:none;padding:8px 20px;font-size:12px;font-weight:600;color:white;text-align:center;position:sticky;top:0;z-index:2000;transition:background .3s;"></div>
 <!-- HERO -->
 <div class="hero">
-  <svg width="100%" height="100%" viewBox="0 0 640 420" preserveAspectRatio="none" style="position:absolute;inset:0;z-index:-1;opacity:0.16;pointer-events:none;">
-    <path d="M-20,30 Q160,75 340,30 T700,30" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,65 Q160,110 340,65 T700,65" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,100 Q160,145 340,100 T700,100" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,135 Q160,180 340,135 T700,135" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,170 Q160,215 340,170 T700,170" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,205 Q160,250 340,205 T700,205" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,240 Q160,285 340,240 T700,240" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,275 Q160,320 340,275 T700,275" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,310 Q160,355 340,310 T700,310" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,345 Q160,390 340,345 T700,345" stroke="white" stroke-width="1" fill="none"/>
-    <path d="M-20,380 Q160,425 340,380 T700,380" stroke="white" stroke-width="1" fill="none"/>
-  </svg>
-  <div class="hero-badge" id="heroBadge">🏕 CampOS</div>
-  <div style="position:absolute;top:16px;right:16px;display:flex;gap:8px;z-index:5;">
-    <button onclick="actualizarApp()" title="Recargar datos"
-      style="background:rgba(255,255,255,.15);border:none;color:white;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px;">🔄</button>
-    <button onclick="salirApp()" title="Salir del proyecto"
-      style="background:rgba(255,255,255,.15);border:none;color:white;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px;">🚪</button>
+  <div class="hero-row1">
+    <div class="hero-title-group" onclick="salirApp()" title="Cambiar de proyecto">
+      <span class="hero-badge" id="heroBadge">🏕 CampOS</span>
+      <h1 id="heroTitle">Campamento <span>Demo</span></h1>
+      <span class="hero-sub" id="heroSubP">Gestión del campamento</span>
+      <span class="hero-switch-hint">⇄</span>
+    </div>
+    <div class="hero-actions">
+      <span id="ultimaSincTexto" title="Última vez que se cargaron datos del Sheet" style="font-size:11px;opacity:.6;align-self:center;margin-right:2px;"></span>
+      <button onclick="actualizarApp()" title="Recargar datos">🔄</button>
+      <button onclick="salirApp()" title="Salir del proyecto">🚪</button>
+    </div>
   </div>
-  <h1 id="heroTitle">Campamento <span>Demo</span></h1>
-  <p class="hero-sub" id="heroSubP">Gestión del campamento</p>
   <div class="hero-stats">
-    <div class="hero-stat">
+    <button class="hero-stat" onclick="filtrarPorEstado('activo')" title="Ver solo activos">
       <span class="num" id="statActivos">—</span>
       <span class="lbl">✅ Activos</span>
-    </div>
-    <div class="hero-stat">
+    </button>
+    <button class="hero-stat" onclick="filtrarPorEstado('pendiente')" title="Ver solo pendientes de revisar">
       <span class="num" id="statPendientes">—</span>
       <span class="lbl">⏳ Pendientes</span>
-    </div>
-    <div class="hero-stat">
+    </button>
+    <button class="hero-stat" onclick="filtrarPorEstado('inactivo')" title="Ver solo no activos">
       <span class="num" id="statInactivos">—</span>
       <span class="lbl">⛔ No activos</span>
-    </div>
+    </button>
   </div>
+</div>
+
+<div id="pendientesBanner" onclick="filtrarPorEstado('pendiente')"
+  style="display:none;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+    background:#FDF1DD;color:#7A4E0A;padding:10px 20px;font-size:13px;font-weight:600;
+    border-bottom:1px solid #F0D9A8;">
+  ⏳ <span id="pendientesBannerCount">0</span> inscripción<span id="pendientesBannerPlural"></span> esperando revisión →
 </div>
 
 <!-- MAIN -->
@@ -3293,24 +3333,74 @@
   let _editingProjectId = null;
 
   // Pide el PIN del proyecto (si tiene) y devuelve true/false. Los proyectos base o sin PIN pasan directo.
-  function verificarPin_(project) {
+  // Modal de confirmación propio (sustituye a confirm() nativo)
+  function mostrarConfirm(mensaje, opts = {}) {
+    return new Promise(resolve => {
+      const overlay = document.getElementById('customConfirmOverlay');
+      const okBtn = document.getElementById('customConfirmOkBtn');
+      const cancelBtn = document.getElementById('customConfirmCancelBtn');
+      document.getElementById('customConfirmMsg').textContent = mensaje;
+      okBtn.textContent = opts.okText || 'Confirmar';
+      okBtn.style.background = opts.danger ? '#c0392b' : 'var(--verde-bosque)';
+      overlay.classList.add('visible');
+      function limpiar(resultado) {
+        overlay.classList.remove('visible');
+        okBtn.removeEventListener('click', onOk);
+        cancelBtn.removeEventListener('click', onCancel);
+        resolve(resultado);
+      }
+      function onOk() { limpiar(true); }
+      function onCancel() { limpiar(false); }
+      okBtn.addEventListener('click', onOk);
+      cancelBtn.addEventListener('click', onCancel);
+    });
+  }
+
+  // Modal de PIN propio (sustituye a prompt() nativo)
+  function mostrarPin(mensaje) {
+    return new Promise(resolve => {
+      const overlay = document.getElementById('customPinOverlay');
+      const input = document.getElementById('customPinInput');
+      const okBtn = document.getElementById('customPinOkBtn');
+      const cancelBtn = document.getElementById('customPinCancelBtn');
+      document.getElementById('customPinMsg').textContent = mensaje;
+      document.getElementById('customPinError').textContent = '';
+      input.value = '';
+      overlay.classList.add('visible');
+      setTimeout(() => input.focus(), 50);
+      function limpiar(resultado) {
+        overlay.classList.remove('visible');
+        okBtn.removeEventListener('click', onOk);
+        cancelBtn.removeEventListener('click', onCancel);
+        input.removeEventListener('keydown', onKey);
+        resolve(resultado);
+      }
+      function onOk() { limpiar(input.value); }
+      function onCancel() { limpiar(null); }
+      function onKey(e) { if (e.key === 'Enter') onOk(); }
+      okBtn.addEventListener('click', onOk);
+      cancelBtn.addEventListener('click', onCancel);
+      input.addEventListener('keydown', onKey);
+    });
+  }
+
+  async function verificarPin_(project) {
     if (project.base || !project.pin) return true;
-    let intento = null;
     for (let i = 0; i < 3; i++) {
-      intento = prompt((i === 0
+      const intento = await mostrarPin(i === 0
         ? '🔒 PIN de acceso a "' + project.nombre + '":'
-        : '❌ PIN incorrecto. Inténtalo de nuevo (' + (3 - i) + ' intentos):'));
+        : '❌ PIN incorrecto. Inténtalo de nuevo (' + (3 - i) + ' intentos):');
       if (intento === null) return false;            // canceló
       if (intento.trim() === String(project.pin)) return true;
     }
-    alert('PIN incorrecto. Acceso denegado a este proyecto.');
+    await mostrarConfirm('PIN incorrecto. Acceso denegado a este proyecto.', { okText: 'Entendido' });
     return false;
   }
 
-  function editProject(id) {
+  async function editProject(id) {
     const p = getProjects().find(x => x.id === id);
     if (!p) return;
-    if (!verificarPin_(p)) return;
+    if (!(await verificarPin_(p))) return;
     _editingProjectId = id;
     document.getElementById('newProjForm').style.display = 'block';
     document.getElementById('npNombre').value    = p.nombre || '';
@@ -3324,18 +3414,18 @@
     document.getElementById('newProjForm').scrollIntoView({ behavior:'smooth', block:'center' });
   }
 
-  function deleteProject(id) {
+  async function deleteProject(id) {
     const p = getProjects().find(x => x.id === id);
     if (!p) return;
-    if (!verificarPin_(p)) return;
-    if (!confirm('¿Eliminar este proyecto? Los datos del Google Sheet no se borran.')) return;
+    if (!(await verificarPin_(p))) return;
+    if (!(await mostrarConfirm('¿Eliminar este proyecto? Los datos del Google Sheet no se borran.', { danger:true, okText:'Eliminar' }))) return;
     const projects = getProjects().filter(x => x.id !== id);
     saveProjects(projects);
     renderProjectList(getProjects());
   }
 
-  function selectProject(project) {
-    if (!verificarPin_(project)) return;
+  async function selectProject(project) {
+    if (!(await verificarPin_(project))) return;
     currentProject = project;
     window._activeScriptUrl = (project.scriptUrl && project.scriptUrl.startsWith('http'))
       ? project.scriptUrl : SCRIPT_URL;
@@ -3591,6 +3681,37 @@
     conclusion.style.display = notas ? '' : 'none';
   }
 
+  // Última sincronización con Google Sheets
+  let ultimaSincronizacion = null;
+
+  function marcarSincronizado() {
+    ultimaSincronizacion = Date.now();
+    renderUltimaSincronizacion();
+  }
+
+  function renderUltimaSincronizacion() {
+    const el = document.getElementById('ultimaSincTexto');
+    if (!el) return;
+    if (!ultimaSincronizacion) { el.textContent = ''; return; }
+    const segundos = Math.floor((Date.now() - ultimaSincronizacion) / 1000);
+    let texto;
+    if (segundos < 10) texto = 'sincronizado ahora';
+    else if (segundos < 60) texto = 'hace ' + segundos + ' s';
+    else if (segundos < 3600) texto = 'hace ' + Math.floor(segundos / 60) + ' min';
+    else if (segundos < 86400) texto = 'hace ' + Math.floor(segundos / 3600) + ' h';
+    else texto = 'hace ' + Math.floor(segundos / 86400) + ' d';
+    el.textContent = texto;
+  }
+
+  setInterval(renderUltimaSincronizacion, 30000);
+
+  // Pulsar un chip de estadística del hero lleva directo a Editar alumnos ya filtrado
+  function filtrarPorEstado(estado) {
+    showTab('edicion');
+    const sel = document.getElementById('filtroActivo');
+    if (sel) { sel.value = estado; renderEditTable(); }
+  }
+
   function updateHeroStats() {
     renderCursosGrid();
     const todos      = getAllEditParticipants(true);
@@ -3608,6 +3729,17 @@
     // Subtotal card Participantes móvil
     const mobSub=document.getElementById('mobSubTotal');
     if(mobSub) mobSub.textContent=activos+' activos';
+    // Aviso de inscripciones pendientes de revisar
+    const banner = document.getElementById('pendientesBanner');
+    if (banner) {
+      if (pendientes > 0) {
+        document.getElementById('pendientesBannerCount').textContent = pendientes;
+        document.getElementById('pendientesBannerPlural').textContent = pendientes === 1 ? '' : 'es';
+        banner.style.display = 'flex';
+      } else {
+        banner.style.display = 'none';
+      }
+    }
   }
 
 
@@ -3629,6 +3761,7 @@
       await loadAllFromSheets();
       await loadParticipantesFromSheets();
       gruposEdit = JSON.parse(JSON.stringify(grupos));
+      marcarSincronizado();
       updateHeroStats();
       renderEditTable();
       renderMonitorGrid();
@@ -3851,8 +3984,8 @@
   }
 
 
-  function deleteAlumnoFromBuscar(n, gid, el) {
-    if (!confirm('¿Eliminar este alumno/a del listado?')) return;
+  async function deleteAlumnoFromBuscar(n, gid, el) {
+    if (!(await mostrarConfirm('¿Eliminar este alumno/a del listado?', { danger:true, okText:'Eliminar' }))) return;
     gruposEdit[gid].participantes = gruposEdit[gid].participantes.filter(x => x.n !== n);
     grupos[gid].participantes = grupos[gid].participantes.filter(x => x.n !== n);
     el.style.opacity = '0';
@@ -3862,8 +3995,8 @@
     updateHeroStats();
   }
 
-  function deleteAlumno(n, gid) {
-    if (!confirm('¿Eliminar este alumno/a del listado?')) return;
+  async function deleteAlumno(n, gid) {
+    if (!(await mostrarConfirm('¿Eliminar este alumno/a del listado?', { danger:true, okText:'Eliminar' }))) return;
     gruposEdit[gid].participantes = gruposEdit[gid].participantes.filter(x => x.n !== n);
     grupos[gid].participantes = grupos[gid].participantes.filter(x => x.n !== n);
     deleteParticipanteSheets(n);
@@ -3875,9 +4008,9 @@
 
   // Borrado DEFINITIVO: además de quitarlo de la app, elimina la fila real en el Sheet (Participantes y Fichas).
   // Pensado para limpiar registros de prueba o duplicados. No se puede deshacer.
-  function deleteAlumnoDefinitivo(n, gid) {
-    if (!confirm('⚠️ Esto BORRARÁ PARA SIEMPRE al alumno/a y su ficha, incluida la fila en el Google Sheet.\n\nNo hay forma de deshacerlo. ¿Continuar?')) return;
-    if (!confirm('Última confirmación: se eliminará de forma permanente. ¿Seguro?')) return;
+  async function deleteAlumnoDefinitivo(n, gid) {
+    if (!(await mostrarConfirm('⚠️ Esto BORRARÁ PARA SIEMPRE al alumno/a y su ficha, incluida la fila en el Google Sheet.\n\nNo hay forma de deshacerlo. ¿Continuar?', { danger:true, okText:'Continuar' }))) return;
+    if (!(await mostrarConfirm('Última confirmación: se eliminará de forma permanente. ¿Seguro?', { danger:true, okText:'Sí, eliminar' }))) return;
     gruposEdit[gid].participantes = gruposEdit[gid].participantes.filter(x => x.n !== n);
     grupos[gid].participantes = grupos[gid].participantes.filter(x => x.n !== n);
     deleteParticipanteHardSheets(n);
@@ -4168,8 +4301,8 @@
     }, 100);
   }
 
-  function deleteMonitor(i) {
-    if (!confirm('¿Eliminar este monitor/a?')) return;
+  async function deleteMonitor(i) {
+    if (!(await mostrarConfirm('¿Eliminar este monitor/a?', { danger:true, okText:'Eliminar' }))) return;
     monitoresData.splice(i, 1);
     renderMonitorGrid();
   }
@@ -4418,8 +4551,8 @@
     }, 100);
   }
 
-  function deleteObs(i) {
-    if (!confirm('¿Eliminar esta nota?')) return;
+  async function deleteObs(i) {
+    if (!(await mostrarConfirm('¿Eliminar esta nota?', { danger:true, okText:'Eliminar' }))) return;
     obsData.splice(i, 1);
     saveObsStorage();
     renderObsGrid();
@@ -4582,8 +4715,8 @@
   }
 
 
-  function mobDeleteAlumno(n, gid, el) {
-    if (!confirm('¿Eliminar este alumno/a?')) return;
+  async function mobDeleteAlumno(n, gid, el) {
+    if (!(await mostrarConfirm('¿Eliminar este alumno/a?', { danger:true, okText:'Eliminar' }))) return;
     gruposEdit[gid].participantes = gruposEdit[gid].participantes.filter(x => x.n !== n);
     grupos[gid].participantes = grupos[gid].participantes.filter(x => x.n !== n);
     el.style.opacity = '0'; el.style.transition = 'opacity .3s';
@@ -4723,7 +4856,7 @@
           <div style="display:flex;gap:8px;">
             <button onclick="saveMonitores();showSyncIndicator('✔ Monitor guardado','ok');"
               style="flex:1;padding:10px;border-radius:10px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">💾 Guardar</button>
-            <button onclick="if(confirm('¿Eliminar este monitor?')){deleteMonitor(${i});renderMobMonitores();}"
+            <button onclick="(async()=>{ await deleteMonitor(${i}); renderMobMonitores(); })()"
               style="padding:10px 14px;border-radius:10px;border:1.5px solid #fdecea;background:white;font-size:14px;cursor:pointer;">🗑</button>
           </div>
         </div>`;
@@ -5307,8 +5440,8 @@ ${body}
   }
 
 
-  function resetTodosGrupos() {
-    if (!confirm('¿Eliminar TODOS los grupos campamento y empezar de cero? Esta acción no se puede deshacer.')) return;
+  async function resetTodosGrupos() {
+    if (!(await mostrarConfirm('¿Eliminar TODOS los grupos campamento y empezar de cero? Esta acción no se puede deshacer.', { danger:true, okText:'Eliminar todos' }))) return;
     gruposCamp = [];
     saveGruposCampStorage();
     renderBanco();
@@ -5324,8 +5457,8 @@ ${body}
     renderGruposCamp();
   }
 
-  function vaciarGrupoCamp(id) {
-    if (!confirm('¿Quitar todos los alumnos de este grupo? Volverán al banco sin asignar.')) return;
+  async function vaciarGrupoCamp(id) {
+    if (!(await mostrarConfirm('¿Quitar todos los alumnos de este grupo? Volverán al banco sin asignar.', { danger:true, okText:'Quitar todos' }))) return;
     const g = gruposCamp.find(x => x.id === id);
     if (g) { g.alumnos = []; saveGruposCampStorage(); }
     renderBanco();
@@ -5334,8 +5467,8 @@ ${body}
     if (document.getElementById('tab-edicion').classList.contains('active')) renderEditTable();
   }
 
-  function deleteGrupoCamp(id) {
-    if (!confirm('¿Eliminar este grupo? Los alumnos volverán al banco.')) return;
+  async function deleteGrupoCamp(id) {
+    if (!(await mostrarConfirm('¿Eliminar este grupo? Los alumnos volverán al banco.', { danger:true, okText:'Eliminar' }))) return;
     gruposCamp = gruposCamp.filter(g => g.id !== id);
     saveGruposCampStorage();
     renderBanco();
@@ -5653,9 +5786,10 @@ ${body}
     w.document.write('<iframe src="' + g.pdfs[pi].data + '" style="width:100%;height:100vh;border:none;"></iframe>');
   }
 
-  function deletePdf(gid, pi) {
+  async function deletePdf(gid, pi) {
     const g = gruposCamp.find(g => g.id === gid);
-    if (!g || !confirm('¿Eliminar este archivo?')) return;
+    if (!g) return;
+    if (!(await mostrarConfirm('¿Eliminar este archivo?', { danger:true, okText:'Eliminar' }))) return;
     g.pdfs.splice(pi, 1);
     saveGruposCampStorage();
     renderGruposCamp();
@@ -6210,8 +6344,9 @@ ${body}
     logCambio('programacion', (editingProgId ? 'Actividad editada' : 'Actividad creada') + ': ' + (act.nombre || act.tipo), act.horaInicio ? act.horaInicio + ' – ' + act.horaFin : '');
   }
 
-  function deleteProgActividad() {
-    if (!editingProgId || !confirm('¿Eliminar esta actividad?')) return;
+  async function deleteProgActividad() {
+    if (!editingProgId) return;
+    if (!(await mostrarConfirm('¿Eliminar esta actividad?', { danger:true, okText:'Eliminar' }))) return;
     const delAct = progData.find(a => a.id === editingProgId);
     progData = progData.filter(a => a.id !== editingProgId);
     saveProgData();
@@ -6737,12 +6872,12 @@ ${body}
     renderBanco();
   }
 
-  function addTodosActivosGrupo(gcampId) {
+  async function addTodosActivosGrupo(gcampId) {
     const g = gruposCamp.find(x => x.id === gcampId);
     if (!g) return;
-    if (!confirm('¿Añadir todos los alumnos activos a este grupo?')) return;
+    if (!(await mostrarConfirm('¿Añadir todos los alumnos activos a este grupo?', { okText:'Añadir' }))) return;
     if (!g.alumnos) g.alumnos = [];
-    const activos = getAllEditParticipants().filter(p => p.activo !== false);
+    const activos = getAllEditParticipants().filter(p => { const ep=p.activo==='pendiente'||p.activo==='pending'; const ei=p.activo===false||p.activo==='false'; return !ep&&!ei; });
     activos.forEach(p => { if (!g.alumnos.includes(p.n)) g.alumnos.push(p.n); });
     saveGruposCampStorage();
     renderGruposCamp();
@@ -6874,7 +7009,7 @@ ${body}
               <button onclick="deleteFichaLibre('${tipo}',${f.id})" title="Eliminar" style="width:24px;height:24px;border-radius:6px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;font-size:12px;flex-shrink:0">🗑</button>
             </div>
             <div class="obs-meta">${fecha}</div>
-            <div style="font-size:14px;line-height:1.65;color:#333;">${formatearTextoFicha_(f.texto)}</div>
+            <div class="ficha-libre-texto" style="font-size:14px;line-height:1.65;color:#333;">${formatearTextoFicha_(f.texto)}</div>
           `;
         }
         grid.appendChild(div);
@@ -6919,8 +7054,8 @@ ${body}
     }, 100);
   }
 
-  function deleteFichaLibre(tipo, id) {
-    if (!confirm('¿Eliminar esta ficha? No se puede deshacer.')) return;
+  async function deleteFichaLibre(tipo, id) {
+    if (!(await mostrarConfirm('¿Eliminar esta ficha? No se puede deshacer.', { danger:true, okText:'Eliminar' }))) return;
     fichasLibres[tipo] = fichasLibres[tipo].filter(f => f.id !== id);
     fichasLibresEnEdicion[tipo].delete(id);
     sheetsSet(tipo, fichasLibres[tipo]);
@@ -7014,8 +7149,8 @@ ${body}
     renderCamposPersonalizadosAdmin();
   }
 
-  function deleteCampoPersonalizado(id) {
-    if (!confirm('¿Eliminar este campo? Los datos ya guardados en fichas no se borran, pero dejarán de mostrarse.')) return;
+  async function deleteCampoPersonalizado(id) {
+    if (!(await mostrarConfirm('¿Eliminar este campo? Los datos ya guardados en fichas no se borran, pero dejarán de mostrarse.', { danger:true, okText:'Eliminar' }))) return;
     camposPersonalizados = camposPersonalizados.filter(x => x.id !== id);
     guardarCamposPersonalizados_();
     renderCamposPersonalizadosAdmin();
@@ -7025,7 +7160,7 @@ ${body}
     const html = !camposPersonalizados.length
       ? '<div style="padding:16px;text-align:center;font-size:13px;opacity:.45;">Todavía no has definido ningún campo personalizado para este proyecto.</div>'
       : camposPersonalizados.map(c => `
-      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px;border:1.5px solid #d9ceb8;border-radius:12px;margin-bottom:8px;background:#faf7f2;">
+      <div class="campo-personalizado-card" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px;border:1.5px solid #d9ceb8;border-radius:12px;margin-bottom:8px;background:#faf7f2;">
         <div style="width:100%;display:flex;justify-content:space-between;align-items:center;">
           <input value="${escHtml(c.etiqueta)}" placeholder="Nombre del campo (ej. DNI)" style="flex:1;min-width:140px;padding:8px 10px;border-radius:8px;border:1px solid #d9ceb8;font-size:13px;"
             onchange="actualizarCampoPersonalizado('${c.id}','etiqueta',this.value)"/>
@@ -7285,6 +7420,7 @@ ${body}
 
       icons.forEach(el => { if (el) { el.style.animation = ''; el.textContent = '✅'; } });
       subs.forEach(el  => { if (el) el.textContent = 'Actualizado'; });
+      marcarSincronizado();
       showSyncIndicator('✔ Todo actualizado', 'ok');
 
       setTimeout(() => {
@@ -7303,8 +7439,8 @@ ${body}
     }
   }
 
-  function salirApp() {
-    if (!confirm('¿Salir del proyecto? Se guardarán los cambios pendientes antes de salir.')) return;
+  async function salirApp() {
+    if (!(await mostrarConfirm('¿Salir del proyecto? Se guardarán los cambios pendientes antes de salir.', { okText:'Salir' }))) return;
     Object.keys(syncTimers).forEach(k => clearTimeout(syncTimers[k]));
     showSyncIndicator('👋 Saliendo…', 'loading');
     setTimeout(() => {
@@ -7467,7 +7603,7 @@ ${body}
               font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
             🩺 Ver ficha completa
           </button>
-          <button onclick="if(confirm('¿Eliminar a ${escHtml(p.apellidos)}?'))deleteAlumno(${p.n},'${p.gid}')"
+          <button onclick="deleteAlumno(${p.n},'${p.gid}')"
             style="padding:10px 14px;border-radius:10px;border:1.5px solid #fdecea;background:white;
               font-size:14px;cursor:pointer;">🗑</button>
         </div>
@@ -7778,7 +7914,7 @@ ${body}
         <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #ede5d0;">
           <button onclick="saveGruposCamp();showSyncIndicator('✔ Grupo guardado','ok');"
             style="flex:1;padding:9px;border-radius:10px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">💾 Guardar</button>
-          <button onclick="if(confirm('¿Eliminar grupo?'))deleteGrupoCamp('${g.id}')"
+          <button onclick="deleteGrupoCamp('${g.id}')"
             style="padding:9px 12px;border-radius:10px;border:1.5px solid #fdecea;background:white;font-size:13px;cursor:pointer;">🗑</button>
         </div>`;
       card.appendChild(header);
@@ -8906,8 +9042,8 @@ ${body}
     });
   }
 
-  function clearHistorial() {
-    if (!confirm('¿Eliminar todo el historial de cambios?')) return;
+  async function clearHistorial() {
+    if (!(await mostrarConfirm('¿Eliminar todo el historial de cambios?', { danger:true, okText:'Eliminar todo' }))) return;
     historialData = [];
     saveHistorialStorage();
     renderHistorial();
@@ -9215,6 +9351,31 @@ ${body}
     <div style="display:flex;gap:10px;">
       <button onclick="generarPDFFicha()" style="flex:1;padding:12px;border-radius:12px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">🖨️ Generar PDF</button>
       <button onclick="document.getElementById('imprimirFichaModal').style.display='none'" style="padding:12px 16px;border-radius:12px;border:1.5px solid #d9ceb8;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE CONFIRMACIÓN PROPIO (sustituye a confirm()) -->
+<div class="ficha-overlay" id="customConfirmOverlay" style="z-index:5000;">
+  <div class="modal-box" style="max-width:380px;padding:24px;">
+    <p id="customConfirmMsg" style="font-size:14px;line-height:1.6;color:var(--verde-bosque);white-space:pre-line;margin-bottom:20px;"></p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button id="customConfirmCancelBtn" style="padding:9px 18px;border-radius:10px;border:1.5px solid var(--crema-oscuro);background:transparent;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+      <button id="customConfirmOkBtn" style="padding:9px 18px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE PIN PROPIO (sustituye a prompt()) -->
+<div class="ficha-overlay" id="customPinOverlay" style="z-index:5000;">
+  <div class="modal-box" style="max-width:340px;padding:24px;">
+    <p id="customPinMsg" style="font-size:14px;line-height:1.6;color:var(--verde-bosque);margin-bottom:14px;"></p>
+    <input id="customPinInput" type="text" inputmode="numeric" placeholder="PIN"
+      style="width:100%;padding:10px 14px;border-radius:10px;border:1.5px solid var(--crema-oscuro);font-size:16px;text-align:center;letter-spacing:2px;margin-bottom:8px;box-sizing:border-box;"/>
+    <p id="customPinError" style="font-size:12px;color:#c0392b;min-height:16px;margin:0 0 12px;"></p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button id="customPinCancelBtn" style="padding:9px 18px;border-radius:10px;border:1.5px solid var(--crema-oscuro);background:transparent;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+      <button id="customPinOkBtn" style="padding:9px 18px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Entrar</button>
     </div>
   </div>
 </div>
