@@ -965,7 +965,7 @@
 /* ── LOGIN ── */
 .login-overlay {
   display:flex; position:fixed; inset:0;
-  background:#2D5016;
+  background:var(--verde-bosque);
   z-index:9000; align-items:center; justify-content:center;
 }
 .login-box {
@@ -975,7 +975,7 @@
 }
 .login-logo-wrap { display:flex; align-items:center; justify-content:center; margin-bottom:24px; }
   .login-logo { height:68px; width:auto; display:block; }
-.login-title { font-family:'DM Sans',sans-serif; font-size:1.5rem; font-weight:900; color:#2D5016; margin-bottom:6px; letter-spacing:2px; text-transform:uppercase; }
+.login-title { font-family:'DM Sans',sans-serif; font-size:1.5rem; font-weight:900; color:var(--verde-bosque); margin-bottom:6px; letter-spacing:2px; text-transform:uppercase; }
 .login-sub { font-size:13px; color:#999; margin-bottom:30px; line-height:1.5; }
 .login-box input[type=password] {
   width:100%; padding:15px 18px; border-radius:12px;
@@ -984,17 +984,17 @@
   margin-bottom:12px; box-sizing:border-box; color:#222;
   transition:border-color .2s, background .2s;
 }
-.login-box input[type=password]:focus { border-color:#2D5016; background:#fff; }
+.login-box input[type=password]:focus { border-color:var(--verde-bosque); background:#fff; }
 .login-box input[type=password]::placeholder { color:#bbb; }
 .login-btn {
   width:100%; padding:16px; border-radius:12px; border:none;
-  background:#2D5016; color:white;
+  background:var(--verde-bosque); color:white;
   font-family:'DM Sans',sans-serif; font-size:14px; font-weight:800;
   letter-spacing:2px; text-transform:uppercase; cursor:pointer;
   transition:background .2s, transform .1s;
   display:flex; align-items:center; justify-content:center; gap:10px;
 }
-.login-btn:hover { background:#2D5016; }
+.login-btn:hover { background:var(--verde-bosque); }
 .login-btn:active { transform:scale(.98); }
 .login-product-badge {
   display:block; margin-top:20px;
@@ -1217,7 +1217,7 @@
       width: 100%; border: none; cursor: pointer;
       padding: 18px 18px;
       border-radius: 18px;
-      background: linear-gradient(135deg, var(--verde-bosque) 0%, var(--verde-medio, #4A7C2F) 100%);
+      background: linear-gradient(135deg, var(--verde-bosque) 0%, var(--verde-medio, var(--verde-medio)) 100%);
       box-shadow: 0 4px 14px rgba(45,80,22,.18);
       transition: transform .15s ease, box-shadow .15s ease;
       text-align: left;
@@ -1485,7 +1485,7 @@
   .pt-liga      { background:#8E44AD22; color:#8E44AD; }
   .pt-piscina   { background:#3B7EA122; color:#3B7EA1; }
   .pt-comedor   { background:#C0392B22; color:#C0392B; }
-  .pt-libre     { background:#7FB06922; color:#4A7C2F; }
+  .pt-libre     { background:#7FB06922; color:var(--verde-medio); }
   .pt-desayuno  { background:#E8C54722; color:#8B5E3C; }
   .pt-almuerzo  { background:#E07A3B22; color:#E07A3B; }
   .pt-merienda  { background:#8E44AD22; color:#8E44AD; }
@@ -1614,7 +1614,7 @@
     border: none; cursor: pointer; text-align: left;
     padding: 16px 18px;
     border-radius: 16px;
-    background: linear-gradient(135deg, var(--verde-bosque) 0%, var(--verde-medio, #4A7C2F) 100%);
+    background: linear-gradient(135deg, var(--verde-bosque) 0%, var(--verde-medio, var(--verde-medio)) 100%);
     box-shadow: 0 4px 14px rgba(45,80,22,.16);
     transition: transform .15s ease, box-shadow .15s ease;
   }
@@ -1748,17 +1748,17 @@
   }
   .export-modal h3 {
     font-family: 'Playfair Display', serif; font-size: 1.2rem;
-    font-weight: 700; color: #2D5016; margin-bottom: 20px;
+    font-weight: 700; color: var(--verde-bosque); margin-bottom: 20px;
   }
   .export-option {
     display: flex; align-items: center; gap: 12px; padding: 14px 16px;
     border-radius: 12px; border: 1.5px solid #d9ceb8; margin-bottom: 10px;
     cursor: pointer; transition: all .15s;
   }
-  .export-option:hover { border-color: #4A7C2F; background: #f0f7eb; }
-  .export-option.selected { border-color: #2D5016; background: #2D501611; }
+  .export-option:hover { border-color: var(--verde-medio); background: #f0f7eb; }
+  .export-option.selected { border-color: var(--verde-bosque); background: #2D501611; }
   .export-option-icon { font-size: 28px; flex-shrink: 0; }
-  .export-option-title { font-size: 14px; font-weight: 700; color: #2D5016; }
+  .export-option-title { font-size: 14px; font-weight: 700; color: var(--verde-bosque); }
   .export-option-sub { font-size: 12px; opacity: .5; }
 
   /* ══ HISTORIAL ══ */
@@ -1796,7 +1796,7 @@
   body.dark-mode {
     --verde-bosque: #5BA85C;
     --verde-medio:  #4A9B4B;
-    --verde-claro:  #7FB069;
+    --verde-claro:  #8FCB7A;
     --verde-suave:  #2A3D2A;
     --tierra:       #C9956C;
     --tierra-claro: #E8B48A;
@@ -1815,7 +1815,7 @@
   body.dark-mode .main { background: #131A15; }
   body.dark-mode .desktop-nav-btn { background: #1E2820; border-color: #2A3830; }
   body.dark-mode .desktop-nav-btn:hover { border-color: #5BA85C; box-shadow: 0 4px 16px rgba(91,168,92,.15); }
-  body.dark-mode .desktop-nav-btn.active-nav { background: #2D5016; border-color: #5BA85C; }
+  body.dark-mode .desktop-nav-btn.active-nav { background: var(--verde-bosque); border-color: #5BA85C; }
   body.dark-mode .tab-panel { background: #131A15; }
   body.dark-mode .monitor-card,
   body.dark-mode .obs-card,
@@ -1851,7 +1851,7 @@
   body.dark-mode .cal-table th { background: #1A2A1A; }
   body.dark-mode footer { background: #1A2A1A; border-color: #2A3830; }
   body.dark-mode .mob-card { background: #1E2820; border-color: #2A3830; }
-  body.dark-mode .mob-card.accent { background: #2D5016; }
+  body.dark-mode .mob-card.accent { background: var(--verde-bosque); }
   body.dark-mode .mob-topbar { background: #1E2820; border-color: #2A3830; }
   body.dark-mode .mob-alumno-item { background: #1E2820; border-color: #2A3830; }
   body.dark-mode .mob-alumno-item:active { background: #2A3830; }
@@ -1937,8 +1937,8 @@
 
       <div class="project-section-title">¿Nuevo proyecto?</div>
       <button onclick="openNewProjectForm()"
-        style="width:100%;padding:11px;border-radius:12px;border:1.5px dashed #7FB069;
-          background:transparent;color:#2D5016;font-family:'DM Sans',sans-serif;
+        style="width:100%;padding:11px;border-radius:12px;border:1.5px dashed var(--verde-claro);
+          background:transparent;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;
           font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;"
         onmouseenter="this.style.background='#f0f7eb'" onmouseleave="this.style.background='transparent'">
         ➕ Crear nuevo proyecto
@@ -1967,12 +1967,16 @@
         </p>
         <label>Paleta de colores</label>
         <div id="npPaleta" style="display:flex;gap:8px;margin:4px 0 10px;flex-wrap:wrap;">
-          <div class="pal-opt" data-pal="bosque"    onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#2D5016,#7FB069);cursor:pointer;border:3px solid #2D5016;" title="Verde bosque"></div>
+          <div class="pal-opt" data-pal="bosque"    onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--verde-bosque),var(--verde-claro));cursor:pointer;border:3px solid var(--verde-bosque);" title="Verde bosque"></div>
           <div class="pal-opt" data-pal="oceano"    onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#0D3B66,#5FA8D3);cursor:pointer;border:3px solid transparent;" title="Azul océano"></div>
           <div class="pal-opt" data-pal="atardecer" onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#B23A0F,#F2A65A);cursor:pointer;border:3px solid transparent;" title="Naranja atardecer"></div>
           <div class="pal-opt" data-pal="lavanda"   onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#4A2D7A,#9B7EDE);cursor:pointer;border:3px solid transparent;" title="Morado lavanda"></div>
           <div class="pal-opt" data-pal="teja"      onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#7A1E1E,#D9777E);cursor:pointer;border:3px solid transparent;" title="Rojo teja"></div>
           <div class="pal-opt" data-pal="turquesa"  onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#0E5D5D,#5FC2BA);cursor:pointer;border:3px solid transparent;" title="Turquesa"></div>
+          <div class="pal-opt" data-pal="dorado"    onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8A6D1A,#E8C468);cursor:pointer;border:3px solid transparent;" title="Dorado"></div>
+          <div class="pal-opt" data-pal="rosa"      onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#8A2D5C,#E88AB5);cursor:pointer;border:3px solid transparent;" title="Rosa"></div>
+          <div class="pal-opt" data-pal="pizarra"   onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#2E3A45,#8FA3B0);cursor:pointer;border:3px solid transparent;" title="Gris pizarra"></div>
+          <div class="pal-opt" data-pal="vino"      onclick="selPaleta(this)" style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#5C1A2E,#C97E93);cursor:pointer;border:3px solid transparent;" title="Vino"></div>
         </div>
         <label>URL del Apps Script *</label>
         <input type="url" id="npScriptUrl" placeholder="https://script.google.com/macros/s/..."/>
@@ -1982,7 +1986,7 @@
         </p>
         <button id="btnCreateProj" onclick="createProject()"
           style="width:100%;padding:10px;border-radius:12px;border:none;
-            background:#2D5016;color:white;font-family:'DM Sans',sans-serif;
+            background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;
             font-size:13px;font-weight:700;cursor:pointer;">
           Guardar proyecto
         </button>
@@ -2981,7 +2985,7 @@
       if (p.activo === false) linkedHtml += '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#C0392B22;color:#C0392B;">⛔ No asiste</span>';
       if (grupoCampAsig) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:${grupoCampAsig.color}22;color:${grupoCampAsig.color};">🏕 ${escHtml(grupoCampAsig.nombre)}</span>`;
       if (grupoCampAsig?.cabana) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#8B5E3C22;color:#8B5E3C;">🏠 ${escHtml(grupoCampAsig.cabana)}</span>`;
-      if (monitorAsig) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#2D501622;color:#2D5016;">👤 ${escHtml(monitorAsig.nombre)} ${escHtml(monitorAsig.apellidos)}</span>`;
+      if (monitorAsig) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#2D501622;color:var(--verde-bosque);">👤 ${escHtml(monitorAsig.nombre)} ${escHtml(monitorAsig.apellidos)}</span>`;
       if (tieneNotas) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#27AE6022;color:#27AE60;cursor:pointer;" onclick="showTab('obsalumnos',null);closeFicha();">🗒 ${notasAlumno.length} nota${notasAlumno.length!==1?'s':''}</span>`;
       linkedHtml += '</div>';
       if (tieneNotas && ultimaNota) {
@@ -3284,7 +3288,7 @@
       card.style.cssText = `display:flex;align-items:center;gap:14px;padding:14px 16px;
         border-radius:14px;border:1.5px solid #d9ceb8;background:#fdfaf5;
         cursor:pointer;transition:all .15s;margin-bottom:10px;position:relative;`;
-      card.onmouseenter = () => { card.style.borderColor='#2D5016'; card.style.background='#f0f7eb'; };
+      card.onmouseenter = () => { card.style.borderColor='var(--verde-bosque)'; card.style.background='#f0f7eb'; };
       card.onmouseleave = () => { card.style.borderColor='#d9ceb8'; card.style.background='#fdfaf5'; };
 
       const fechaStr = p.fechaInicio
@@ -3300,14 +3304,14 @@
       const editBtn = p.base ? '' :
         `<div onclick="event.stopPropagation();editProject('${p.id}')"
           style="position:absolute;top:8px;right:34px;width:22px;height:22px;border-radius:50%;
-            background:#eef4e8;color:#2D5016;font-size:11px;display:flex;align-items:center;
+            background:#eef4e8;color:var(--verde-bosque);font-size:11px;display:flex;align-items:center;
             justify-content:center;cursor:pointer;" title="Editar proyecto (ver/cambiar URL, PIN...)">✏️</div>`;
 
       card.innerHTML = `
-        <div style="width:44px;height:44px;border-radius:12px;background:#2D5016;
+        <div style="width:44px;height:44px;border-radius:12px;background:var(--verde-bosque);
           display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;">🏕</div>
         <div style="flex:1;">
-          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#2D5016;">
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);">
             ${p.nombre}</div>
           <div style="font-size:12px;opacity:.5;margin-top:2px;">
             ${p.entidad||''}${fechaStr?' · '+fechaStr:''}</div>
@@ -3504,6 +3508,10 @@
     lavanda:  { oscuro:'#4A2D7A', medio:'#6B4BA3', claro:'#9B7EDE', suave:'#D6C8F0' },
     teja:     { oscuro:'#7A1E1E', medio:'#A33B3B', claro:'#D9777E', suave:'#F0C8CB' },
     turquesa: { oscuro:'#0E5D5D', medio:'#1F8A83', claro:'#5FC2BA', suave:'#BCE8E3' },
+    dorado:   { oscuro:'#8A6D1A', medio:'#B08D2C', claro:'#E8C468', suave:'#F5E6BE' },
+    rosa:     { oscuro:'#8A2D5C', medio:'#B03D7A', claro:'#E88AB5', suave:'#F5D3E3' },
+    pizarra:  { oscuro:'#2E3A45', medio:'#4A5C6B', claro:'#8FA3B0', suave:'#D4DEE3' },
+    vino:     { oscuro:'#5C1A2E', medio:'#7A2B42', claro:'#C97E93', suave:'#EAD0D8' },
   };
   let _paletaSel = 'bosque';
 
@@ -3520,11 +3528,6 @@
     r.setProperty('--verde-medio',  p.medio);
     r.setProperty('--verde-claro',  p.claro);
     r.setProperty('--verde-suave',  p.suave);
-    // Colores fijos inline (barra de stats móvil, botones)
-    document.querySelectorAll('[style]').forEach(el => {
-      const s = el.getAttribute('style');
-      if (s && s.includes('#2D5016')) el.setAttribute('style', s.replaceAll('#2D5016', p.oscuro));
-    });
   }
 
   function createProject() {
@@ -3924,7 +3927,7 @@
             data-estado="${esPendiente?'pendiente':activo?'activo':'inactivo'}"
             title="${esPendiente?'⏳ Pendiente — pulsa para activar':activo?'✅ Activo — pulsa para desactivar':'⛔ Inactivo — pulsa para activar'}"
             style="width:38px;height:22px;border-radius:11px;border:none;cursor:pointer;position:relative;
-              background:${esPendiente?'#F39C12':activo?'#4A7C2F':'#c8bfa8'};transition:background .2s;flex-shrink:0;padding:0;">
+              background:${esPendiente?'#F39C12':activo?'var(--verde-medio)':'#c8bfa8'};transition:background .2s;flex-shrink:0;padding:0;">
             <span style="width:16px;height:16px;border-radius:50%;background:white;box-shadow:0 1px 3px rgba(0,0,0,.25);
               position:absolute;top:3px;transition:left .2s;
               left:${esPendiente?'11px':activo?'19px':'3px'};"></span>
@@ -3940,7 +3943,7 @@
           <button onclick="openFichaById(${p.n})" title="Ver ficha completa"
             style="padding:4px 8px;border-radius:6px;border:none;background:#e8f4fd;color:#1a6fa0;font-size:13px;cursor:pointer;margin-right:4px;">🩺</button>
           <button onclick="saveAllAlumnos()" title="Guardar cambios"
-            style="padding:4px 8px;border-radius:6px;border:none;background:#f0f7eb;color:#2D5016;font-size:13px;cursor:pointer;margin-right:4px;">💾</button>
+            style="padding:4px 8px;border-radius:6px;border:none;background:#f0f7eb;color:var(--verde-bosque);font-size:13px;cursor:pointer;margin-right:4px;">💾</button>
           <button class="tbl-del-btn" onclick="deleteAlumno(${p.n},'${p.gid}')" title="Baja (desactivar, no borra del Sheet)">🗑</button>
           <button onclick="deleteAlumnoDefinitivo(${p.n},'${p.gid}')" title="Eliminar DEFINITIVAMENTE (borra la fila del Sheet, no se puede deshacer)"
             style="padding:4px 6px;border-radius:6px;border:none;background:#fdecea;color:#c0392b;font-size:12px;cursor:pointer;margin-left:2px;">💥</button>
@@ -4056,7 +4059,7 @@
         <td>${g ? g.label : ''}</td>
         <td>${p.grupo && p.grupo !== '❓' ? p.grupo : '—'}</td>
         <td>${gcampAsig ? escHtml(gcampAsig.nombre) : '—'}</td>
-        <td style="text-align:center;font-weight:700;color:${esPendiente ? '#F39C12' : activo ? '#2D5016' : '#C0392B'}">
+        <td style="text-align:center;font-weight:700;color:${esPendiente ? '#F39C12' : activo ? 'var(--verde-bosque)' : '#C0392B'}">
           ${esPendiente ? '⏳ Pendiente' : activo ? '✅ Activo' : '⛔ No activo'}
         </td>
       </tr>`;
@@ -4069,15 +4072,15 @@
 <title>Lista de participantes — CampOS</title>
 <style>
   body { font-family: 'Segoe UI', Arial, sans-serif; margin: 20px; color: #222; }
-  h1 { color: #2D5016; font-size: 1.4rem; margin-bottom: 4px; }
+  h1 { color: var(--verde-bosque); font-size: 1.4rem; margin-bottom: 4px; }
   .meta { font-size: 12px; color: #888; margin-bottom: 16px; }
   .resumen { display: flex; gap: 24px; margin-bottom: 16px; font-size: 13px; }
   .res-item { padding: 8px 16px; border-radius: 8px; font-weight: 700; }
-  .res-total { background: #f0f7eb; color: #2D5016; }
+  .res-total { background: #f0f7eb; color: var(--verde-bosque); }
   .res-activos { background: #e8f5e9; color: #27AE60; }
   .res-inactivos { background: #fdecea; color: #C0392B; }
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  th { background: #2D5016; color: white; padding: 8px 10px; text-align: left; font-weight: 700; }
+  th { background: var(--verde-bosque); color: white; padding: 8px 10px; text-align: left; font-weight: 700; }
   td { padding: 6px 10px; border-bottom: 1px solid #e8e0d0; }
   tr:nth-child(even) td { background: #f9f6f0; }
   tr.inactivo td { opacity: 0.55; }
@@ -4111,7 +4114,7 @@
   <tbody>${filas}</tbody>
 </table>
 <div class="no-print" style="margin-top:20px;text-align:center;">
-  <button onclick="window.print()" style="padding:10px 24px;background:#2D5016;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;">🖨️ Imprimir</button>
+  <button onclick="window.print()" style="padding:10px 24px;background:var(--verde-bosque);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;">🖨️ Imprimir</button>
   <button onclick="window.close()" style="margin-left:10px;padding:10px 24px;background:#eee;border:none;border-radius:8px;font-size:14px;cursor:pointer;">Cerrar</button>
 </div>
 </body>
@@ -4242,12 +4245,12 @@
           <label style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.8px;">Estado</label>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;">
             <span style="color:${m.activo===false?'#C0392B':'#27AE60'};">${m.activo===false?'⛔ No activo':'✅ Activo'}</span>
-            <input type="checkbox" ${m.activo!==false?'checked':''} style="width:16px;height:16px;accent-color:#2D5016;"
+            <input type="checkbox" ${m.activo!==false?'checked':''} style="width:16px;height:16px;accent-color:var(--verde-bosque);"
               onchange="updateMonitor(${i},'activo',this.checked);renderMonitorGrid()"/>
           </label>
         </div>
         <div style="margin-top:10px;text-align:right;">
-          <button onclick="saveMonitorIndividual(${i},this)" style="padding:6px 14px;border-radius:8px;border:1.5px solid #2D5016;background:white;color:#2D5016;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">💾 Guardar</button>
+          <button onclick="saveMonitorIndividual(${i},this)" style="padding:6px 14px;border-radius:8px;border:1.5px solid var(--verde-bosque);background:white;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">💾 Guardar</button>
         </div>
       `;
       grid.appendChild(div);
@@ -4702,7 +4705,7 @@
     // Total
     const total = getAllEditParticipants().length;
     const totalCard = document.createElement('div');
-    totalCard.style.cssText = 'background:#2D5016;border-radius:14px;padding:16px;margin-bottom:12px;';
+    totalCard.style.cssText = 'background:var(--verde-bosque);border-radius:14px;padding:16px;margin-bottom:12px;';
     totalCard.innerHTML = `<div style="font-size:11px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,.6);text-transform:uppercase;margin-bottom:4px;">TOTAL</div><div style="font-size:2rem;font-weight:900;color:white;line-height:1;">${total}</div><div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:2px;">activos inscritos</div>`;
     container.appendChild(totalCard);
   }
@@ -4797,7 +4800,7 @@
       const initials = getInitials(m.nombre||'', m.apellidos||'');
       card.innerHTML = `
         <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid #f5f0e8;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.mob-chev').style.transform=this.nextElementSibling.style.display==='block'?'rotate(90deg)':'';">
-          <div style="width:40px;height:40px;border-radius:50%;background:#2D5016;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px;flex-shrink:0;">${initials}</div>
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--verde-bosque);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:14px;flex-shrink:0;">${initials}</div>
           <div style="flex:1;">
             <div style="font-weight:700;font-size:14px;">${escHtml((m.nombre+' '+m.apellidos).trim()||'Monitor/a')}</div>
             <div style="font-size:11px;opacity:.5;">${m.rol||'Monitor/a'}</div>
@@ -4848,7 +4851,7 @@
           </div>
           <div style="display:flex;gap:8px;">
             <button onclick="saveMonitores();showSyncIndicator('✔ Monitor guardado','ok');"
-              style="flex:1;padding:10px;border-radius:10px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">💾 Guardar</button>
+              style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">💾 Guardar</button>
             <button onclick="(async()=>{ await deleteMonitor(${i}); renderMobMonitores(); })()"
               style="padding:10px 14px;border-radius:10px;border:1.5px solid #fdecea;background:white;font-size:14px;cursor:pointer;">🗑</button>
           </div>
@@ -4879,14 +4882,14 @@
           <textarea rows="4" style="width:100%;padding:8px 10px;border-radius:8px;border:1.5px solid #d9ceb8;background:#f9f6f1;font-family:'DM Sans',sans-serif;font-size:13px;box-sizing:border-box;outline:none;resize:vertical;"
             onchange="obsData[${i}].texto=this.value;saveObs();">${escHtml(obs.texto||'')}</textarea>
           <button onclick="obsData[${i}].texto=this.previousElementSibling.value;saveObs();showSyncIndicator('✔ Nota guardada','ok');"
-            style="width:100%;padding:9px;border-radius:10px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;">💾 Guardar</button>
+            style="width:100%;padding:9px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:8px;">💾 Guardar</button>
         </div>`;
       container.appendChild(div);
     });
     // Añadir nota
     const addBtn = document.createElement('button');
     addBtn.onclick = () => { addObs(); renderMobObs(); };
-    addBtn.style.cssText = 'width:100%;padding:12px;border-radius:12px;border:1.5px dashed #7FB069;background:transparent;color:#2D5016;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;cursor:pointer;';
+    addBtn.style.cssText = 'width:100%;padding:12px;border-radius:12px;border:1.5px dashed var(--verde-claro);background:transparent;color:var(--verde-bosque);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:700;cursor:pointer;';
     addBtn.textContent = '+ Nueva nota de coordinación';
     container.appendChild(addBtn);
   }
@@ -5050,7 +5053,7 @@
 <style>
   * { box-sizing:border-box; margin:0; padding:0; }
   body { font-family:'Segoe UI',Arial,sans-serif; padding:20px; color:#222; font-size:13px; }
-  h1 { color:#2D5016; font-size:1.2rem; margin-bottom:4px; }
+  h1 { color:var(--verde-bosque); font-size:1.2rem; margin-bottom:4px; }
   .meta { font-size:11px; color:#888; margin-bottom:20px; }
   /* Grupo cards */
   .gcamp-card { border:1.5px solid #d9ceb8; border-radius:10px; padding:14px; margin-bottom:12px; break-inside:avoid; }
@@ -5060,7 +5063,7 @@
   /* Chips alumnos */
   .grupo-alumno-chip { display:inline-flex; align-items:center; gap:4px; padding:3px 8px;
     border-radius:20px; background:#f0f7eb; font-size:11px; margin:2px; }
-  .chip-avatar { width:18px; height:18px; border-radius:50%; background:#2D5016;
+  .chip-avatar { width:18px; height:18px; border-radius:50%; background:var(--verde-bosque);
     color:white; font-size:8px; font-weight:800; display:inline-flex;
     align-items:center; justify-content:center; }
   /* Resumen por monitor/clase */
@@ -5080,7 +5083,7 @@
 <div class="meta">CampOS · Generado: ${new Date().toLocaleString('es-ES')}</div>
 ${contenido}
 <div class="no-print" style="margin-top:20px;text-align:center;">
-  <button onclick="window.print()" style="display:inline-block!important;padding:10px 24px;background:#2D5016;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-right:8px;">🖨️ Imprimir / Guardar PDF</button>
+  <button onclick="window.print()" style="display:inline-block!important;padding:10px 24px;background:var(--verde-bosque);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-right:8px;">🖨️ Imprimir / Guardar PDF</button>
   <button onclick="window.close()" style="display:inline-block!important;padding:10px 24px;background:#eee;border:none;border-radius:8px;font-size:14px;cursor:pointer;">Cerrar</button>
 </div>
 </body></html>`;
@@ -5201,13 +5204,13 @@ ${contenido}
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Segoe UI',Arial,sans-serif;padding:24px;color:#222;font-size:13px}
-  .header{display:flex;align-items:center;gap:14px;padding:14px 16px;background:#2D5016;border-radius:12px;margin-bottom:18px;color:white}
+  .header{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--verde-bosque);border-radius:12px;margin-bottom:18px;color:white}
   .avatar{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0}
   .hname{font-size:1.1rem;font-weight:700}
   .hmeta{font-size:11px;opacity:.75;margin-top:2px}
   .sec{margin-bottom:16px;border:1.5px solid #e8e0d0;border-radius:10px;overflow:hidden}
   .alert-sec{border-color:#f5c6cb}
-  .sec-title{background:#f9f6f1;padding:9px 14px;font-weight:700;font-size:12px;color:#2D5016;border-bottom:1px solid #e8e0d0}
+  .sec-title{background:#f9f6f1;padding:9px 14px;font-weight:700;font-size:12px;color:var(--verde-bosque);border-bottom:1px solid #e8e0d0}
   .dt{width:100%;border-collapse:collapse}
   .dt td{padding:7px 14px;border-bottom:1px solid #f0ebe0;vertical-align:top}
   .dt tr:last-child td{border-bottom:none}
@@ -5227,7 +5230,7 @@ ${contenido}
 ${sections}
 <div class="footer">CampOS · Escuela y Deporte · ${new Date().toLocaleString('es-ES')}</div>
 <div class="no-print">
-  <button onclick="window.print()" style="padding:10px 24px;background:#2D5016;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-right:8px;">🖨️ Imprimir / Guardar PDF</button>
+  <button onclick="window.print()" style="padding:10px 24px;background:var(--verde-bosque);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-right:8px;">🖨️ Imprimir / Guardar PDF</button>
   <button onclick="window.close()" style="padding:10px 24px;background:#eee;border:none;border-radius:8px;font-size:14px;cursor:pointer;">Cerrar</button>
 </div>
 </body></html>`;
@@ -5280,10 +5283,10 @@ ${sections}
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Segoe UI',Arial,sans-serif;padding:20px;color:#222;font-size:13px}
-  h1{color:#2D5016;font-size:1.2rem;margin-bottom:4px}
+  h1{color:var(--verde-bosque);font-size:1.2rem;margin-bottom:4px}
   .meta{font-size:11px;color:#888;margin-bottom:20px}
   .alumno-block{margin-bottom:20px;break-inside:avoid}
-  .alumno-header{background:#2D5016;color:white;padding:8px 12px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px}
+  .alumno-header{background:var(--verde-bosque);color:white;padding:8px 12px;border-radius:8px 8px 0 0;font-weight:700;font-size:13px}
   .n-notas{font-weight:400;opacity:.7;font-size:11px}
   .nota-item{padding:8px 12px;background:#f9f6f1;border-bottom:1px solid #e8e0d0;margin-top:0}
   .nota-mood{font-size:11px;font-weight:700;margin-bottom:3px}
@@ -5296,7 +5299,7 @@ ${sections}
 <div class="meta">CampOS · ${entries.length} alumno${entries.length!==1?'s':''} · ${new Date().toLocaleString('es-ES')}</div>
 ${body}
 <div class="no-print">
-  <button onclick="window.print()" style="padding:10px 24px;background:#2D5016;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-right:8px;">🖨️ Imprimir / PDF</button>
+  <button onclick="window.print()" style="padding:10px 24px;background:var(--verde-bosque);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-right:8px;">🖨️ Imprimir / PDF</button>
   <button onclick="window.close()" style="padding:10px 24px;background:#eee;border:none;border-radius:8px;font-size:14px;cursor:pointer;">Cerrar</button>
 </div>
 </body></html>`;
@@ -5360,10 +5363,10 @@ ${body}
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Segoe UI',Arial,sans-serif;padding:20px;color:#222;font-size:13px}
-  h1{color:#2D5016;font-size:1.2rem;margin-bottom:4px}
+  h1{color:var(--verde-bosque);font-size:1.2rem;margin-bottom:4px}
   .meta{font-size:11px;color:#888;margin-bottom:16px}
   table{width:100%;border-collapse:collapse}
-  th{background:#2D5016;color:white;padding:8px 10px;text-align:left;font-size:12px}
+  th{background:var(--verde-bosque);color:white;padding:8px 10px;text-align:left;font-size:12px}
   td{padding:7px 10px;border-bottom:1px solid #e8e0d0;vertical-align:top}
   tr:nth-child(even) td{background:#f9f6f1}
   .no-print{margin-top:20px;text-align:center}
@@ -5379,7 +5382,7 @@ ${body}
   </tbody>
 </table>
 <div class="no-print">
-  <button onclick="window.print()" style="padding:10px 24px;background:#2D5016;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-right:8px;">🖨️ Imprimir / PDF</button>
+  <button onclick="window.print()" style="padding:10px 24px;background:var(--verde-bosque);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;margin-right:8px;">🖨️ Imprimir / PDF</button>
   <button onclick="window.close()" style="padding:10px 24px;background:#eee;border:none;border-radius:8px;font-size:14px;cursor:pointer;">Cerrar</button>
 </div>
 </body></html>`;
@@ -5977,7 +5980,7 @@ ${body}
 
   const TIPO_COLORS = {
     velada:'#1a1a4e',taller:'#E67E22',juego:'#27AE60',liga:'#8E44AD',
-    piscina:'#3B7EA1',comedor:'#C0392B',libre:'#4A7C2F',desayuno:'#8B5E3C',
+    piscina:'#3B7EA1',comedor:'#C0392B',libre:'var(--verde-medio)',desayuno:'#8B5E3C',
     almuerzo:'#E07A3B',merienda:'#9B59B6',cena:'#922B21'
   };
 
@@ -6074,7 +6077,7 @@ ${body}
     } else {
       const sorted = [...acts].sort((a,b)=>(a.horaInicio||'').localeCompare(b.horaInicio||''));
       sorted.forEach(a => {
-        const color = TIPO_COLORS[a.tipo] || '#4A7C2F';
+        const color = TIPO_COLORS[a.tipo] || 'var(--verde-medio)';
         html += `<div onclick="openProgModal(${a.id})" style="display:flex;gap:12px;padding:14px 16px;border-radius:14px;
           border-left:5px solid ${color};border:1px solid #e8e0d0;border-left:5px solid ${color};
           margin-bottom:10px;cursor:pointer;transition:box-shadow .15s;background:white;"
@@ -6085,7 +6088,7 @@ ${body}
           </div>
           <div style="flex:1;">
             <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:${color};margin-bottom:4px;">${TIPO_LABELS[a.tipo]||a.tipo}</div>
-            <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#2D5016;">${escHtml(a.nombre||'Sin nombre')}</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);">${escHtml(a.nombre||'Sin nombre')}</div>
             ${a.lugar?`<div style="font-size:12px;opacity:.5;margin-top:4px;">📍 ${escHtml(a.lugar)}</div>`:''}
           </div>
           <div style="font-size:11px;opacity:.4;align-self:flex-start;padding-top:2px;">✏️ Editar</div>
@@ -6110,8 +6113,8 @@ ${body}
       const ds = dateToStr(d);
       const isToday = ds === TODAY;
       const DIAS_ES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-      html += `<th style="padding:10px 6px;text-align:center;background:${isToday?'#2D5016':'#f5f0e8'};
-        color:${isToday?'white':'#2D5016'};font-size:12px;font-weight:700;border-bottom:2px solid #d9ceb8;border-left:1px solid #d9ceb8;min-width:90px;">
+      html += `<th style="padding:10px 6px;text-align:center;background:${isToday?'var(--verde-bosque)':'#f5f0e8'};
+        color:${isToday?'white':'var(--verde-bosque)'};font-size:12px;font-weight:700;border-bottom:2px solid #d9ceb8;border-left:1px solid #d9ceb8;min-width:90px;">
         <div>${DIAS_ES[d.getDay()]}</div>
         <div style="font-size:18px;font-weight:900;">${d.getDate()}</div>
       </th>`;
@@ -6128,7 +6131,7 @@ ${body}
         const actsHora = lista.filter(a => actividadEnFecha(a,ds) && a.horaInicio && parseInt(a.horaInicio)===hNum);
         html += `<td style="padding:2px;vertical-align:top;border-bottom:1px solid #ede8de;border-left:1px solid #ede8de;background:${isToday?'#f0f7eb':'white'};min-height:40px;">`;
         actsHora.forEach(a => {
-          const color = TIPO_COLORS[a.tipo] || '#4A7C2F';
+          const color = TIPO_COLORS[a.tipo] || 'var(--verde-medio)';
           html += `<div onclick="openProgModal(${a.id})" style="background:${color};color:white;border-radius:6px;padding:3px 6px;
             font-size:10px;font-weight:600;margin-bottom:2px;cursor:pointer;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"
             title="${escHtml(a.nombre||'')} ${a.horaInicio}-${a.horaFin}">
@@ -6152,7 +6155,7 @@ ${body}
     const DIAS_CAB = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
 
     let html = `<table style="width:100%;border-collapse:collapse;">`;
-    html += '<tr>' + DIAS_CAB.map(d=>`<th style="padding:10px 4px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;color:#2D5016;background:#f5f0e8;border-bottom:2px solid #d9ceb8;">${d}</th>`).join('') + '</tr>';
+    html += '<tr>' + DIAS_CAB.map(d=>`<th style="padding:10px 4px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;color:var(--verde-bosque);background:#f5f0e8;border-bottom:2px solid #d9ceb8;">${d}</th>`).join('') + '</tr>';
 
     let day = 1;
     let started = false;
@@ -6166,10 +6169,10 @@ ${body}
         const isToday = ds===TODAY;
         const dayActs = lista.filter(a => actividadEnFecha(a,ds));
         html += `<td style="vertical-align:top;padding:4px;border:1px solid #ede8de;height:80px;background:${isToday?'#f0f7eb':'white'};cursor:pointer;" onclick="calFecha=new Date(${year},${month},${day});setCalVista('dia',document.getElementById('btnCalDia'))">
-          <div style="font-size:12px;font-weight:${isToday?'900':'600'};color:${isToday?'#2D5016':'#555'};margin-bottom:3px;
-            ${isToday?'background:#2D5016;color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;':''}">${day}</div>
+          <div style="font-size:12px;font-weight:${isToday?'900':'600'};color:${isToday?'var(--verde-bosque)':'#555'};margin-bottom:3px;
+            ${isToday?'background:var(--verde-bosque);color:white;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;':''}">${day}</div>
           ${dayActs.slice(0,3).map(a=>{
-            const color=TIPO_COLORS[a.tipo]||'#4A7C2F';
+            const color=TIPO_COLORS[a.tipo]||'var(--verde-medio)';
             return `<div style="background:${color};color:white;border-radius:4px;padding:1px 5px;font-size:9px;font-weight:600;margin-bottom:1px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" title="${escHtml(a.nombre||'')}">${escHtml((a.nombre||TIPO_LABELS[a.tipo]||'').slice(0,14))}</div>`;
           }).join('')}
           ${dayActs.length>3?`<div style="font-size:9px;opacity:.5;">+${dayActs.length-3} más</div>`:''}
@@ -6216,9 +6219,9 @@ ${body}
       const semanalBtn = document.querySelector('.dia-btn-all');
       if (semanalBtn && (a.dias||[]).length === 7) {
         semanalBtn.classList.add('activo');
-        semanalBtn.style.background = '#4A7C2F';
+        semanalBtn.style.background = 'var(--verde-medio)';
         semanalBtn.style.color = 'white';
-        semanalBtn.style.borderColor = '#4A7C2F';
+        semanalBtn.style.borderColor = 'var(--verde-medio)';
       }
     }
 
@@ -6276,16 +6279,16 @@ ${body}
     const semanal = document.querySelector('.dia-btn-all');
     if (semanal) {
       semanal.classList.toggle('activo', !allActive);
-      if (!allActive) { semanal.style.background='#4A7C2F'; semanal.style.color='white'; semanal.style.borderColor='#4A7C2F'; }
+      if (!allActive) { semanal.style.background='var(--verde-medio)'; semanal.style.color='white'; semanal.style.borderColor='var(--verde-medio)'; }
       else { semanal.style.background=''; semanal.style.color=''; semanal.style.borderColor=''; }
     }
   }
 
   function applyDiaStyle(btn, active) {
     if (active) {
-      btn.style.background = '#2D5016';
+      btn.style.background = 'var(--verde-bosque)';
       btn.style.color = 'white';
-      btn.style.borderColor = '#2D5016';
+      btn.style.borderColor = 'var(--verde-bosque)';
     } else {
       btn.style.background = '#f5f0e8';
       btn.style.color = '#555';
@@ -6304,7 +6307,7 @@ ${body}
 
   function updateProgModalColor() {
     const tipo = document.getElementById('pTipo').value;
-    const colors = {velada:'#1a1a2e',taller:'#E67E22',juego:'#27AE60',liga:'#8E44AD',piscina:'#3B7EA1',comedor:'#C0392B',libre:'#7FB069',desayuno:'#8B5E3C',almuerzo:'#E07A3B',merienda:'#8E44AD',cena:'#C0392B'};
+    const colors = {velada:'#1a1a2e',taller:'#E67E22',juego:'#27AE60',liga:'#8E44AD',piscina:'#3B7EA1',comedor:'#C0392B',libre:'var(--verde-claro)',desayuno:'#8B5E3C',almuerzo:'#E07A3B',merienda:'#8E44AD',cena:'#C0392B'};
     document.getElementById('progModalBar').style.background = colors[tipo] || 'var(--verde-medio)';
   }
 
@@ -6481,7 +6484,7 @@ ${body}
       const conAlerta = alumnos.filter(p => getMedAlert(p.n));
       const tipoIcon = g.tipoAloj==='Tienda'?'⛺':g.tipoAloj==='Dormitorio'?'🛏':'🏠';
       const card = document.createElement('div');
-      card.style.cssText = 'background:white;border-radius:14px;margin-bottom:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid '+(g.hex||'#2D5016')+';';
+      card.style.cssText = 'background:white;border-radius:14px;margin-bottom:12px;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid '+(g.hex||'var(--verde-bosque)')+';';
       card.innerHTML = `
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
           <span style="font-size:24px;">${tipoIcon}</span>
@@ -6491,7 +6494,7 @@ ${body}
           </div>
           ${conAlerta.length ? '<span style="background:#fdecea;color:#c0392b;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;">🔴 '+conAlerta.length+' alertas</span>' : ''}
         </div>
-        ${monitores.length ? `<div style="font-size:12px;color:#2D5016;font-weight:600;margin-bottom:8px;">👤 ${monitores.map(m=>escHtml((m.nombre+' '+m.apellidos).trim())).join(', ')}</div>` : ''}
+        ${monitores.length ? `<div style="font-size:12px;color:var(--verde-bosque);font-weight:600;margin-bottom:8px;">👤 ${monitores.map(m=>escHtml((m.nombre+' '+m.apellidos).trim())).join(', ')}</div>` : ''}
         <div style="display:flex;flex-wrap:wrap;gap:5px;">
           ${alumnos.map(p => {
             const med = getMedAlert(p.n);
@@ -6578,7 +6581,7 @@ ${body}
         <div class="obs-alu-avatar" style="background:${g?g.hex:'#999'};width:30px;height:30px;font-size:11px;">${getInitials(p.nombre,p.apellidos)}</div>
         <div style="flex:1"><div style="font-size:13px;font-weight:600">${escHtml(p.apellidos)}, ${escHtml(p.nombre)}${isInact?' <span style="font-size:10px;padding:1px 5px;border-radius:5px;background:#C0392B22;color:#C0392B;">no asiste</span>':''}</div>
         <div style="font-size:11px;opacity:.45">${g?g.label:''}</div></div>
-        <button onclick="openAddNota(${p.n})" style="padding:5px 12px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:12px;font-weight:600;cursor:pointer;">+ Nota</button>
+        <button onclick="openAddNota(${p.n})" style="padding:5px 12px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:12px;font-weight:600;cursor:pointer;">+ Nota</button>
       `;
       results.appendChild(div);
     });
@@ -6899,7 +6902,7 @@ ${body}
     if (pg) pg.activo = newVal;
 
     btn.dataset.estado = nextEstado;
-    const colors = { activo:'#4A7C2F', inactivo:'#c8bfa8', pendiente:'#F39C12' };
+    const colors = { activo:'var(--verde-medio)', inactivo:'#c8bfa8', pendiente:'#F39C12' };
     const knobPos = { activo:'19px', inactivo:'3px', pendiente:'11px' };
     const titles  = { activo:'✅ Activo — pulsa para desactivar', inactivo:'⛔ Inactivo — pulsa para activar', pendiente:'⏳ Pendiente — pulsa para activar' };
     btn.style.background = colors[nextEstado];
@@ -7065,17 +7068,17 @@ ${body}
     win.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>${escHtml(f.titulo)}</title>
       <style>
         body{font-family:'DM Sans',Arial,sans-serif;color:#2D2D2D;max-width:700px;margin:40px auto;padding:0 20px;}
-        h1{font-family:Georgia,serif;color:#2D5016;font-size:1.6rem;margin-bottom:2px;}
+        h1{font-family:Georgia,serif;color:var(--verde-bosque);font-size:1.6rem;margin-bottom:2px;}
         .meta{color:#888;font-size:13px;margin-bottom:24px;}
         .texto{white-space:pre-wrap;line-height:1.7;font-size:14px;}
-        .cabecera{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#4A7C2F;font-weight:700;margin-bottom:6px;}
+        .cabecera{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--verde-medio);font-weight:700;margin-bottom:6px;}
         @media print { button{ display:none; } }
       </style></head><body>
       <div class="cabecera">${meta.icono} ${meta.titulo}</div>
       <h1>${escHtml(f.titulo)}</h1>
       <div class="meta">${fecha}</div>
       <div class="texto">${escHtml(f.texto)}</div>
-      <button onclick="window.print()" style="margin-top:30px;padding:10px 24px;background:#2D5016;color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;">🖨️ Imprimir / Guardar PDF</button>
+      <button onclick="window.print()" style="margin-top:30px;padding:10px 24px;background:var(--verde-bosque);color:white;border:none;border-radius:8px;font-size:14px;cursor:pointer;">🖨️ Imprimir / Guardar PDF</button>
       </body></html>`);
     win.document.close();
   }
@@ -7159,7 +7162,7 @@ ${body}
             onchange="actualizarCampoPersonalizado('${c.id}','etiqueta',this.value)"/>
           <button onclick="deleteCampoPersonalizado('${c.id}')" title="Eliminar" style="width:28px;height:28px;border-radius:8px;border:none;background:rgba(0,0,0,0.06);cursor:pointer;margin-left:8px;">🗑</button>
         </div>
-        <div style="font-size:11px;font-family:monospace;color:#4A7C2F;background:#fff;padding:2px 8px;border-radius:6px;">id: ${escHtml(c.id)}</div>
+        <div style="font-size:11px;font-family:monospace;color:var(--verde-medio);background:#fff;padding:2px 8px;border-radius:6px;">id: ${escHtml(c.id)}</div>
         <select style="padding:8px 10px;border-radius:8px;border:1px solid #d9ceb8;font-size:13px;" onchange="actualizarCampoPersonalizado('${c.id}','tipo',this.value)">
           ${Object.entries(TIPOS_CAMPO_EXTRA).map(([k,v]) => `<option value="${k}" ${c.tipo===k?'selected':''}>${v.label}</option>`).join('')}
         </select>
@@ -7346,7 +7349,7 @@ ${body}
     const styles = {
       ok:      'background:#27AE60;color:white;',
       warn:    'background:#E67E22;color:white;',
-      loading: 'background:#2D5016;color:white;',
+      loading: 'background:var(--verde-bosque);color:white;',
       error:   'background:#C0392B;color:white;'
     };
     ind.style.cssText += styles[type] || styles.ok;
@@ -7487,7 +7490,7 @@ ${body}
       const esInact    = !esPend && !esAct;
       const medAlert   = getMedAlert(p.n);
       const bgColor    = esPend ? '#fff8e1' : esAct ? 'white' : '#f8f8f8';
-      const toggleBg   = esPend ? '#F39C12' : esAct ? '#4A7C2F' : '#c8bfa8';
+      const toggleBg   = esPend ? '#F39C12' : esAct ? 'var(--verde-medio)' : '#c8bfa8';
       const toggleLeft = esPend ? '10px'    : esAct ? '17px'    : '4px';
       const badge      = esPend
         ? '<span style="font-size:10px;font-weight:700;color:#F39C12;background:#fff3cd;padding:1px 6px;border-radius:5px;">⏳ Pendiente</span>'
@@ -7513,7 +7516,7 @@ ${body}
           </div>
           <div style="font-size:11px;opacity:.5;margin-top:1px;display:flex;align-items:center;gap:6px;">
             <span>${g?g.label:'?'}</span>
-            ${gcampAsig?'<span style="color:'+( gcampAsig.hex||'#2D5016')+'">· '+escHtml(gcampAsig.nombre)+'</span>':''}
+            ${gcampAsig?'<span style="color:'+( gcampAsig.hex||'var(--verde-bosque)')+'">· '+escHtml(gcampAsig.nombre)+'</span>':''}
             ${badge?badge:''}
           </div>
         </div>
@@ -7580,7 +7583,7 @@ ${body}
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid #e8e0d0;margin-bottom:12px;">
           <span style="font-size:13px;font-weight:600;color:#444;">
-            Estado: ${esPend?'<span style="color:#F39C12;">⏳ Pendiente</span>':esAct?'<span style="color:#2D5016;">✅ Activo</span>':'<span style="color:#C0392B;">⛔ No activo</span>'}
+            Estado: ${esPend?'<span style="color:#F39C12;">⏳ Pendiente</span>':esAct?'<span style="color:var(--verde-bosque);">✅ Activo</span>':'<span style="color:#C0392B;">⛔ No activo</span>'}
           </span>
           <button onclick="mobToggleActivo(${p.n},'${p.gid}')"
             style="width:42px;height:24px;border-radius:12px;border:none;cursor:pointer;position:relative;background:${toggleBg};">
@@ -7592,7 +7595,7 @@ ${body}
             style="padding:10px 14px;border-radius:10px;border:1.5px solid #f0f7eb;background:white;
               font-size:14px;cursor:pointer;" title="Guardar cambios">💾</button>
           <button onclick="openFichaById(${p.n})"
-            style="flex:1;padding:10px;border-radius:10px;border:none;background:#2D5016;color:white;
+            style="flex:1;padding:10px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;
               font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
             🩺 Ver ficha completa
           </button>
@@ -7665,7 +7668,7 @@ ${body}
       div.innerHTML = `
         <div style="width:28px;height:28px;border-radius:50%;background:${g?.hex||'#888'};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0;">${getInitials(p.nombre,p.apellidos)}</div>
         <div style="flex:1;font-size:13px;"><strong>${escHtml(p.apellidos)}</strong>, ${escHtml(p.nombre)}</div>
-        <button onclick="openAddNotaMob(${p.n})" style="padding:4px 10px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:11px;font-weight:600;cursor:pointer;">+ Nota</button>
+        <button onclick="openAddNotaMob(${p.n})" style="padding:4px 10px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:11px;font-weight:600;cursor:pointer;">+ Nota</button>
       `;
       res.appendChild(div);
     });
@@ -7719,12 +7722,12 @@ ${body}
       // Header
       card.innerHTML = `
         <div style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f9f6f1;border-bottom:1px solid #ede5d0;">
-          <div style="width:36px;height:36px;border-radius:10px;background:${g?.hex||'#2D5016'};display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:13px;flex-shrink:0;">${getInitials(alumno.nombre||'',alumno.apellidos||'')}</div>
+          <div style="width:36px;height:36px;border-radius:10px;background:${g?.hex||'var(--verde-bosque)'};display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:13px;flex-shrink:0;">${getInitials(alumno.nombre||'',alumno.apellidos||'')}</div>
           <div style="flex:1;">
             <div style="font-weight:700;font-size:14px;">${escHtml(alumno.apellidos)}, ${escHtml(alumno.nombre)}</div>
             <div style="font-size:11px;opacity:.5;">${g?g.label:''} · ${alumno.notas.length} nota${alumno.notas.length!==1?'s':''}</div>
           </div>
-          <button onclick="openAddNota(${n})" style="padding:6px 10px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:12px;font-weight:700;cursor:pointer;">+ Nota</button>
+          <button onclick="openAddNota(${n})" style="padding:6px 10px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:12px;font-weight:700;cursor:pointer;">+ Nota</button>
         </div>
         <div style="padding:10px 14px;">
           ${alumno.notas.slice().reverse().map(nota => {
@@ -7749,7 +7752,7 @@ ${body}
                 </div>
                 <textarea rows="2" style="width:100%;padding:7px 9px;border-radius:8px;border:1.5px solid #d9ceb8;background:white;font-family:'DM Sans',sans-serif;font-size:13px;box-sizing:border-box;outline:none;resize:none;">${escHtml(nota.texto)}</textarea>
                 <div style="display:flex;gap:6px;margin-top:6px;">
-                  <button onclick="mobSaveEditNota(${n},${nota.id},this)" style="flex:1;padding:7px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:12px;font-weight:700;cursor:pointer;">💾 Guardar</button>
+                  <button onclick="mobSaveEditNota(${n},${nota.id},this)" style="flex:1;padding:7px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:12px;font-weight:700;cursor:pointer;">💾 Guardar</button>
                   <button onclick="mobToggleEditNota(${n},${nota.id})" style="padding:7px 10px;border-radius:8px;border:1.5px solid #d9ceb8;background:transparent;font-size:12px;cursor:pointer;">Cancelar</button>
                 </div>
               </div>
@@ -7791,9 +7794,9 @@ ${body}
       const btn   = document.getElementById('mobGTab'+t.charAt(0).toUpperCase()+t.slice(1));
       if (panel) panel.style.display = t===tab ? 'block' : 'none';
       if (btn) {
-        btn.style.color    = t===tab ? '#2D5016' : '#888';
+        btn.style.color    = t===tab ? 'var(--verde-bosque)' : '#888';
         btn.style.fontWeight = t===tab ? '800' : '600';
-        btn.style.borderBottom = t===tab ? '2px solid #2D5016' : '2px solid transparent';
+        btn.style.borderBottom = t===tab ? '2px solid var(--verde-bosque)' : '2px solid transparent';
       }
     });
     if (tab === 'camp')  { renderMobGruposCamp(); }
@@ -7819,7 +7822,7 @@ ${body}
       const alumnos = g.alumnos || [];
       const conAlerta = alumnos.filter(n => getMedAlert(n)).length;
       const card = document.createElement('div');
-      card.style.cssText = 'background:white;border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);border-top:3px solid '+(g.hex||'#2D5016')+';';
+      card.style.cssText = 'background:white;border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);border-top:3px solid '+(g.hex||'var(--verde-bosque)')+';';
       // Header
       const header = document.createElement('div');
       header.style.cssText = 'display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;';
@@ -7832,7 +7835,7 @@ ${body}
       };
       header.innerHTML = `
         <div onclick="event.stopPropagation();cycleColor('${g.id}');renderMobGruposMain();"
-          style="width:22px;height:22px;border-radius:50%;background:${g.hex||'#2D5016'};flex-shrink:0;cursor:pointer;border:2px solid rgba(255,255,255,.5);" title="Cambiar color"></div>
+          style="width:22px;height:22px;border-radius:50%;background:${g.hex||'var(--verde-bosque)'};flex-shrink:0;cursor:pointer;border:2px solid rgba(255,255,255,.5);" title="Cambiar color"></div>
         <div style="flex:1;">
           <div style="font-weight:700;font-size:14px;">${escHtml(g.nombre||'Grupo')}</div>
           <div style="font-size:11px;opacity:.5;">${alumnos.length} alumnos${conAlerta?' · '+conAlerta+' 🔴':''}</div>
@@ -7845,7 +7848,7 @@ ${body}
       body.innerHTML = `
         <div style="display:flex;gap:6px;margin-bottom:12px;padding-top:8px;">
           <button onclick="mobGrupoCardTab(this,'alumnos-${gi}')" class="gcardtab active" data-panel="alumnos-${gi}"
-            style="flex:1;padding:6px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:11px;font-weight:700;cursor:pointer;">👥 Alumnos</button>
+            style="flex:1;padding:6px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:11px;font-weight:700;cursor:pointer;">👥 Alumnos</button>
           <button onclick="mobGrupoCardTab(this,'monitores-${gi}')" class="gcardtab" data-panel="monitores-${gi}"
             style="flex:1;padding:6px;border-radius:8px;border:1.5px solid #d9ceb8;background:transparent;color:#666;font-size:11px;font-weight:700;cursor:pointer;">👤 Monitores</button>
           <button onclick="mobGrupoCardTab(this,'cabana-${gi}')" class="gcardtab" data-panel="cabana-${gi}"
@@ -7857,7 +7860,7 @@ ${body}
             <input placeholder="🔍 Añadir alumno…" id="mobGBuscar-${gi}"
               style="flex:1;padding:8px 10px;border-radius:8px;border:1.5px solid #d9ceb8;background:white;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;"
               oninput="mobGrupoSearch('${g.id}',${gi})"/>
-            <button onclick="addTodosActivosGrupo('${g.id}')" style="padding:8px 10px;border-radius:8px;border:1.5px solid #2D5016;background:transparent;color:#2D5016;font-size:11px;font-weight:700;cursor:pointer;">+Todos</button>
+            <button onclick="addTodosActivosGrupo('${g.id}')" style="padding:8px 10px;border-radius:8px;border:1.5px solid var(--verde-bosque);background:transparent;color:var(--verde-bosque);font-size:11px;font-weight:700;cursor:pointer;">+Todos</button>
           </div>
           <div id="mobGBuscarRes-${gi}" style="max-height:150px;overflow-y:auto;margin-bottom:8px;"></div>
           <div style="display:flex;flex-wrap:wrap;gap:6px;" id="mobGChips-${gi}">
@@ -7906,7 +7909,7 @@ ${body}
         <!-- Acciones grupo -->
         <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #ede5d0;">
           <button onclick="saveGruposCamp();showSyncIndicator('✔ Grupo guardado','ok');"
-            style="flex:1;padding:9px;border-radius:10px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">💾 Guardar</button>
+            style="flex:1;padding:9px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">💾 Guardar</button>
           <button onclick="deleteGrupoCamp('${g.id}')"
             style="padding:9px 12px;border-radius:10px;border:1.5px solid #fdecea;background:white;font-size:13px;cursor:pointer;">🗑</button>
         </div>`;
@@ -7922,7 +7925,7 @@ ${body}
     card.querySelectorAll('.gcardtab').forEach(b => {
       b.style.background = 'transparent'; b.style.color = '#666'; b.style.border = '1.5px solid #d9ceb8';
     });
-    btn.style.background = '#2D5016'; btn.style.color = 'white'; btn.style.border = 'none';
+    btn.style.background = 'var(--verde-bosque)'; btn.style.color = 'white'; btn.style.border = 'none';
     card.querySelectorAll('[id^="alumnos-"],[id^="monitores-"],[id^="cabana-"]').forEach(p => p.style.display = 'none');
     const panel = document.getElementById(panelId);
     if (panel) panel.style.display = 'block';
@@ -7979,7 +7982,7 @@ ${body}
       div.innerHTML = `
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
           <div style="width:10px;height:10px;border-radius:50%;background:${g.hex};flex-shrink:0;"></div>
-          <div style="font-family:'Playfair Display',serif;font-weight:700;color:#2D5016;flex:1;">${escHtml(m.nombre)} ${escHtml(m.apellidos)}</div>
+          <div style="font-family:'Playfair Display',serif;font-weight:700;color:var(--verde-bosque);flex:1;">${escHtml(m.nombre)} ${escHtml(m.apellidos)}</div>
           <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;background:${g.hex}22;color:${g.hex};">${g.label}</span>
         </div>
         ${sorted.map(p=>`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid #f5f0e8;">
@@ -8020,10 +8023,10 @@ ${body}
   function showMobMonTab(tab, btn) {
     document.getElementById('mobMonListaPanel').style.display = tab==='lista' ? 'block' : 'none';
     document.getElementById('mobMonMedicoPanel').style.display = tab==='medico' ? 'block' : 'none';
-    document.getElementById('mobMonTabLista').style.background  = tab==='lista' ? '#2D5016' : '#f5f0e8';
-    document.getElementById('mobMonTabLista').style.color       = tab==='lista' ? 'white' : '#2D5016';
-    document.getElementById('mobMonTabMedico').style.background = tab==='medico' ? '#2D5016' : '#f5f0e8';
-    document.getElementById('mobMonTabMedico').style.color      = tab==='medico' ? 'white' : '#2D5016';
+    document.getElementById('mobMonTabLista').style.background  = tab==='lista' ? 'var(--verde-bosque)' : '#f5f0e8';
+    document.getElementById('mobMonTabLista').style.color       = tab==='lista' ? 'white' : 'var(--verde-bosque)';
+    document.getElementById('mobMonTabMedico').style.background = tab==='medico' ? 'var(--verde-bosque)' : '#f5f0e8';
+    document.getElementById('mobMonTabMedico').style.color      = tab==='medico' ? 'white' : 'var(--verde-bosque)';
     if (tab==='medico') renderMobMonitoResumenMedico();
   }
 
@@ -8057,10 +8060,10 @@ ${body}
   function showMobProgTab(tab, btn) {
     document.getElementById('mobProgListPanel').style.display  = tab==='lista' ? 'block' : 'none';
     document.getElementById('mobProgSemanaPanel').style.display = tab==='semana' ? 'block' : 'none';
-    document.getElementById('mobProgTabLista').style.color        = tab==='lista' ? '#2D5016' : '#888';
-    document.getElementById('mobProgTabLista').style.borderBottom = tab==='lista' ? '2px solid #2D5016' : 'none';
-    document.getElementById('mobProgTabSemana').style.color        = tab==='semana' ? '#2D5016' : '#888';
-    document.getElementById('mobProgTabSemana').style.borderBottom = tab==='semana' ? '2px solid #2D5016' : 'none';
+    document.getElementById('mobProgTabLista').style.color        = tab==='lista' ? 'var(--verde-bosque)' : '#888';
+    document.getElementById('mobProgTabLista').style.borderBottom = tab==='lista' ? '2px solid var(--verde-bosque)' : 'none';
+    document.getElementById('mobProgTabSemana').style.color        = tab==='semana' ? 'var(--verde-bosque)' : '#888';
+    document.getElementById('mobProgTabSemana').style.borderBottom = tab==='semana' ? '2px solid var(--verde-bosque)' : 'none';
     if (tab==='semana') renderMobProgSemana();
     if (tab==='lista')  renderMobProgLista();
   }
@@ -8130,24 +8133,24 @@ ${body}
       const dayDiv = document.createElement('div');
       dayDiv.style.cssText = 'margin-bottom:14px;';
       dayDiv.innerHTML = `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-        <div style="width:36px;height:36px;border-radius:50%;background:${isToday?'#2D5016':'#f5f0e8'};color:${isToday?'white':'#2D5016'};display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0;">
+        <div style="width:36px;height:36px;border-radius:50%;background:${isToday?'var(--verde-bosque)':'#f5f0e8'};color:${isToday?'white':'var(--verde-bosque)'};display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;font-size:10px;flex-shrink:0;">
           <span>${DIAS_ES[d.getDay()]}</span><span style="font-size:14px;line-height:1;">${d.getDate()}</span>
         </div>
         <div style="font-size:12px;font-weight:600;color:#555;">${acts.length} actividad${acts.length!==1?'es':''}</div>
       </div>`;
 
       acts.forEach(a => {
-        const color = (typeof TIPO_COLORS !== 'undefined' ? TIPO_COLORS[a.tipo] : null) || '#4A7C2F';
+        const color = (typeof TIPO_COLORS !== 'undefined' ? TIPO_COLORS[a.tipo] : null) || 'var(--verde-medio)';
         const item = document.createElement('div');
         item.style.cssText = `display:flex;align-items:center;gap:10px;padding:10px 12px;background:white;border-radius:10px;margin-bottom:6px;border-left:4px solid ${color};border:1px solid #ede8de;border-left:4px solid ${color};cursor:pointer;`;
         item.innerHTML = `
           <div style="text-align:center;min-width:42px;">
-            <div style="font-size:12px;font-weight:700;color:#2D5016;">${a.horaInicio||'--'}</div>
+            <div style="font-size:12px;font-weight:700;color:var(--verde-bosque);">${a.horaInicio||'--'}</div>
             ${a.horaFin?`<div style="font-size:10px;opacity:.4;">${a.horaFin}</div>`:''}
           </div>
           <div style="flex:1;">
             <div style="font-size:10px;font-weight:700;color:${color};text-transform:uppercase;letter-spacing:.5px;">${TIPO_LABELS[a.tipo]||a.tipo}</div>
-            <div style="font-size:13px;font-weight:600;color:#2D5016;">${escHtml(a.nombre||'')}</div>
+            <div style="font-size:13px;font-weight:600;color:var(--verde-bosque);">${escHtml(a.nombre||'')}</div>
             ${a.lugar?`<div style="font-size:11px;opacity:.5;">📍 ${escHtml(a.lugar)}</div>`:''}
           </div>
         `;
@@ -8393,7 +8396,7 @@ ${body}
       if (actividadActual.length) {
         guardiaAhora.innerHTML = actividadActual.map(a => {
           const monitoresAct = (a.monitores||[]).map(mid => monitoresData.find(m=>String(m.id)===String(mid))).filter(Boolean);
-          const color = (typeof TIPO_COLORS !== 'undefined' ? TIPO_COLORS[a.tipo] : null) || '#4A7C2F';
+          const color = (typeof TIPO_COLORS !== 'undefined' ? TIPO_COLORS[a.tipo] : null) || 'var(--verde-medio)';
           return `<div style="background:${color};border-radius:16px;padding:20px 24px;color:white;margin-bottom:12px;">
             <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:.75;margin-bottom:6px;">🔴 EN CURSO AHORA</div>
             <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;margin-bottom:8px;">${escHtml(a.nombre||TIPO_LABELS[a.tipo]||'')}</div>
@@ -8423,7 +8426,7 @@ ${body}
             const [h2,m2]=(a.horaFin||'23:59').split(':').map(Number);
             return horaActual>=ini && horaActual<=h2*60+m2;
           })();
-          const color = (typeof TIPO_COLORS !== 'undefined' ? TIPO_COLORS[a.tipo] : null) || '#4A7C2F';
+          const color = (typeof TIPO_COLORS !== 'undefined' ? TIPO_COLORS[a.tipo] : null) || 'var(--verde-medio)';
           const monitoresAct = (a.monitores||[]).map(mid=>monitoresData.find(m=>String(m.id)===String(mid))).filter(Boolean);
           const gruposAct = (a.grupos||[]).map(gid=>gruposCamp.find(g=>String(g.id)===String(gid))).filter(Boolean);
           return `<div style="display:flex;gap:12px;padding:12px 16px;border-radius:12px;margin-bottom:8px;
@@ -8516,7 +8519,7 @@ ${body}
       if (!miembros.length) return;
       const section = document.createElement('div');
       section.style.cssText = 'margin-bottom:16px;';
-      section.innerHTML = `<div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#2D5016;opacity:.7;padding:8px 14px;background:#f0f7eb;border-radius:8px;margin-bottom:6px;">${escHtml(g.nombre)}</div>`;
+      section.innerHTML = `<div style="font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--verde-bosque);opacity:.7;padding:8px 14px;background:#f0f7eb;border-radius:8px;margin-bottom:6px;">${escHtml(g.nombre)}</div>`;
       miembros.forEach(p => {
         const estado = day[p.n] || '';
         const med = getMedAlert(p.n);
@@ -8565,10 +8568,10 @@ ${body}
     // EN CURSO
     const enCurso = actHoy.filter(a => a.horaInicio <= hhmm && a.horaFin >= hhmm);
     let html = `<div style="margin-bottom:16px;">
-      <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#2D5016;opacity:.6;margin-bottom:8px;">⚡ En este momento</div>`;
+      <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--verde-bosque);opacity:.6;margin-bottom:8px;">⚡ En este momento</div>`;
     if (enCurso.length) {
       enCurso.forEach(a => {
-        const color = TIPO_COLORS[a.tipo]||'#2D5016';
+        const color = TIPO_COLORS[a.tipo]||'var(--verde-bosque)';
         html += `<div style="background:${color};border-radius:12px;padding:14px;color:white;margin-bottom:8px;">
           <div style="font-size:11px;font-weight:700;opacity:.8;margin-bottom:4px;">${TIPO_LABELS[a.tipo]||a.tipo} · ${a.horaInicio}–${a.horaFin}</div>
           <div style="font-size:16px;font-weight:900;">${escHtml(a.nombre||TIPO_LABELS[a.tipo]||'')}</div>
@@ -8582,10 +8585,10 @@ ${body}
 
     // AGENDA HOY
     html += `<div style="margin-bottom:16px;">
-      <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#2D5016;opacity:.6;margin-bottom:8px;">📅 Agenda de hoy</div>`;
+      <div style="font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--verde-bosque);opacity:.6;margin-bottom:8px;">📅 Agenda de hoy</div>`;
     if (actHoy.length) {
       actHoy.forEach(a => {
-        const color = TIPO_COLORS[a.tipo]||'#2D5016';
+        const color = TIPO_COLORS[a.tipo]||'var(--verde-bosque)';
         const isCur = enCurso.some(x=>x.id===a.id);
         html += `<div style="display:flex;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:6px;background:${isCur?color+'22':'white'};border-left:3px solid ${color};">
           <div style="font-size:12px;font-weight:700;color:#666;flex-shrink:0;">${a.horaInicio||'—'}</div>
@@ -8620,7 +8623,7 @@ ${body}
 
     // Resumen diario
     html += `<button onclick="generarResumenDiario()"
-      style="width:100%;padding:12px;border-radius:12px;border:1.5px solid #2D5016;background:transparent;color:#2D5016;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
+      style="width:100%;padding:12px;border-radius:12px;border:1.5px solid var(--verde-bosque);background:transparent;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
       📋 Generar resumen del día
     </button>`;
 
@@ -8665,7 +8668,7 @@ ${body}
       box-shadow:0 8px 32px rgba(0,0,0,.2);max-width:280px;font-family:'DM Sans',sans-serif;font-size:13px;
       border-left:4px solid ${d.alergias?'#C0392B':'#E67E22'};`;
     tooltip.innerHTML = `
-      <div style="font-weight:700;color:#2D5016;margin-bottom:8px;">🩺 ${escHtml(p.apellidos)}, ${escHtml(p.nombre)}</div>
+      <div style="font-weight:700;color:var(--verde-bosque);margin-bottom:8px;">🩺 ${escHtml(p.apellidos)}, ${escHtml(p.nombre)}</div>
       ${d.alergias?`<div style="color:#C0392B;margin-bottom:4px;"><strong>⚠️ Alergias:</strong> ${escHtml(d.alergias)}</div>`:''}
       ${d.medicacion?`<div style="color:#E67E22;margin-bottom:4px;"><strong>💊 Medicación:</strong> ${escHtml(d.medicacion)}</div>`:''}
       ${d.observaciones?`<div style="opacity:.7;"><strong>📋</strong> ${escHtml(d.observaciones)}</div>`:''}
@@ -8726,10 +8729,10 @@ ${body}
   function printHeader(titulo, subtitulo) {
     const now = new Date().toLocaleDateString('es-ES', {day:'numeric',month:'long',year:'numeric'});
     return `
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid #2D5016;">
-        <div style="width:48px;height:48px;border-radius:50%;background:#2D5016;display:flex;align-items:center;justify-content:center;color:white;font-size:22px;flex-shrink:0;">🏕</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:12px;border-bottom:3px solid var(--verde-bosque);">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--verde-bosque);display:flex;align-items:center;justify-content:center;color:white;font-size:22px;flex-shrink:0;">🏕</div>
         <div style="flex:1;">
-          <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:#2D5016;">${titulo}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900;color:var(--verde-bosque);">${titulo}</div>
           <div style="font-size:12px;opacity:.5;margin-top:2px;">${subtitulo} · Generado ${now}</div>
         </div>
         <div style="text-align:right;font-size:11px;opacity:.4;">CampOS</div>
@@ -8753,7 +8756,7 @@ ${body}
     // Color legend
     html += `<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">`;
     Object.entries(TIPO_LABELS).forEach(([k,v]) => {
-      const color = TIPO_COLORS[k] || '#4A7C2F';
+      const color = TIPO_COLORS[k] || 'var(--verde-medio)';
       html += `<span style="display:inline-flex;align-items:center;gap:4px;font-size:10px;"><span style="width:10px;height:10px;border-radius:3px;background:${color};display:inline-block;"></span>${v}</span>`;
     });
     html += '</div>';
@@ -8763,7 +8766,7 @@ ${body}
     html += '<tr><th style="width:38px;background:#f5f0e8;border:1px solid #d9ceb8;padding:4px;"></th>';
     dias.forEach(d => {
       const isToday = dateToStr(d) === todayStr;
-      html += `<th style="text-align:center;background:${isToday?'#2D5016':'#f5f0e8'};color:${isToday?'white':'#2D5016'};border:1px solid #d9ceb8;padding:5px;font-size:11px;">
+      html += `<th style="text-align:center;background:${isToday?'var(--verde-bosque)':'#f5f0e8'};color:${isToday?'white':'var(--verde-bosque)'};border:1px solid #d9ceb8;padding:5px;font-size:11px;">
         <div style="font-weight:700;">${DIAS_ES[d.getDay()]}</div>
         <div style="font-size:13px;font-weight:900;">${d.getDate()}</div>
       </th>`;
@@ -8778,7 +8781,7 @@ ${body}
         const acts = progData.filter(a => actividadEnFecha(a,ds) && a.horaInicio && parseInt(a.horaInicio)===hNum);
         html += `<td style="vertical-align:top;padding:2px;border:1px solid #ede8de;min-height:28px;">`;
         acts.forEach(a => {
-          const color = TIPO_COLORS[a.tipo] || '#4A7C2F';
+          const color = TIPO_COLORS[a.tipo] || 'var(--verde-medio)';
           const monNom = (a.monitores||[]).map(mid=>{const m=monitoresData.find(m=>String(m.id)===String(mid));return m?m.nombre:'';}).filter(Boolean).join(', ');
           html += `<div style="background:${color};color:white;border-radius:3px;padding:2px 4px;margin-bottom:1px;font-size:9px;line-height:1.3;">
             <div style="font-weight:700;">${escHtml((a.nombre||'').slice(0,20))}</div>
@@ -8805,7 +8808,7 @@ ${body}
     html += printHeader('Programación completa', sorted.length + ' actividades');
 
     html += `<table style="width:100%;border-collapse:collapse;font-size:11px;">
-      <thead><tr style="background:#2D5016;color:white;">
+      <thead><tr style="background:var(--verde-bosque);color:white;">
         <th style="padding:7px 10px;text-align:left;font-size:10px;letter-spacing:.5px;">TIPO</th>
         <th style="padding:7px 10px;text-align:left;">ACTIVIDAD</th>
         <th style="padding:7px 10px;text-align:left;">DÍAS</th>
@@ -8817,7 +8820,7 @@ ${body}
       </tr></thead><tbody>`;
 
     sorted.forEach((a, i) => {
-      const color = TIPO_COLORS[a.tipo] || '#4A7C2F';
+      const color = TIPO_COLORS[a.tipo] || 'var(--verde-medio)';
       const diasStr = (a.dias||[]).map(d=>DIAS_LABELS[d]?.slice(0,3)||d).join(', ');
       const gruposNom = (a.grupos||[]).map(gid=>{const g=gruposCamp.find(g=>String(g.id)===String(gid));return g?g.nombre:'';}).filter(Boolean).join(', ');
       const monNom = (a.monitores||[]).map(mid=>{const m=monitoresData.find(m=>String(m.id)===String(mid));return m?(m.nombre+' '+m.apellidos[0]+'.').trim():'';}).filter(Boolean).join(', ');
@@ -8862,7 +8865,7 @@ ${body}
           </tr></thead><tbody>`;
 
       acts.forEach((a,i) => {
-        const color = TIPO_COLORS[a.tipo] || '#4A7C2F';
+        const color = TIPO_COLORS[a.tipo] || 'var(--verde-medio)';
         const diasStr = (a.dias||[]).map(d=>DIAS_LABELS[d]?.slice(0,3)||d).join(', ');
         const monNom = (a.monitores||[]).map(mid=>{const m=monitoresData.find(m=>String(m.id)===String(mid));return m?m.nombre:'';}).filter(Boolean).join(', ');
         html += `<tr style="background:${i%2===0?'white':'#faf8f5'};border-bottom:1px solid #ede8de;">
@@ -8894,7 +8897,7 @@ ${body}
 
       const gruposAsig = gruposCamp.filter(g => (g.monitores||[]).includes(m.id));
       html += `<div style="break-inside:avoid;margin-bottom:20px;">
-        <div style="background:#2D5016;color:white;border-radius:8px 8px 0 0;padding:10px 14px;">
+        <div style="background:var(--verde-bosque);color:white;border-radius:8px 8px 0 0;padding:10px 14px;">
           <div style="font-weight:700;font-size:13px;">👤 ${escHtml(m.nombre)} ${escHtml(m.apellidos)} · ${escHtml(m.rol)}</div>
           ${gruposAsig.length?`<div style="font-size:11px;opacity:.75;margin-top:3px;">🏕 ${gruposAsig.map(g=>escHtml(g.nombre)).join(', ')}</div>`:''}
           ${m.tel?`<div style="font-size:11px;opacity:.75;">📞 ${escHtml(m.tel)}</div>`:''}
@@ -8910,7 +8913,7 @@ ${body}
           </tr></thead><tbody>`;
 
       acts.forEach((a,i) => {
-        const color = TIPO_COLORS[a.tipo] || '#4A7C2F';
+        const color = TIPO_COLORS[a.tipo] || 'var(--verde-medio)';
         const diasStr = (a.dias||[]).map(d=>DIAS_LABELS[d]?.slice(0,3)||d).join(', ');
         const gruposNom = (a.grupos||[]).map(gid=>{const g=gruposCamp.find(g=>String(g.id)===String(gid));return g?g.nombre:'';}).filter(Boolean).join(', ');
         html += `<tr style="background:${i%2===0?'white':'#faf8f5'};border-bottom:1px solid #ede8de;">
@@ -8942,7 +8945,7 @@ ${body}
     grupo:        { color: '#8E44AD', label: 'Grupo'        },
     ficha:        { color: '#E67E22', label: 'Ficha médica' },
     asistencia:   { color: '#16A085', label: 'Asistencia'   },
-    programacion: { color: '#2D5016', label: 'Programación' },
+    programacion: { color: 'var(--verde-bosque)', label: 'Programación' },
     obs:          { color: '#C0392B', label: 'Nota'         },
     sistema:      { color: '#95A5A6', label: 'Sistema'      },
   };
@@ -9058,7 +9061,7 @@ ${body}
       lista.innerHTML = '<div style="text-align:center;padding:30px;font-size:13px;opacity:.4;">Sin registros en el historial.</div>';
       return;
     }
-    const tipoColors = {alumno:'#3B7EA1',ficha:'#C0392B',monitor:'#8E44AD',grupo:'#2D5016',programacion:'#E67E22',asistencia:'#27AE60',obs:'#E67E22',sistema:'#888'};
+    const tipoColors = {alumno:'#3B7EA1',ficha:'#C0392B',monitor:'#8E44AD',grupo:'var(--verde-bosque)',programacion:'#E67E22',asistencia:'#27AE60',obs:'#E67E22',sistema:'#888'};
     const tipoLabels = {alumno:'👥 Alumno',ficha:'🩺 Ficha',monitor:'👤 Monitor',grupo:'🏕 Grupo',programacion:'📅 Prog.',asistencia:'✅ Asist.',obs:'📝 Nota',sistema:'⚙️ Sistema'};
     lista.innerHTML = '';
     filtered.slice(0,50).forEach(e => {
@@ -9170,10 +9173,10 @@ ${body}
     printArea.innerHTML = `
       <div style="font-family:'DM Sans',sans-serif;font-size:12px;color:#222;padding:20px;max-width:800px;margin:0 auto;">
         <!-- Cabecera -->
-        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:14px;border-bottom:3px solid #2D5016;">
-          <div style="width:52px;height:52px;border-radius:50%;background:#2D5016;display:flex;align-items:center;justify-content:center;color:white;font-size:24px;flex-shrink:0;">🏕</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:14px;border-bottom:3px solid var(--verde-bosque);">
+          <div style="width:52px;height:52px;border-radius:50%;background:var(--verde-bosque);display:flex;align-items:center;justify-content:center;color:white;font-size:24px;flex-shrink:0;">🏕</div>
           <div style="flex:1;">
-            <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:#2D5016;">Resumen del día</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--verde-bosque);">Resumen del día</div>
             <div style="font-size:13px;opacity:.5;margin-top:2px;text-transform:capitalize;">${fechaStr} · Generado a las ${horaStr}</div>
           </div>
           <div style="text-align:right;font-size:11px;opacity:.4;">CampOS</div>
@@ -9181,7 +9184,7 @@ ${body}
 
         <!-- Asistencia -->
         <div style="background:#f5f0e8;border-radius:14px;padding:16px 20px;margin-bottom:16px;">
-          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#2D5016;margin-bottom:12px;">✅ Asistencia</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);margin-bottom:12px;">✅ Asistencia</div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
             <div style="text-align:center;background:white;border-radius:10px;padding:12px;border-left:3px solid #27AE60;">
               <div style="font-size:28px;font-weight:900;color:#27AE60;">${presentes}</div>
@@ -9210,9 +9213,9 @@ ${body}
 
         <!-- Actividades del día -->
         <div style="background:#f5f0e8;border-radius:14px;padding:16px 20px;margin-bottom:16px;">
-          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#2D5016;margin-bottom:12px;">📅 Actividades de hoy (${actHoy.length})</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);margin-bottom:12px;">📅 Actividades de hoy (${actHoy.length})</div>
           ${actHoy.length ? actHoy.map(a => {
-            const color = TIPO_COLORS[a.tipo] || '#4A7C2F';
+            const color = TIPO_COLORS[a.tipo] || 'var(--verde-medio)';
             const monNom = (a.monitores||[]).map(mid=>{const m=monitoresData.find(m=>String(m.id)===String(mid));return m?m.nombre:'';}).filter(Boolean).join(', ');
             return `<div style="display:flex;gap:10px;padding:8px 12px;background:white;border-radius:8px;margin-bottom:6px;border-left:3px solid ${color};">
               <div style="min-width:44px;text-align:center;">
@@ -9230,7 +9233,7 @@ ${body}
         <!-- Notas del día -->
         ${notasHoy.length ? `
         <div style="background:#f5f0e8;border-radius:14px;padding:16px 20px;margin-bottom:16px;">
-          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#2D5016;margin-bottom:12px;">🗒 Notas de alumnos de hoy (${notasHoy.length})</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);margin-bottom:12px;">🗒 Notas de alumnos de hoy (${notasHoy.length})</div>
           ${notasHoy.map(({alumno,nota}) => {
             const moodCol = {bien:'#27AE60',regular:'#E67E22',mal:'#C0392B'}[nota.mood]||'#27AE60';
             const moodIco = {bien:'😊',regular:'😐',mal:'😟'}[nota.mood]||'';
@@ -9257,7 +9260,7 @@ ${body}
 
         <!-- Cambios del día -->
         <div style="background:#f5f0e8;border-radius:14px;padding:16px 20px;">
-          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#2D5016;margin-bottom:12px;">📜 Actividad del sistema hoy (${cambiosHoy.length} acciones)</div>
+          <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);margin-bottom:12px;">📜 Actividad del sistema hoy (${cambiosHoy.length} acciones)</div>
           ${cambiosHoy.length ? cambiosHoy.slice(0,10).map(e => {
             const tipo = HIST_TIPOS[e.tipo] || HIST_TIPOS.sistema;
             return `<div style="display:flex;gap:8px;padding:5px 0;border-bottom:1px solid #ede8de;font-size:11px;">
@@ -9285,9 +9288,9 @@ ${body}
     }
     modal.innerHTML = `
       <div style="background:var(--blanco);padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1.5px solid var(--crema-oscuro);">
-        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:#2D5016;flex:1;">📋 Resumen del día — ${ahora.toLocaleDateString('es-ES',{day:'numeric',month:'long'})}</div>
+        <div style="font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--verde-bosque);flex:1;">📋 Resumen del día — ${ahora.toLocaleDateString('es-ES',{day:'numeric',month:'long'})}</div>
         <button onclick="window.print();setTimeout(()=>{document.getElementById('printArea').innerHTML='';document.getElementById('resumenModal').style.display='none';},1000)"
-          style="padding:8px 16px;border-radius:10px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🖨 Imprimir / PDF</button>
+          style="padding:8px 16px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🖨 Imprimir / PDF</button>
         <button onclick="document.getElementById('resumenModal').style.display='none';document.getElementById('printArea').innerHTML=''"
           style="padding:8px 14px;border-radius:10px;border:1.5px solid #d9ceb8;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;">Cerrar</button>
       </div>
@@ -9317,32 +9320,32 @@ ${body}
 <!-- ══ MODAL IMPRIMIR FICHA ══ -->
 <div id="imprimirFichaModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:10000;align-items:center;justify-content:center;padding:20px;">
   <div style="background:white;border-radius:20px;padding:28px;max-width:420px;width:100%;box-shadow:0 32px 80px rgba(0,0,0,.3);">
-    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:#2D5016;margin-bottom:6px;">🖨️ Imprimir ficha</div>
+    <div style="font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:900;color:var(--verde-bosque);margin-bottom:6px;">🖨️ Imprimir ficha</div>
     <div style="font-size:13px;color:#888;margin-bottom:18px;">Selecciona qué secciones incluir</div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;border-radius:10px;border:1.5px solid #d9ceb8;background:#f9f6f1;">
-        <input type="checkbox" id="fpDatosPersonales" checked style="width:16px;height:16px;accent-color:#2D5016;">
+        <input type="checkbox" id="fpDatosPersonales" checked style="width:16px;height:16px;accent-color:var(--verde-bosque);">
         <div><div style="font-weight:600;font-size:13px;">📋 Datos del participante</div><div style="font-size:11px;color:#888;">Nombre, curso, grupo, monitor</div></div>
       </label>
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;border-radius:10px;border:1.5px solid #d9ceb8;background:#f9f6f1;">
-        <input type="checkbox" id="fpContacto" checked style="width:16px;height:16px;accent-color:#2D5016;">
+        <input type="checkbox" id="fpContacto" checked style="width:16px;height:16px;accent-color:var(--verde-bosque);">
         <div><div style="font-weight:600;font-size:13px;">📞 Contacto familiar</div><div style="font-size:11px;color:#888;">Persona de contacto y teléfonos</div></div>
       </label>
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;border-radius:10px;border:1.5px solid #d9ceb8;background:#f9f6f1;">
-        <input type="checkbox" id="fpMedico" checked style="width:16px;height:16px;accent-color:#2D5016;">
+        <input type="checkbox" id="fpMedico" checked style="width:16px;height:16px;accent-color:var(--verde-bosque);">
         <div><div style="font-weight:600;font-size:13px;">💊 Datos médicos</div><div style="font-size:11px;color:#888;">Alergias, medicación, observaciones</div></div>
       </label>
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;border-radius:10px;border:1.5px solid #d9ceb8;background:#f9f6f1;">
-        <input type="checkbox" id="fpOrganizacion" checked style="width:16px;height:16px;accent-color:#2D5016;">
+        <input type="checkbox" id="fpOrganizacion" checked style="width:16px;height:16px;accent-color:var(--verde-bosque);">
         <div><div style="font-weight:600;font-size:13px;">🏕 Organización campamento</div><div style="font-size:11px;color:#888;">Grupo, cabaña, monitor asignado</div></div>
       </label>
       <label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px 12px;border-radius:10px;border:1.5px solid #d9ceb8;background:#f9f6f1;">
-        <input type="checkbox" id="fpNotas" style="width:16px;height:16px;accent-color:#2D5016;">
+        <input type="checkbox" id="fpNotas" style="width:16px;height:16px;accent-color:var(--verde-bosque);">
         <div><div style="font-weight:600;font-size:13px;">🗒 Notas individuales</div><div style="font-size:11px;color:#888;">Observaciones del equipo de monitores</div></div>
       </label>
     </div>
     <div style="display:flex;gap:10px;">
-      <button onclick="generarPDFFicha()" style="flex:1;padding:12px;border-radius:12px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">🖨️ Generar PDF</button>
+      <button onclick="generarPDFFicha()" style="flex:1;padding:12px;border-radius:12px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;cursor:pointer;">🖨️ Generar PDF</button>
       <button onclick="document.getElementById('imprimirFichaModal').style.display='none'" style="padding:12px 16px;border-radius:12px;border:1.5px solid #d9ceb8;background:transparent;font-family:'DM Sans',sans-serif;font-size:14px;cursor:pointer;">Cancelar</button>
     </div>
   </div>
@@ -9467,7 +9470,7 @@ ${body}
     </div>
     <div class="ficha-footer">
       <span class="ficha-saved-msg" id="fichaSavedMsg">✔ Datos guardados</span>
-      <button class="ficha-save-btn" style="background:#f0f7eb;color:#2D5016;border:1.5px solid #2D5016;" onclick="abrirImprimirFicha()">🖨️ Imprimir</button>
+      <button class="ficha-save-btn" style="background:#f0f7eb;color:var(--verde-bosque);border:1.5px solid var(--verde-bosque);" onclick="abrirImprimirFicha()">🖨️ Imprimir</button>
       <button class="ficha-save-btn" id="fichaSaveBtn" onclick="saveFichaConSpinner()">Guardar ficha</button>
     </div>
   </div>
@@ -9486,7 +9489,7 @@ ${body}
 <!-- PANTALLA PRINCIPAL -->
   <div class="mob-screen active" id="mob-home">
     <!-- Stats bar móvil -->
-    <div style="background:#2D5016;padding:10px 16px 12px;display:flex;gap:0;">
+    <div style="background:var(--verde-bosque);padding:10px 16px 12px;display:flex;gap:0;">
       <div style="flex:1;text-align:center;border-right:1px solid rgba(255,255,255,.15);">
         <div style="font-size:1.5rem;font-weight:900;color:white;line-height:1;" id="mobStatActivos">—</div>
         <div style="font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:2px;">✅ Activos</div>
@@ -9667,8 +9670,8 @@ ${body}
       <div class="mob-back" onclick="mobBack()">←</div>
       <div class="mob-topbar-title">✏️ Editar alumnos</div>
       <div style="display:flex;gap:5px;">
-        <button onclick="mobAddAlumno()" style="padding:5px 9px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:11px;font-weight:700;cursor:pointer;">+ Añadir</button>
-        <button onclick="saveAllAlumnos()" style="padding:5px 9px;border-radius:8px;border:1.5px solid #2D5016;background:transparent;color:#2D5016;font-size:11px;font-weight:700;cursor:pointer;">💾</button>
+        <button onclick="mobAddAlumno()" style="padding:5px 9px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:11px;font-weight:700;cursor:pointer;">+ Añadir</button>
+        <button onclick="saveAllAlumnos()" style="padding:5px 9px;border-radius:8px;border:1.5px solid var(--verde-bosque);background:transparent;color:var(--verde-bosque);font-size:11px;font-weight:700;cursor:pointer;">💾</button>
         <button onclick="imprimirListaAlumnos()" style="padding:5px 9px;border-radius:8px;border:1.5px solid #888;background:transparent;color:#666;font-size:11px;cursor:pointer;">🖨️</button>
       </div>
     </div>
@@ -9728,7 +9731,7 @@ ${body}
       <button class="hist-filtro-btn" onclick="filterHistorialMob('grupo',this)" style="white-space:nowrap;font-size:11px;">🏕</button>
     </div>
     <div style="display:flex;gap:5px;padding:8px 12px;background:#f9f6f1;border-bottom:1px solid #e8e0d0;overflow-x:auto;-webkit-overflow-scrolling:touch;">
-      <button onclick="filterHistorial('');renderMobHistorial();" style="padding:4px 10px;border-radius:20px;border:1.5px solid #2D5016;background:#f0f7eb;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;color:#2D5016;">Todos</button>
+      <button onclick="filterHistorial('');renderMobHistorial();" style="padding:4px 10px;border-radius:20px;border:1.5px solid var(--verde-bosque);background:#f0f7eb;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;color:var(--verde-bosque);">Todos</button>
       <button onclick="filterHistorial('alumno');renderMobHistorial();" style="padding:4px 10px;border-radius:20px;border:1.5px solid #d9ceb8;background:white;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0;">👥 Alumnos</button>
       <button onclick="filterHistorial('ficha');renderMobHistorial();" style="padding:4px 10px;border-radius:20px;border:1.5px solid #d9ceb8;background:white;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0;">🩺 Fichas</button>
       <button onclick="filterHistorial('asistencia');renderMobHistorial();" style="padding:4px 10px;border-radius:20px;border:1.5px solid #d9ceb8;background:white;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0;">✅ Asist.</button>
@@ -9740,7 +9743,7 @@ ${body}
 
   <!-- PANTALLA ASISTENCIA MOB -->
   <div class="mob-screen" id="mob-asistencia">
-    <div class="mob-topbar" style="background:#2D5016;">
+    <div class="mob-topbar" style="background:var(--verde-bosque);">
       <div class="mob-back" onclick="mobBack()" style="border-color:rgba(255,255,255,.3);color:white;">←</div>
       <div class="mob-topbar-title" style="color:white;">✅ Asistencia</div>
       <button onclick="asistNavDay(-1)" style="padding:5px 10px;border-radius:8px;border:1.5px solid rgba(255,255,255,.3);background:transparent;color:white;font-size:12px;font-weight:600;cursor:pointer;">◀</button>
@@ -9751,7 +9754,7 @@ ${body}
       <span style="color:#27AE60;" id="mobAsistP">0 ✅</span>
       <span style="color:#C0392B;" id="mobAsistA">0 ❌</span>
       <span style="color:#E67E22;" id="mobAsistJ">0 ⚠️</span>
-      <button onclick="marcarTodosPresentes();renderMobAsistencia()" style="margin-left:auto;padding:4px 10px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:11px;font-weight:600;cursor:pointer;">✅ Todos</button>
+      <button onclick="marcarTodosPresentes();renderMobAsistencia()" style="margin-left:auto;padding:4px 10px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:11px;font-weight:600;cursor:pointer;">✅ Todos</button>
     </div>
     <div id="mobAsistLista" style="padding:10px 14px;"></div>
   </div>
@@ -9762,7 +9765,7 @@ ${body}
       <div class="mob-back" onclick="mobBack()">←</div>
       <div class="mob-topbar-title">🔔 Panel de guardia</div>
       <button onclick="renderGuardia();renderMobGuardia()" style="padding:5px 10px;border-radius:8px;border:1.5px solid #d9ceb8;background:#f5f0e8;font-size:11px;font-weight:600;cursor:pointer;">🔄</button>
-      <button onclick="generarResumenDiario()" style="padding:5px 10px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:11px;font-weight:600;cursor:pointer;">📋</button>
+      <button onclick="generarResumenDiario()" style="padding:5px 10px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:11px;font-weight:600;cursor:pointer;">📋</button>
     </div>
     <div id="mobGuardiaContent" style="padding:12px 16px;"></div>
   </div>
@@ -9782,14 +9785,14 @@ ${body}
       <div class="mob-back" onclick="mobBack()">←</div>
       <div class="mob-topbar-title">📅 Programación</div>
       <div style="display:flex;gap:5px;">
-        <button onclick="openProgModal()" style="padding:5px 9px;border-radius:8px;border:none;background:#2D5016;color:white;font-size:11px;font-weight:700;cursor:pointer;">+ Nueva</button>
-        <button onclick="saveProgData();showSyncIndicator('✔ Programación guardada','ok');" style="padding:5px 9px;border-radius:8px;border:1.5px solid #2D5016;background:transparent;color:#2D5016;font-size:11px;font-weight:700;cursor:pointer;">💾</button>
+        <button onclick="openProgModal()" style="padding:5px 9px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:11px;font-weight:700;cursor:pointer;">+ Nueva</button>
+        <button onclick="saveProgData();showSyncIndicator('✔ Programación guardada','ok');" style="padding:5px 9px;border-radius:8px;border:1.5px solid var(--verde-bosque);background:transparent;color:var(--verde-bosque);font-size:11px;font-weight:700;cursor:pointer;">💾</button>
         <button onclick="document.getElementById('exportModal').classList.add('visible')" style="padding:5px 9px;border-radius:8px;border:1.5px solid #888;background:transparent;color:#666;font-size:11px;cursor:pointer;">📄 PDF</button>
       </div>
     </div>
     <!-- Vista tabs: Lista / Semana -->
     <div style="display:flex;gap:0;border-bottom:2px solid #d9ceb8;background:white;position:sticky;top:57px;z-index:90;">
-      <button onclick="showMobProgTab('lista',this)" id="mobProgTabLista" style="flex:1;padding:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:#2D5016;border-bottom:2px solid #2D5016;margin-bottom:-2px;cursor:pointer;">📋 Lista</button>
+      <button onclick="showMobProgTab('lista',this)" id="mobProgTabLista" style="flex:1;padding:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:var(--verde-bosque);border-bottom:2px solid var(--verde-bosque);margin-bottom:-2px;cursor:pointer;">📋 Lista</button>
       <button onclick="showMobProgTab('semana',this)" id="mobProgTabSemana" style="flex:1;padding:9px;border:none;background:transparent;font-size:12px;font-weight:700;color:#888;cursor:pointer;">📅 Esta semana</button>
     </div>
     <!-- Filtros -->
@@ -9859,13 +9862,13 @@ ${body}
       <div style="display:flex;gap:5px;align-items:center;">
         <button onclick="imprimirListaMonitores()" style="padding:5px 9px;border-radius:8px;border:1.5px solid #888;background:transparent;color:#666;font-size:11px;cursor:pointer;">🖨️</button>
         <button onclick="exportMonitoresExcel()" style="padding:5px 9px;border-radius:8px;border:1.5px solid #888;background:transparent;color:#666;font-size:11px;cursor:pointer;">📊</button>
-        <button onclick="addMonitor();renderMobMonitores()" style="padding:6px 12px;border-radius:10px;border:none;background:#2D5016;color:white;font-size:12px;font-weight:600;cursor:pointer;">+ Añadir</button>
+        <button onclick="addMonitor();renderMobMonitores()" style="padding:6px 12px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;font-size:12px;font-weight:600;cursor:pointer;">+ Añadir</button>
       </div>
     </div>
     <div id="mobMonResumenMed" style="margin:12px 16px 0;display:none;"></div>
     <div style="padding:10px 16px;border-bottom:1px solid #d9ceb8;background:white;display:flex;gap:6px;">
-      <button onclick="showMobMonTab('lista',this)" id="mobMonTabLista" style="flex:1;padding:8px;border:none;background:#2D5016;color:white;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">👤 Monitores</button>
-      <button onclick="showMobMonTab('medico',this)" id="mobMonTabMedico" style="flex:1;padding:8px;border:none;background:#f5f0e8;color:#2D5016;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🩺 Resumen médico</button>
+      <button onclick="showMobMonTab('lista',this)" id="mobMonTabLista" style="flex:1;padding:8px;border:none;background:var(--verde-bosque);color:white;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">👤 Monitores</button>
+      <button onclick="showMobMonTab('medico',this)" id="mobMonTabMedico" style="flex:1;padding:8px;border:none;background:#f5f0e8;color:var(--verde-bosque);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">🩺 Resumen médico</button>
     </div>
     <div id="mobMonListaPanel" style="padding:12px 16px;"></div>
     <div id="mobMonMedicoPanel" style="padding:12px 16px;display:none;"></div>
@@ -9879,12 +9882,12 @@ ${body}
       <div style="display:flex;gap:5px;">
         <button onclick="mobImprimirGrupos()" style="padding:5px 9px;border-radius:8px;border:1.5px solid #888;background:transparent;color:#666;font-size:11px;cursor:pointer;">🖨️</button>
         <button onclick="mobExportGruposExcel()" style="padding:5px 9px;border-radius:8px;border:1.5px solid #888;background:transparent;color:#666;font-size:11px;cursor:pointer;">📊</button>
-        <button onclick="addGrupoCamp();renderMobGruposMain()" style="padding:6px 12px;border-radius:10px;border:none;background:#2D5016;color:white;font-size:12px;font-weight:600;cursor:pointer;">+ Grupo</button>
+        <button onclick="addGrupoCamp();renderMobGruposMain()" style="padding:6px 12px;border-radius:10px;border:none;background:var(--verde-bosque);color:white;font-size:12px;font-weight:600;cursor:pointer;">+ Grupo</button>
       </div>
     </div>
     <!-- Sub-nav grupos móvil -->
     <div style="display:flex;gap:0;border-bottom:2px solid #d9ceb8;background:white;position:sticky;top:57px;z-index:90;">
-      <button id="mobGTabCamp" onclick="showMobGTab('camp')" style="flex:1;padding:10px 6px;border:none;background:transparent;font-size:11px;font-weight:700;color:#2D5016;border-bottom:2px solid #2D5016;margin-bottom:-2px;cursor:pointer;">🏕 Grupos</button>
+      <button id="mobGTabCamp" onclick="showMobGTab('camp')" style="flex:1;padding:10px 6px;border:none;background:transparent;font-size:11px;font-weight:700;color:var(--verde-bosque);border-bottom:2px solid var(--verde-bosque);margin-bottom:-2px;cursor:pointer;">🏕 Grupos</button>
       <button id="mobGTabMon"  onclick="showMobGTab('mon')"  style="flex:1;padding:10px 6px;border:none;background:transparent;font-size:11px;font-weight:700;color:#888;cursor:pointer;">👤 Monitor</button>
       <button id="mobGTabClase" onclick="showMobGTab('clase')" style="flex:1;padding:10px 6px;border:none;background:transparent;font-size:11px;font-weight:700;color:#888;cursor:pointer;">📋 Clase</button>
     </div>
@@ -9999,7 +10002,7 @@ ${body}
 
     <div style="display:flex;gap:10px;margin-top:20px;justify-content:flex-end;">
       <button onclick="closeExportModal()" style="padding:10px 20px;border-radius:12px;border:1.5px solid #d9ceb8;background:transparent;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;">Cancelar</button>
-      <button onclick="ejecutarExport()" style="padding:10px 22px;border-radius:12px;border:none;background:#2D5016;color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">🖨 Imprimir / Guardar PDF</button>
+      <button onclick="ejecutarExport()" style="padding:10px 22px;border-radius:12px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">🖨 Imprimir / Guardar PDF</button>
     </div>
   </div>
 </div>
