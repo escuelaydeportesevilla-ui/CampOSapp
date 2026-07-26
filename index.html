@@ -5575,9 +5575,8 @@ ${body}
       // PDF list HTML
       const pdfListHtml = (g.pdfs||[]).map((pdf, pi) => `
         <div class="pdf-item">
-          <span style="font-size:18px">📄</span>
+          <span style="font-size:18px">🔗</span>
           <span class="pdf-item-name">${escHtml(pdf.name)}</span>
-          <span class="pdf-item-size">${pdf.size||''}</span>
           <button class="pdf-open-btn" onclick="openPdf(${g.id},${pi})">Abrir</button>
           <button onclick="deletePdf(${g.id},${pi})" style="width:26px;height:26px;border-radius:6px;border:none;background:rgba(192,57,43,.1);color:var(--rojo-suave);cursor:pointer;font-size:12px;">🗑</button>
         </div>`).join('');
@@ -5699,14 +5698,17 @@ ${body}
           <button class="obs-save-btn" onclick="saveGruposCamp()">Guardar</button>
         </div>
 
-        <!-- DOCS / PDF -->
+        <!-- DOCS / ENLACES A DOCUMENTOS -->
         <div id="ctab-${g.id}-docs" class="ctab-panel" style="display:none;">
-          <div class="pdf-upload-area" onclick="document.getElementById('pdfInput-${g.id}').click()">
-            <input type="file" id="pdfInput-${g.id}" accept=".pdf,.doc,.docx,.jpg,.png,.xlsx" multiple
-              onchange="handlePdfUpload(event,${g.id})"/>
-            <div style="font-size:32px;margin-bottom:8px;">📎</div>
-            <div style="font-size:13px;font-weight:600;color:var(--verde-bosque);">Pulsa para subir archivos</div>
-            <div style="font-size:11px;opacity:.5;margin-top:4px;">PDF, Word, imágenes, Excel…</div>
+          <div style="font-size:12px;opacity:.6;margin-bottom:10px;">
+            Pega el enlace para compartir de Google Drive, Dropbox u otro servicio en la nube (no se suben archivos, solo el enlace).
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+            <input type="text" id="docNombre-${g.id}" placeholder="Nombre del documento"
+              style="flex:1;min-width:160px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--crema-oscuro);background:var(--crema);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;"/>
+            <input type="url" id="docUrl-${g.id}" placeholder="https://drive.google.com/..."
+              style="flex:2;min-width:200px;padding:9px 12px;border-radius:10px;border:1.5px solid var(--crema-oscuro);background:var(--crema);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;"/>
+            <button onclick="addDocLink(${g.id})" class="edit-btn" style="font-size:13px;padding:9px 16px;">➕ Añadir</button>
           </div>
           <div class="pdf-list" id="pdfList-${g.id}">${pdfListHtml}</div>
         </div>
@@ -5808,36 +5810,39 @@ ${body}
   }
 
   // ── PDF / Documentos ──
-  function handlePdfUpload(e, gid) {
+  function addDocLink(gid) {
     const g = gruposCamp.find(g => g.id === gid);
     if (!g) return;
+    const nombreEl = document.getElementById('docNombre-' + gid);
+    const urlEl = document.getElementById('docUrl-' + gid);
+    const nombre = nombreEl.value.trim();
+    const url = urlEl.value.trim();
+    if (!url) { alert('Pega el enlace del documento.'); return; }
+    if (!/^https?:\/\//i.test(url)) { alert('El enlace debe empezar por http:// o https://'); return; }
     if (!g.pdfs) g.pdfs = [];
-    Array.from(e.target.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = function(ev) {
-        const kb = Math.round(file.size / 1024);
-        g.pdfs.push({ name: file.name, size: kb + ' KB', data: ev.target.result });
-        saveGruposCampStorage();
-        // Refresh pdf list
-        const listEl = document.getElementById('pdfList-' + gid);
-        if (listEl) listEl.innerHTML = (g.pdfs||[]).map((pdf, pi) => `
-          <div class="pdf-item">
-            <span style="font-size:18px">📄</span>
-            <span class="pdf-item-name">${escHtml(pdf.name)}</span>
-            <span class="pdf-item-size">${pdf.size||''}</span>
-            <button class="pdf-open-btn" onclick="openPdf(${gid},${pi})">Abrir</button>
-            <button onclick="deletePdf(${gid},${pi})" style="width:26px;height:26px;border-radius:6px;border:none;background:rgba(192,57,43,.1);color:var(--rojo-suave);cursor:pointer;font-size:12px;">🗑</button>
-          </div>`).join('');
-      };
-      reader.readAsDataURL(file);
-    });
+    g.pdfs.push({ name: nombre || url, url });
+    saveGruposCampStorage();
+    nombreEl.value = '';
+    urlEl.value = '';
+    const listEl = document.getElementById('pdfList-' + gid);
+    if (listEl) listEl.innerHTML = (g.pdfs||[]).map((pdf, pi) => `
+        <div class="pdf-item">
+          <span style="font-size:18px">🔗</span>
+          <span class="pdf-item-name">${escHtml(pdf.name)}</span>
+          <button class="pdf-open-btn" onclick="openPdf(${gid},${pi})">Abrir</button>
+          <button onclick="deletePdf(${gid},${pi})" style="width:26px;height:26px;border-radius:6px;border:none;background:rgba(192,57,43,.1);color:var(--rojo-suave);cursor:pointer;font-size:12px;">🗑</button>
+        </div>`).join('');
   }
 
   function openPdf(gid, pi) {
     const g = gruposCamp.find(g => g.id === gid);
     if (!g || !g.pdfs || !g.pdfs[pi]) return;
-    const w = window.open();
-    w.document.write('<iframe src="' + g.pdfs[pi].data + '" style="width:100%;height:100vh;border:none;"></iframe>');
+    const pdf = g.pdfs[pi];
+    if (pdf.url) { window.open(pdf.url, '_blank'); return; }
+    if (pdf.data) { // documentos antiguos guardados como archivo (formato descontinuado)
+      const w = window.open();
+      w.document.write('<iframe src="' + pdf.data + '" style="width:100%;height:100vh;border:none;"></iframe>');
+    }
   }
 
   async function deletePdf(gid, pi) {
