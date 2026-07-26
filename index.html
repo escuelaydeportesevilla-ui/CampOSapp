@@ -774,6 +774,14 @@
   .tab-btn:hover { border-color: var(--verde-claro); color: var(--verde-bosque); }
   .tab-btn.active { background: var(--verde-bosque); color: white; border-color: var(--verde-bosque); }
 
+  .ptab-btn {
+    padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--crema-oscuro);
+    background: var(--blanco); font-family: 'DM Sans', sans-serif; font-size: 12px;
+    font-weight: 600; cursor: pointer; transition: all .2s; color: var(--gris-texto);
+  }
+  .ptab-btn:hover { border-color: var(--verde-claro); color: var(--verde-bosque); }
+  .ptab-btn.active { background: var(--verde-bosque); color: white; border-color: var(--verde-bosque); }
+
   .tab-panel { display: none; }
   .tab-panel.active { display: block; }
 
@@ -2226,8 +2234,26 @@
   <!-- TAB 1: PARTICIPANTES -->
   <div id="tab-participantes" class="tab-panel active">
 
-    <h2 class="section-title">👥 Participantes por curso</h2>
-    <div class="grupos-grid" id="cursosGrid"></div>
+    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <button class="ptab-btn active" id="ptab-curso" onclick="showPTab('curso')">🎓 Por curso escolar</button>
+      <button class="ptab-btn" id="ptab-grupo" onclick="showPTab('grupo')">🏕 Por grupo asignado</button>
+      <button class="ptab-btn" id="ptab-cabana" onclick="showPTab('cabana')">🏠 Por cabaña</button>
+    </div>
+
+    <div id="ptab-panel-curso">
+      <h2 class="section-title">👥 Participantes por curso</h2>
+      <div class="grupos-grid" id="cursosGrid"></div>
+    </div>
+
+    <div id="ptab-panel-grupo" style="display:none;">
+      <h2 class="section-title">🏕 Participantes por grupo asignado</h2>
+      <div class="grupos-grid" id="gruposAsignadosGrid"></div>
+    </div>
+
+    <div id="ptab-panel-cabana" style="display:none;">
+      <h2 class="section-title">🏠 Participantes por cabaña</h2>
+      <div class="grupos-grid" id="cabanasGrid"></div>
+    </div>
 
 
 
@@ -3021,6 +3047,13 @@
       if (data.medicacion)    document.getElementById('fMedicacion').value = data.medicacion;
       if (data.observaciones) document.getElementById('fObservaciones').value = data.observaciones;
       if (data.grupoCamp)     document.getElementById('fGrupoCamp').value = data.grupoCamp;
+      const gruposDeEstealumno = gruposCamp.filter(gc => (gc.alumnos||[]).includes(p.n));
+      const infoDiv = document.getElementById('fichaGruposCampInfo');
+      if (infoDiv) {
+        infoDiv.innerHTML = gruposDeEstealumno.length
+          ? gruposDeEstealumno.map(gc => `<span style="font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;background:${gc.color}22;color:${gc.color};margin-right:4px;">${escHtml(gc.nombre)}</span>`).join('')
+          : '<span style="font-size:12px;opacity:.4;">No está en ningún grupo de campamento todavía (asígnalo desde Organización → Grupos).</span>';
+      }
       let extra = {};
       if (data.datosExtra) {
         if (typeof data.datosExtra === 'string') {
@@ -3316,7 +3349,14 @@
 
       card.innerHTML = `
         <div style="width:50px;height:50px;border-radius:14px;background:#2C3A47;
-          display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">🏕</div>
+          display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3L21 19H3L12 3Z" stroke="#F2A65A" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M12 3L16.5 19" stroke="#F2A65A" stroke-width="1.4" stroke-linejoin="round"/>
+            <path d="M12 10L18.2 19" stroke="#F2A65A" stroke-width="1" opacity=".6"/>
+            <rect x="10.5" y="15.5" width="3" height="3.5" fill="#7FA0B5"/>
+          </svg>
+        </div>
         <div style="flex:1;">
           <div style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:#2C3A47;">
             ${p.nombre}</div>
@@ -3413,6 +3453,11 @@
     document.getElementById('npFechaFin').value  = p.fechaFin || '';
     document.getElementById('npScriptUrl').value = p.scriptUrl && p.scriptUrl.startsWith('http') ? p.scriptUrl : '';
     document.getElementById('npPin').value       = p.pin || '';
+    // Marcar la paleta real de este proyecto, para no sobrescribirla al guardar sin tocarla
+    _paletaSel = p.paleta || 'bosque';
+    document.querySelectorAll('#npPaleta .pal-opt').forEach(el => {
+      el.style.borderColor = el.dataset.pal === _paletaSel ? PALETAS[_paletaSel].oscuro : 'transparent';
+    });
     const btn = document.getElementById('btnCreateProj');
     if (btn) btn.textContent = '💾 Guardar cambios';
     document.getElementById('newProjForm').scrollIntoView({ behavior:'smooth', block:'center' });
@@ -3585,6 +3630,74 @@
     alert(editando ? 'Proyecto actualizado.' : 'Proyecto creado. Selecciónalo para comenzar.');
   }
 
+
+  function showPTab(tipo) {
+    ['curso','grupo','cabana'].forEach(t => {
+      const btn = document.getElementById('ptab-' + t);
+      const panel = document.getElementById('ptab-panel-' + t);
+      if (btn) btn.classList.toggle('active', t === tipo);
+      if (panel) panel.style.display = t === tipo ? 'block' : 'none';
+    });
+    if (tipo === 'grupo')  renderGruposAsignadosGrid();
+    if (tipo === 'cabana') renderCabanasGrid();
+  }
+
+  function verDetalleClasif(titulo, participantes) {
+    document.getElementById('detalleClasifTitulo').textContent = titulo;
+    const sorted = [...participantes].sort((a,b) => a.apellidos.localeCompare(b.apellidos,'es',{sensitivity:'base'}));
+    document.getElementById('detalleClasifLista').innerHTML = sorted.length
+      ? sorted.map(p => `
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--crema-oscuro);">
+            <div style="width:30px;height:30px;border-radius:50%;background:var(--verde-bosque);color:white;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;">${getInitials(p.nombre,p.apellidos)}</div>
+            <div style="font-size:13px;"><strong>${escHtml(p.apellidos)}</strong>, ${escHtml(p.nombre)}</div>
+          </div>`).join('')
+      : '<div style="font-size:13px;opacity:.4;padding:12px 0;">No hay participantes aquí todavía.</div>';
+    document.getElementById('detalleClasifOverlay').classList.add('visible');
+  }
+
+  function renderGruposAsignadosGrid() {
+    const grid = document.getElementById('gruposAsignadosGrid');
+    if (!grid) return;
+    if (!gruposCamp.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;padding:24px;text-align:center;font-size:13px;opacity:.45;">Todavía no has creado ningún grupo asignado (Organización → Grupos).</div>';
+      return;
+    }
+    let html = '';
+    gruposCamp.forEach(g => {
+      const alumnos = (g.alumnos||[]).map(n => getAllEditParticipants(true).find(p => p.n === n)).filter(Boolean);
+      html += `
+        <div class="grupo-card" onclick='verDetalleClasif(${JSON.stringify(g.nombre)}, ${JSON.stringify(alumnos.map(p=>({apellidos:p.apellidos,nombre:p.nombre})))})'>
+          <div class="curso-label">${escHtml(g.nombre)}</div>
+          <div class="numero" style="color:${g.color||g.hex}">${alumnos.length}</div>
+          <div class="descripcion">participantes</div>
+          <div class="card-toggle-hint">Ver participantes ↓</div>
+        </div>`;
+    });
+    grid.innerHTML = html;
+  }
+
+  function renderCabanasGrid() {
+    const grid = document.getElementById('cabanasGrid');
+    if (!grid) return;
+    const conCabana = gruposCamp.filter(g => g.cabana || g.tipoAloj);
+    if (!conCabana.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;padding:24px;text-align:center;font-size:13px;opacity:.45;">Todavía no has puesto cabaña/alojamiento a ningún grupo (Organización → Grupos → pestaña Cabaña).</div>';
+      return;
+    }
+    let html = '';
+    conCabana.forEach(g => {
+      const alumnos = (g.alumnos||[]).map(n => getAllEditParticipants(true).find(p => p.n === n)).filter(Boolean);
+      const nombreCabana = [g.tipoAloj, g.cabana].filter(Boolean).join(' ') || 'Sin nombre';
+      html += `
+        <div class="grupo-card" onclick='verDetalleClasif(${JSON.stringify(nombreCabana + " (" + g.nombre + ")")}, ${JSON.stringify(alumnos.map(p=>({apellidos:p.apellidos,nombre:p.nombre})))})'>
+          <div class="curso-label">${escHtml(nombreCabana)}</div>
+          <div class="numero" style="color:${g.color||g.hex}">${alumnos.length}</div>
+          <div class="descripcion">${escHtml(g.nombre)}</div>
+          <div class="card-toggle-hint">Ver participantes ↓</div>
+        </div>`;
+    });
+    grid.innerHTML = html;
+  }
 
   function renderCursosGrid() {
     const grid = document.getElementById('cursosGrid');
@@ -3769,6 +3882,8 @@
       renderEditTable();
       renderMonitorGrid();
       renderObsGrid();
+      renderBanco();
+      renderGruposCamp();
       renderGruposPorMonitor();
       renderGruposClase();
       const total = getAllEditParticipants().filter(p => p.activo !== 'pendiente' && p.activo !== 'pending').length;
@@ -3840,45 +3955,17 @@
     return opts;
   }
 
-  function getOtrosGruposOptions(n) {
-    // Encuentra en qué grupo campamento está el alumno (solo puede estar en uno via este select)
-    // Si está en varios (asignado por drag&drop), mostramos el primero
-    const grupoActual = gruposCamp.find(g => (g.alumnos||[]).includes(n));
-    let opts = '<option value="">Sin grupo</option>';
-    gruposCamp.forEach(g => {
-      const sel = grupoActual && grupoActual.id === g.id ? 'selected' : '';
-      opts += `<option value="${g.id}" ${sel}>${escHtml(g.nombre)}</option>`;
-    });
-    return opts;
-  }
-
   function getOtrosGruposCell(p) {
     if (!gruposCamp || !gruposCamp.length) {
       return `<span style="font-size:11px;opacity:.35;font-style:italic;">Sin grupos creados</span>`;
     }
-    return `<select onchange="asignarGrupoCampAlumno(this.value,${p.n})"
-      style="padding:5px 8px;border-radius:8px;border:1.5px solid var(--crema-oscuro);background:var(--crema);font-family:'DM Sans',sans-serif;font-size:12px;outline:none;width:100%;min-width:100px;">
-      ${getOtrosGruposOptions(p.n)}
-    </select>`;
-  }
-
-  function asignarGrupoCampAlumno(nuevoGcampId, alumnoN) {
-    // Quitar de todos los grupos primero
-    gruposCamp.forEach(g => {
-      g.alumnos = (g.alumnos||[]).filter(id => id !== alumnoN);
-    });
-    // Asignar al nuevo si no es "Sin grupo"
-    if (nuevoGcampId) {
-      const g = gruposCamp.find(x => String(x.id) === String(nuevoGcampId));
-      if (g) {
-        if (!g.alumnos) g.alumnos = [];
-        g.alumnos.push(alumnoN);
-      }
+    const gruposDelAlumno = gruposCamp.filter(g => (g.alumnos||[]).includes(p.n));
+    if (!gruposDelAlumno.length) {
+      return `<span style="font-size:11px;opacity:.35;font-style:italic;">Sin asignar</span>`;
     }
-    saveGruposCampStorage();
-    // Refresh banco si está visible
-    const banco = document.getElementById('bancoBanco');
-    if (banco) renderBanco();
+    return gruposDelAlumno.map(g =>
+      `<span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:12px;background:${g.color}22;color:${g.color};margin:1px 2px 1px 0;display:inline-block;">${escHtml(g.nombre)}</span>`
+    ).join('');
   }
 
   function renderEditTable() {
@@ -3964,8 +4051,6 @@
       tbody.appendChild(tr);
     });
   }
-
-  // toggleGrupoCampAlumno reemplazado por asignarGrupoCampAlumno (select)
 
   function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
@@ -4370,39 +4455,82 @@
     if (!container) return;
     container.innerHTML = '';
 
-    const asignados = monitoresData.filter(m => m.grupoAsignado);
-    if (!asignados.length) {
-      container.innerHTML = '<div style="opacity:.4;font-size:13px;padding:20px 0;">Asigna un grupo a cada monitor en la pestaña Monitores para ver la distribución aquí.</div>';
+    // Un monitor "cuenta" si tiene grupo de clase asignado (grupoAsignado clásico)
+    // O si aparece en el array monitores[] de algún grupo de campamento (Grupos asignados)
+    const monitoresConAlgo = monitoresData.filter(m => {
+      const tieneClase = m.grupoAsignado && !String(m.grupoAsignado).startsWith('camp_');
+      const tieneCampLegacy = m.grupoAsignado && String(m.grupoAsignado).startsWith('camp_');
+      const tieneCamp = gruposCamp.some(g => (g.monitores||[]).map(String).includes(String(m.id)));
+      return tieneClase || tieneCampLegacy || tieneCamp;
+    });
+
+    if (!monitoresConAlgo.length) {
+      container.innerHTML = '<div style="opacity:.4;font-size:13px;padding:20px 0;">Asigna un grupo de clase o un grupo de campamento a cada monitor para ver la distribución aquí.</div>';
       return;
     }
 
-    asignados.forEach(m => {
-      const gid = m.grupoAsignado;
-      const g = gruposEdit[gid];
-      if (!g) return;
-      const sorted = [...g.participantes].sort((a,b) => a.apellidos.localeCompare(b.apellidos,'es',{sensitivity:'base'}));
+    const idsCubiertos = new Set();
+
+    monitoresConAlgo.forEach(m => {
+      const participantesMap = new Map();
+      const etiquetas = [];
+      let colorPrincipal = 'var(--verde-bosque)';
+
+      // 1. Grupo de clase (formato 'g4' o 'g4|A')
+      if (m.grupoAsignado && !String(m.grupoAsignado).startsWith('camp_')) {
+        const [gid, letra] = String(m.grupoAsignado).split('|');
+        const g = gruposEdit[gid];
+        if (g) {
+          g.participantes.forEach(p => {
+            if (!letra || (p.grupo||'').toUpperCase().trim() === letra) participantesMap.set(p.n, p);
+          });
+          etiquetas.push(g.label + (letra ? ' ' + letra : ''));
+          colorPrincipal = g.hex;
+        }
+      }
+
+      // 2. Grupos de campamento donde este monitor está incluido (Grupos asignados)
+      const gruposCampDelMonitor = gruposCamp.filter(g => (g.monitores||[]).map(String).includes(String(m.id)));
+      // Compatibilidad: si grupoAsignado usa el formato antiguo 'camp_X', añadirlo también
+      if (m.grupoAsignado && String(m.grupoAsignado).startsWith('camp_')) {
+        const gcId = String(m.grupoAsignado).replace('camp_', '');
+        const legacy = gruposCamp.find(x => String(x.id) === gcId);
+        if (legacy && !gruposCampDelMonitor.includes(legacy)) gruposCampDelMonitor.push(legacy);
+      }
+      gruposCampDelMonitor.forEach(g => {
+        (g.alumnos||[]).forEach(n => {
+          const p = getAllEditParticipants(true).find(x => x.n === n);
+          if (p) participantesMap.set(p.n, p);
+        });
+        etiquetas.push(g.nombre);
+        if (colorPrincipal === 'var(--verde-bosque)') colorPrincipal = g.hex || colorPrincipal;
+      });
+
+      const sorted = [...participantesMap.values()].sort((a,b) => a.apellidos.localeCompare(b.apellidos,'es',{sensitivity:'base'}));
+      sorted.forEach(p => idsCubiertos.add(p.n));
+      if (!sorted.length) return;
+
       const card = document.createElement('div');
       card.className = 'grupo-resumen-card';
       card.innerHTML = `
         <div class="grupo-resumen-header">
-          <div class="grupo-color-dot" style="background:${g.hex}"></div>
+          <div class="grupo-color-dot" style="background:${colorPrincipal}"></div>
           <div class="grupo-resumen-title">${escHtml(m.nombre)} ${escHtml(m.apellidos)}</div>
-          <div style="font-size:11px;opacity:.4;font-weight:600;background:${g.hex}22;color:${g.hex};padding:3px 10px;border-radius:10px;">${g.label}</div>
+          <div style="font-size:11px;opacity:.6;font-weight:600;background:${colorPrincipal}22;color:${colorPrincipal};padding:3px 10px;border-radius:10px;">${escHtml(etiquetas.join(' · '))}</div>
           <div class="grupo-resumen-meta">${sorted.length} participantes</div>
         </div>
         <div class="grupo-alumnos-list">
           ${sorted.map(p => `
             <div class="grupo-alumno-chip">
-              <div class="chip-avatar" style="background:${g.hex}">${getInitials(p.nombre,p.apellidos)}</div>
+              <div class="chip-avatar" style="background:${colorPrincipal}">${getInitials(p.nombre,p.apellidos)}</div>
               <span style="font-weight:600">${escHtml(p.apellidos)}</span>&nbsp;${escHtml(p.nombre)}
             </div>`).join('')}
         </div>`;
       container.appendChild(card);
     });
 
-    // Participantes sin monitor asignado
-    const asignadosGids = asignados.map(m => m.grupoAsignado);
-    const sinMonitor = getAllEditParticipants().filter(p => !asignadosGids.includes(p.gid));
+    // Participantes sin ningún monitor (ni por clase ni por grupo de campamento)
+    const sinMonitor = getAllEditParticipants().filter(p => !idsCubiertos.has(p.n));
     if (sinMonitor.length) {
       const card = document.createElement('div');
       card.className = 'grupo-resumen-card';
@@ -7501,10 +7629,11 @@ ${body}
       renderEditTable();
       renderMonitorGrid();
       renderObsGrid();
+      renderBanco();
+      renderGruposCamp();
       renderGruposPorMonitor();
       renderGruposClase();
 
-      if (activeId === 'grupos')        { renderBanco(); renderGruposCamp(); }
       if (activeId === 'cabanas')       renderCabanasVista();
       if (activeId === 'programacion')  { populateProgFiltros(); renderProg(); }
       if (activeId === 'obsalumnos')    renderObsAlumnos();
@@ -9480,6 +9609,17 @@ ${body}
   </div>
 </div>
 
+<!-- MODAL LIGERO: DETALLE DE GRUPO/CABAÑA (clasificaciones alternativas) -->
+<div class="ficha-overlay" id="detalleClasifOverlay" onclick="if(event.target===this)document.getElementById('detalleClasifOverlay').classList.remove('visible')">
+  <div class="modal-box" style="max-width:440px;max-height:70vh;display:flex;flex-direction:column;">
+    <div style="padding:20px 22px 12px;border-bottom:1px solid var(--crema-oscuro);display:flex;justify-content:space-between;align-items:center;">
+      <div id="detalleClasifTitulo" style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--verde-bosque);"></div>
+      <button onclick="document.getElementById('detalleClasifOverlay').classList.remove('visible')" style="border:none;background:transparent;font-size:20px;cursor:pointer;opacity:.5;">×</button>
+    </div>
+    <div id="detalleClasifLista" style="padding:16px 22px;overflow-y:auto;"></div>
+  </div>
+</div>
+
 <!-- MODAL DE CONFIRMACIÓN PROPIO (sustituye a confirm()) -->
 <div class="ficha-overlay" id="customConfirmOverlay" style="z-index:999999;">
   <div class="modal-box" style="max-width:380px;padding:24px;">
@@ -9547,6 +9687,7 @@ ${body}
         <div class="ficha-field ficha-full">
           <label>Grupo campamento (puede ser distinto al de clase)</label>
           <input type="text" id="fGrupoCamp" placeholder="Ej. Lobos, Águilas, Grupo 1…"/>
+          <div id="fichaGruposCampInfo" style="margin-top:6px;"></div>
         </div>
         <div class="ficha-field ficha-full">
           <label>Monitor/a asignado/a en el campamento</label>
