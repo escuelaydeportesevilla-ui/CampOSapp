@@ -4223,6 +4223,15 @@
       const div = document.createElement('div');
       div.className = 'monitor-card';
       const enEdicion = monitoresEnEdicion.has(m.id);
+      const gruposDelMonitor = gruposCamp.filter(g => (g.monitores||[]).map(String).includes(String(m.id)));
+      const gruposMonitorHtml = gruposDelMonitor.length
+        ? `<div style="margin-top:10px;">
+             <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;margin-bottom:5px;">🏕 Grupos asignados</div>
+             <div style="display:flex;flex-wrap:wrap;gap:6px;">
+               ${gruposDelMonitor.map(g => `<span style="font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;background:${g.color}22;color:${g.color};">${escHtml(g.nombre)}</span>`).join('')}
+             </div>
+           </div>`
+        : '';
 
       if (!enEdicion) {
         // ── MODO LECTURA ──
@@ -4236,6 +4245,7 @@
             ${m.email ? `<div>✉️ ${escHtml(m.email)}</div>` : ''}
             ${m.observaciones ? `<div style="margin-top:6px;opacity:.8;">${escHtml(m.observaciones)}</div>` : ''}
           </div>
+          ${gruposMonitorHtml}
           <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
             <span style="font-size:12px;font-weight:600;color:${m.activo===false?'#C0392B':'#27AE60'};">${m.activo===false?'⛔ No activo':'✅ Activo'}</span>
             <button onclick="editMonitor(${i})" style="padding:6px 14px;border-radius:8px;border:1.5px solid var(--verde-bosque);background:white;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">✏️ Editar</button>
@@ -4274,6 +4284,7 @@
         </div>
         <div class="monitor-field"><label>Observaciones</label>
           <textarea rows="2" onchange="updateMonitor(${i},'observaciones',this.value)">${escHtml(m.observaciones)}</textarea></div>
+        ${gruposMonitorHtml}
         <div class="monitor-field" style="display:flex;align-items:center;justify-content:space-between;margin-top:6px;">
           <label style="font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.8px;">Estado</label>
           <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:600;">
@@ -4963,12 +4974,6 @@
 
   let gruposCamp = JSON.parse(localStorage.getItem(pKey('camp-grupos')) || '[]');
   // IDs de alumnos ya asignados a algún grupo
-  function asignadosEnGrupos() {
-    const ids = new Set();
-    gruposCamp.forEach(g => (g.alumnos||[]).forEach(id => ids.add(id)));
-    return ids;
-  }
-
   function exportGruposExcel(tipo) {
     let rows = [];
     let filename = '';
@@ -5515,21 +5520,24 @@ ${body}
     const banco = document.getElementById('bancoBanco');
     if (!banco) return;
     banco.innerHTML = '';
-    const asignados = asignadosEnGrupos();
-    const sinAsignar = getAllEditParticipants().filter(p => !asignados.has(p.n));
-    if (!sinAsignar.length) {
-      banco.innerHTML = '<span style="font-size:13px;opacity:.4;padding:4px 8px;">✅ Todos los alumnos están asignados a un grupo.</span>';
+    const todos = getAllEditParticipants();
+    if (!todos.length) {
+      banco.innerHTML = '<span style="font-size:13px;opacity:.4;padding:4px 8px;">No hay alumnos todavía.</span>';
       return;
     }
-    sinAsignar.forEach(p => {
+    todos.forEach(p => {
       const g = gruposEdit[p.gid] || grupos[p.gid];
+      const gruposDeCampAsignados = gruposCamp.filter(gc => (gc.alumnos||[]).includes(p.n));
       const chip = document.createElement('div');
       chip.className = 'draggable-chip';
       chip.draggable = true;
       chip.dataset.pid = p.n;
       chip.dataset.pgid = p.gid;
       chip.style.cssText = `background:${g.hex}22;color:${g.hex};border-color:${g.hex}44;`;
-      chip.innerHTML = `<span>${escHtml(p.apellidos.split(' ')[0])}, ${escHtml(p.nombre)}</span>`;
+      const etiquetaGrupos = gruposDeCampAsignados.length
+        ? ` <span style="font-size:9px;opacity:.65;font-weight:600;">· ${gruposDeCampAsignados.map(gc=>escHtml(gc.nombre)).join(', ')}</span>`
+        : '';
+      chip.innerHTML = `<span>${escHtml(p.apellidos.split(' ')[0])}, ${escHtml(p.nombre)}${etiquetaGrupos}</span>`;
       chip.addEventListener('dragstart', e => { e.dataTransfer.setData('pid', p.n); e.dataTransfer.setData('src', 'banco'); chip.style.opacity='.4'; });
       chip.addEventListener('dragend', () => chip.style.opacity='1');
       banco.appendChild(chip);
@@ -5663,6 +5671,7 @@ ${body}
 
         <!-- CABAÑA -->
         <div id="ctab-${g.id}-cabana" class="ctab-panel" style="display:none;">
+          ${gruposCampCabanaEnEdicion.has(g.id) ? `
           <div class="cabana-grid">
             <div class="cabana-field">
               <label>Tipo de alojamiento</label>
@@ -5695,7 +5704,17 @@ ${body}
                 onchange="updateGcampField(${g.id},'notasCabana',this.value)">${escHtml(g.notasCabana||'')}</textarea>
             </div>
           </div>
-          <button class="obs-save-btn" onclick="saveGruposCamp()">Guardar</button>
+          <button class="obs-save-btn" onclick="guardarCabanaGrupo(${g.id})">💾 Guardar</button>
+          ` : `
+          <div style="font-size:13px;line-height:2;color:#444;">
+            <div><strong>Tipo:</strong> ${{cabana:'🏠 Cabaña',bungalow:'🏠 Bungalow',tienda:'⛺ Tienda',dormitorio:'🛏 Dormitorio',otro:'Otro'}[g.tipoAloj] || '<span style="opacity:.4;">Sin especificar</span>'}</div>
+            <div><strong>Número/Nombre:</strong> ${escHtml(g.cabana) || '<span style="opacity:.4;">—</span>'}</div>
+            <div><strong>Zona/Sector:</strong> ${escHtml(g.zona) || '<span style="opacity:.4;">—</span>'}</div>
+            <div><strong>Capacidad:</strong> ${escHtml(String(g.capacidad||'')) || '<span style="opacity:.4;">—</span>'}</div>
+            ${g.notasCabana ? `<div style="margin-top:6px;"><strong>Notas:</strong> ${escHtml(g.notasCabana)}</div>` : ''}
+          </div>
+          <button onclick="editarCabanaGrupo(${g.id})" style="margin-top:10px;padding:6px 14px;border-radius:8px;border:1.5px solid var(--verde-bosque);background:white;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">✏️ Editar</button>
+          `}
         </div>
 
         <!-- DOCS / ENLACES A DOCUMENTOS -->
@@ -5740,6 +5759,18 @@ ${body}
   }
 
   const gruposCampNombreEnEdicion = new Set();
+  const gruposCampCabanaEnEdicion = new Set();
+
+  function editarCabanaGrupo(gid) {
+    gruposCampCabanaEnEdicion.add(gid);
+    renderGruposCamp();
+  }
+
+  function guardarCabanaGrupo(gid) {
+    gruposCampCabanaEnEdicion.delete(gid);
+    saveGruposCampStorage();
+    renderGruposCamp();
+  }
 
   function editarNombreGrupo(gid) {
     gruposCampNombreEnEdicion.add(gid);
@@ -6481,12 +6512,14 @@ ${body}
   async function saveParticipanteSheets(p) {
     if (!getActiveScriptUrl() || getActiveScriptUrl() === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') return true;
     try {
-      const params = new URLSearchParams({
+      const paramsObj = {
         action: 'saveParticipante', pwd: PASSWORD,
         n: p.n, apellidos: p.apellidos || '', nombre: p.nombre || '',
         gid: p.gid || 'sin_grupo', grupo: p.grupo || '❓',
         grupoCamp: p.grupoCamp || '', monitorId: p.monitorId || '',
-      });
+      };
+      if (p.activo !== undefined) paramsObj.activo = String(p.activo);
+      const params = new URLSearchParams(paramsObj);
       const r = await fetch(getActiveScriptUrl() + '?' + params.toString());
       const j = await r.json();
       return j.ok;
@@ -6516,7 +6549,7 @@ ${body}
   // Sincroniza toda la lista de golpe (útil al guardar cambios masivos)
   async function syncAllParticipantesSheets() {
     const _url = getActiveScriptUrl(); if (!_url || _url === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') return;
-    const lista = getAllEditParticipants();
+    const lista = getAllEditParticipants(true); // incluir inactivos: esta función reescribe TODA la hoja
     try {
       const r = await fetch(getActiveScriptUrl(), {
         method: 'POST',
@@ -6905,13 +6938,17 @@ ${body}
     resultsDiv.style.display = 'block';
     encontrados.forEach(p => {
       const pg = gruposEdit[p.gid]||grupos[p.gid];
+      const otrosGrupos = gruposCamp.filter(gc => (gc.alumnos||[]).includes(p.n));
+      const etiquetaOtros = otrosGrupos.length
+        ? `<span style="font-size:10px;font-weight:600;color:#F39C12;margin-left:6px;">· Ya en: ${otrosGrupos.map(gc=>escHtml(gc.nombre)).join(', ')}</span>`
+        : '';
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--crema-oscuro);';
       row.onmouseenter = () => row.style.background = '#FDFAF5';
       row.onmouseleave = () => row.style.background = '';
       row.innerHTML = `
         <div style="width:28px;height:28px;border-radius:50%;background:${pg?.hex||'#888'};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0">${getInitials(p.nombre,p.apellidos)}</div>
-        <div style="flex:1;font-size:13px;"><strong>${escHtml(p.apellidos)}</strong>, ${escHtml(p.nombre)}<span style="font-size:11px;opacity:.45;margin-left:6px;">${pg?.label||''}</span></div>
+        <div style="flex:1;font-size:13px;"><strong>${escHtml(p.apellidos)}</strong>, ${escHtml(p.nombre)}<span style="font-size:11px;opacity:.45;margin-left:6px;">${pg?.label||''}</span>${etiquetaOtros}</div>
         <button onclick="addAlumnoAGrupo(${gcampId},${p.n},this)" style="padding:4px 12px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-size:12px;font-weight:600;cursor:pointer;">Añadir</button>
       `;
       resultsDiv.appendChild(row);
@@ -6980,6 +7017,13 @@ ${body}
     }
     logCambio('alumno', (p?.apellidos||'') + ', ' + (p?.nombre||''), 'Estado → ' + nextEstado);
     updateHeroStats();
+    if (p) {
+      btn.disabled = true;
+      saveParticipanteSheets(p).then(ok => {
+        btn.disabled = false;
+        showSyncIndicator(ok ? '✔ Estado guardado' : '⚠ No se pudo guardar el estado', ok ? 'ok' : 'warn');
+      });
+    }
   }
 
   // Keep old name for mobile compat
@@ -7697,6 +7741,9 @@ ${body}
     logCambio('alumno',(p.apellidos||'')+', '+(p.nombre||''),'Estado → '+(next===true?'activo':next===false?'inactivo':'pendiente'));
     updateHeroStats();
     renderMobEdicion();
+    saveParticipanteSheets(p).then(ok => {
+      showSyncIndicator(ok ? '✔ Estado guardado' : '⚠ No se pudo guardar el estado', ok ? 'ok' : 'warn');
+    });
   }
 
 
@@ -7955,19 +8002,28 @@ ${body}
         </div>
         <!-- CABAÑA -->
         <div id="cabana-${gi}" style="display:none;">
+          ${gruposCampCabanaEnEdicion.has(g.id) ? `
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
             <div>
               <label style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;display:block;margin-bottom:4px;">Tipo</label>
-              <select onchange="gruposCamp[${gi}].tipoAloj=this.value;saveGruposCamp();" style="width:100%;padding:7px;border-radius:8px;border:1.5px solid #d9ceb8;background:white;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;">
+              <select onchange="gruposCamp[${gi}].tipoAloj=this.value;" style="width:100%;padding:7px;border-radius:8px;border:1.5px solid #d9ceb8;background:white;font-family:'DM Sans',sans-serif;font-size:12px;outline:none;">
                 ${['Cabaña','Bungalow','Tienda','Dormitorio','Otro'].map(t=>`<option value="${t}" ${g.tipoAloj===t?'selected':''}>${t}</option>`).join('')}
               </select>
             </div>
             <div>
               <label style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#888;display:block;margin-bottom:4px;">Nombre/Nº</label>
               <input value="${escHtml(g.cabana||'')}" placeholder="Ej. Cabaña 3" style="width:100%;padding:7px;border-radius:8px;border:1.5px solid #d9ceb8;background:white;font-family:'DM Sans',sans-serif;font-size:12px;box-sizing:border-box;outline:none;"
-                onchange="gruposCamp[${gi}].cabana=this.value;saveGruposCamp();"/>
+                onchange="gruposCamp[${gi}].cabana=this.value;"/>
             </div>
           </div>
+          <button onclick="guardarCabanaGrupo('${g.id}');renderMobGruposMain();" style="margin-top:10px;width:100%;padding:8px;border-radius:8px;border:none;background:var(--verde-bosque);color:white;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">💾 Guardar</button>
+          ` : `
+          <div style="font-size:13px;line-height:1.9;color:#444;">
+            <div><strong>Tipo:</strong> ${escHtml(g.tipoAloj) || '<span style="opacity:.4;">Sin especificar</span>'}</div>
+            <div><strong>Nombre/Nº:</strong> ${escHtml(g.cabana) || '<span style="opacity:.4;">—</span>'}</div>
+          </div>
+          <button onclick="editarCabanaGrupo('${g.id}');renderMobGruposMain();" style="margin-top:10px;padding:6px 14px;border-radius:8px;border:1.5px solid var(--verde-bosque);background:white;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">✏️ Editar</button>
+          `}
         </div>
         <!-- Acciones grupo -->
         <div style="display:flex;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid #ede5d0;">
@@ -8004,13 +8060,19 @@ ${body}
     const found = getAllEditParticipants().filter(p =>
       !asignados.includes(p.n) && (p.apellidos+' '+p.nombre).toLowerCase().includes(q)
     ).slice(0,8);
-    res.innerHTML = found.map(p => `
+    res.innerHTML = found.map(p => {
+      const otrosGrupos = gruposCamp.filter(gc => (gc.alumnos||[]).includes(p.n));
+      const etiquetaOtros = otrosGrupos.length
+        ? ` <span style="font-size:10px;font-weight:600;color:#F39C12;">· Ya en: ${escHtml(otrosGrupos.map(gc=>gc.nombre).join(', '))}</span>`
+        : '';
+      return `
       <div onclick="addAlumnoAGrupo('${grupoId}',${p.n});document.getElementById('mobGBuscar-${gi}').value='';document.getElementById('mobGBuscarRes-${gi}').innerHTML='';renderMobGruposMain();"
         style="padding:8px 10px;cursor:pointer;border-bottom:1px solid #ede5d0;font-size:13px;background:white;"
         onmouseenter="this.style.background='#f0f7eb'" onmouseleave="this.style.background='white'">
         ${escHtml(p.apellidos)}, ${escHtml(p.nombre)}
-        <span style="font-size:11px;opacity:.4;margin-left:6px;">${(gruposEdit[p.gid]||grupos[p.gid])?.label||''}</span>
-      </div>`).join('') || '<div style="padding:8px 10px;font-size:12px;opacity:.4;">Sin resultados</div>';
+        <span style="font-size:11px;opacity:.4;margin-left:6px;">${(gruposEdit[p.gid]||grupos[p.gid])?.label||''}</span>${etiquetaOtros}
+      </div>`;
+    }).join('') || '<div style="padding:8px 10px;font-size:12px;opacity:.4;">Sin resultados</div>';
   }
 
 
