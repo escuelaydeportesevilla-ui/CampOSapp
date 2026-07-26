@@ -3161,6 +3161,9 @@
     } else {
       logCambio('alumno', updatedP.apellidos + ', ' + updatedP.nombre, 'Datos personales actualizados');
     }
+
+    // Cerrar la ficha automáticamente tras guardar, dando tiempo a ver la confirmación
+    setTimeout(() => closeFicha(), 700);
   }
 
   function closeFicha() {
@@ -4205,6 +4208,13 @@
     return opts;
   }
 
+  const monitoresEnEdicion = new Set();
+
+  function editMonitor(i) {
+    monitoresEnEdicion.add(monitoresData[i].id);
+    renderMonitorGrid();
+  }
+
   function renderMonitorGrid() {
     const grid = document.getElementById('monitorGrid');
     if (!grid) return;
@@ -4212,7 +4222,30 @@
     monitoresData.forEach((m, i) => {
       const div = document.createElement('div');
       div.className = 'monitor-card';
+      const enEdicion = monitoresEnEdicion.has(m.id);
 
+      if (!enEdicion) {
+        // ── MODO LECTURA ──
+        div.innerHTML = `
+          <button class="monitor-del-btn" onclick="deleteMonitor(${i})" title="Eliminar">🗑</button>
+          <div class="monitor-avatar">${monitorInitials(m)}</div>
+          <div class="monitor-name">${escHtml(m.nombre)} ${escHtml(m.apellidos)}</div>
+          <div class="monitor-rol">${escHtml(m.rol)}</div>
+          <div style="margin-top:12px;font-size:13px;line-height:1.9;color:#444;">
+            ${m.tel ? `<div>📞 ${escHtml(m.tel)}</div>` : ''}
+            ${m.email ? `<div>✉️ ${escHtml(m.email)}</div>` : ''}
+            ${m.observaciones ? `<div style="margin-top:6px;opacity:.8;">${escHtml(m.observaciones)}</div>` : ''}
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+            <span style="font-size:12px;font-weight:600;color:${m.activo===false?'#C0392B':'#27AE60'};">${m.activo===false?'⛔ No activo':'✅ Activo'}</span>
+            <button onclick="editMonitor(${i})" style="padding:6px 14px;border-radius:8px;border:1.5px solid var(--verde-bosque);background:white;color:var(--verde-bosque);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;">✏️ Editar</button>
+          </div>
+        `;
+        grid.appendChild(div);
+        return;
+      }
+
+      // ── MODO EDICIÓN ──
       div.innerHTML = `
         <button class="monitor-del-btn" onclick="deleteMonitor(${i})" title="Eliminar">🗑</button>
         <div class="monitor-avatar">${monitorInitials(m)}</div>
@@ -4289,7 +4322,9 @@
   }
 
   function addMonitor() {
-    monitoresData.push({id: Date.now(), nombre:'Nuevo', apellidos:'Monitor/a', rol:'Monitor/a', tel:'', email:'', grupoAsignado:'', observaciones:''});
+    const nuevo = {id: Date.now(), nombre:'Nuevo', apellidos:'Monitor/a', rol:'Monitor/a', tel:'', email:'', grupoAsignado:'', observaciones:''};
+    monitoresData.push(nuevo);
+    monitoresEnEdicion.add(nuevo.id);
     renderMonitorGrid();
     setTimeout(() => {
       const cards = document.querySelectorAll('.monitor-card');
@@ -4299,6 +4334,7 @@
 
   async function deleteMonitor(i) {
     if (!(await mostrarConfirm('¿Eliminar este monitor/a?', { danger:true, okText:'Eliminar' }))) return;
+    monitoresEnEdicion.delete(monitoresData[i].id);
     monitoresData.splice(i, 1);
     renderMonitorGrid();
   }
@@ -5334,7 +5370,8 @@ ${body}
     if (btn) { btn.disabled=true; btn.innerHTML='⏳ Guardando…'; }
     saveMonitoresStorage();
     setTimeout(() => {
-      if (btn) { btn.disabled=false; btn.innerHTML='💾 Guardar'; }
+      monitoresEnEdicion.delete(monitoresData[i].id);
+      renderMonitorGrid();
       showSyncIndicator('✔ Monitor guardado', 'ok');
     }, 300);
   }
@@ -5448,6 +5485,7 @@ ${body}
     const id = Date.now();
     const color = GCAMP_COLORS[gruposCamp.length % GCAMP_COLORS.length];
     gruposCamp.push({id, nombre:'Nuevo grupo', color, alumnos:[], monitores:[], cabana:'', bungalow:'', notas:'', pdfs:[]});
+    gruposCampNombreEnEdicion.add(id);
     saveGruposCampStorage();
     renderBanco();
     renderGruposCamp();
@@ -5528,7 +5566,7 @@ ${body}
 
       // Alumnos del grupo
       const alumnosDelGrupo = getAllEditParticipants().filter(p => (g.alumnos||[]).includes(p.n));
-      const monitoresDelGrupo = monitoresData.filter(m => (g.monitores||[]).includes(m.id));
+      const monitoresDelGrupo = monitoresData.filter(m => (g.monitores||[]).map(String).includes(String(m.id)));
       const conAlertas = alumnosDelGrupo.filter(p => {
         const d = fichasCache[String(p.n)] || (() => { try { const r=localStorage.getItem('ficha-'+p.n); return r?JSON.parse(r):{};} catch(e){return{};} })();
         return d && (d.alergias||d.medicacion);
@@ -5544,11 +5582,18 @@ ${body}
           <button onclick="deletePdf(${g.id},${pi})" style="width:26px;height:26px;border-radius:6px;border:none;background:rgba(192,57,43,.1);color:var(--rojo-suave);cursor:pointer;font-size:12px;">🗑</button>
         </div>`).join('');
 
+      const nombreEnEdicion = gruposCampNombreEnEdicion.has(g.id);
+      const nombreHtml = nombreEnEdicion
+        ? `<input class="gcamp-name-input" value="${escHtml(g.nombre)}" placeholder="Nombre del grupo"
+            onchange="updateGcampField(${g.id},'nombre',this.value)"/>
+           <button class="edit-btn" onclick="guardarNombreGrupo(${g.id})" style="font-size:12px;padding:6px 12px;" title="Guardar nombre">💾</button>`
+        : `<div style="flex:1;min-width:120px;font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--verde-bosque);padding:2px 4px;">${escHtml(g.nombre) || 'Sin nombre'}</div>
+           <button class="edit-btn" onclick="editarNombreGrupo(${g.id})" style="font-size:12px;padding:6px 12px;" title="Editar nombre">✏️</button>`;
+
       card.innerHTML = `
         <div class="gcamp-card-header">
           <div class="gcamp-color-strip" style="background:${g.color}" title="Cambiar color" onclick="cycleColor(${g.id},this)"></div>
-          <input class="gcamp-name-input" value="${escHtml(g.nombre)}" placeholder="Nombre del grupo"
-            onchange="updateGcampField(${g.id},'nombre',this.value)"/>
+          ${nombreHtml}
           <button class="edit-btn" onclick="vaciarGrupoCamp(${g.id})" style="font-size:12px;padding:6px 12px;" title="Quitar todos los alumnos de este grupo">🧹 Vaciar</button>
           <button class="edit-btn danger gcamp-del-btn" onclick="deleteGrupoCamp(${g.id})">🗑 Eliminar</button>
         </div>
@@ -5612,8 +5657,8 @@ ${body}
           <select onchange="addMonitorToGrupo(${g.id},this.value);this.value=''"
             style="padding:8px 12px;border-radius:10px;border:1.5px solid var(--crema-oscuro);background:var(--crema);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;max-width:280px;">
             <option value="">— Selecciona un monitor —</option>
-            ${monitoresData.filter(m => m.activo!==false && !(g.monitores||[]).map(String).includes(String(m.id))).map(m =>
-              `<option value="${m.id}">${escHtml(m.nombre)} ${escHtml(m.apellidos)}</option>`).join('')}
+            ${monitoresData.filter(m => !(g.monitores||[]).map(String).includes(String(m.id))).map(m =>
+              `<option value="${m.id}">${escHtml(m.nombre)} ${escHtml(m.apellidos)}${m.activo===false?' (inactivo)':''}</option>`).join('')}
           </select>
         </div>
 
@@ -5690,6 +5735,19 @@ ${body}
     el.style.background = g.color;
     el.closest('.gcamp-card').style.borderLeftColor = g.color;
     saveGruposCampStorage();
+  }
+
+  const gruposCampNombreEnEdicion = new Set();
+
+  function editarNombreGrupo(gid) {
+    gruposCampNombreEnEdicion.add(gid);
+    renderGruposCamp();
+  }
+
+  function guardarNombreGrupo(gid) {
+    gruposCampNombreEnEdicion.delete(gid);
+    saveGruposCampStorage();
+    renderGruposCamp();
   }
 
   function updateGcampField(gid, field, val) {
