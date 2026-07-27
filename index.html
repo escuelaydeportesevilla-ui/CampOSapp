@@ -1895,8 +1895,9 @@
     display: flex; align-items: center; gap: 14px; margin-bottom: 6px;
   }
   .project-app-icon {
-    width: 52px; height: 52px; border-radius: 14px; background: var(--verde-bosque);
-    display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0;
+    width: 52px; height: 52px; border-radius: 14px; background: #FDF8F0;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    border: 1px solid #EDE5D0;
   }
   .project-app-name {
     font-family: 'Playfair Display', serif; font-size: 1.6rem;
@@ -1933,7 +1934,25 @@
   <div class="project-overlay" id="projectOverlay">
     <div class="project-box">
       <div class="project-box-header">
-        <div class="project-app-icon">🏕</div>
+        <div class="project-app-icon">
+          <svg width="34" height="34" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="46" cy="46" r="15" fill="white"/>
+            <circle cx="52" cy="41" r="13" fill="#FDF8F0"/>
+            <g stroke="#3A3A3A" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M40 150L58 108L76 150Z" fill="#7CF0C8"/>
+              <line x1="47" y1="150" x2="47" y2="160"/>
+              <line x1="69" y1="150" x2="69" y2="160"/>
+              <path d="M138 140L156 96L174 140Z" fill="#7CF0C8"/>
+              <line x1="145" y1="140" x2="145" y2="152"/>
+              <line x1="167" y1="140" x2="167" y2="152"/>
+            </g>
+            <line x1="20" y1="168" x2="180" y2="168" stroke="#3A3A3A" stroke-width="4" stroke-linecap="round"/>
+            <g stroke="#3A3A3A" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+              <path d="M78 165L100 40L128 100L150 165Z" fill="white"/>
+              <path d="M100 100L82 165H118L100 100Z" fill="#FFB338"/>
+            </g>
+          </svg>
+        </div>
         <div>
           <div class="project-app-name">CampOSapp</div>
           <div class="project-app-tagline">Gestión de campamentos y tiempo libre</div>
@@ -2964,9 +2983,8 @@
     document.getElementById('fNombre').value = p.nombre || '';
     document.getElementById('fCurso').value = p.gid || 'sin_grupo';
     document.getElementById('fGrupoClase').value = (p.grupo && p.grupo !== '❓') ? p.grupo : '';
-    // Populate grupo campamento (from gruposCamp assignment, not text field)
-    const gcampAsigFicha = gruposCamp.find(gc => (gc.alumnos||[]).includes(p.n));
-    document.getElementById('fGrupoCamp').value = gcampAsigFicha ? gcampAsigFicha.nombre : (p.grupoCamp || '');
+    // Poblar el desplegable "añadir a un grupo" con los grupos donde el alumno TODAVÍA no está
+    renderFichaGrupoCampAdd(p.n);
 
     // Populate monitor select
     const monSel = document.getElementById('fMonitor');
@@ -3004,14 +3022,16 @@
     if (grupoCampAsig) metaText += ' · 🏕 ' + grupoCampAsig.nombre;
     document.getElementById('fichaMeta').textContent = metaText;
 
-    // Panel de datos vinculados
+    // Panel de datos vinculados (simplificado: solo lo que no se ve en ningún otro sitio de la ficha)
+    const todosLosGruposDelAlumno = gruposCamp.filter(gc => (gc.alumnos||[]).includes(p.n));
+    const cabanasDelAlumno = todosLosGruposDelAlumno.filter(gc => gc.cabana);
     let linkedHtml = '';
-    if (monitorAsig || grupoCampAsig || tieneNotas || p.activo === false) {
+    if (tieneNotas || p.activo === false || cabanasDelAlumno.length) {
       linkedHtml += '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;padding:12px 14px;background:var(--crema);border-radius:12px;">';
       if (p.activo === false) linkedHtml += '<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#C0392B22;color:#C0392B;">⛔ No asiste</span>';
-      if (grupoCampAsig) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:${grupoCampAsig.color}22;color:${grupoCampAsig.color};">🏕 ${escHtml(grupoCampAsig.nombre)}</span>`;
-      if (grupoCampAsig?.cabana) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#8B5E3C22;color:#8B5E3C;">🏠 ${escHtml(grupoCampAsig.cabana)}</span>`;
-      if (monitorAsig) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#2D501622;color:var(--verde-bosque);">👤 ${escHtml(monitorAsig.nombre)} ${escHtml(monitorAsig.apellidos)}</span>`;
+      cabanasDelAlumno.forEach(gc => {
+        linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#8B5E3C22;color:#8B5E3C;">🏠 ${escHtml(gc.cabana)}</span>`;
+      });
       if (tieneNotas) linkedHtml += `<span style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:10px;background:#27AE6022;color:#27AE60;cursor:pointer;" onclick="showTab('obsalumnos',null);closeFicha();">🗒 ${notasAlumno.length} nota${notasAlumno.length!==1?'s':''}</span>`;
       linkedHtml += '</div>';
       if (tieneNotas && ultimaNota) {
@@ -3046,14 +3066,7 @@
       if (data.alergias)      document.getElementById('fAlergias').value = data.alergias;
       if (data.medicacion)    document.getElementById('fMedicacion').value = data.medicacion;
       if (data.observaciones) document.getElementById('fObservaciones').value = data.observaciones;
-      if (data.grupoCamp)     document.getElementById('fGrupoCamp').value = data.grupoCamp;
-      const gruposDeEstealumno = gruposCamp.filter(gc => (gc.alumnos||[]).includes(p.n));
-      const infoDiv = document.getElementById('fichaGruposCampInfo');
-      if (infoDiv) {
-        infoDiv.innerHTML = gruposDeEstealumno.length
-          ? gruposDeEstealumno.map(gc => `<span style="font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;background:${gc.color}22;color:${gc.color};margin-right:4px;">${escHtml(gc.nombre)}</span>`).join('')
-          : '<span style="font-size:12px;opacity:.4;">No está en ningún grupo de campamento todavía (asígnalo desde Organización → Grupos).</span>';
-      }
+      renderFichaGruposCampInfo(p.n);
       let extra = {};
       if (data.datosExtra) {
         if (typeof data.datosExtra === 'string') {
@@ -3087,6 +3100,50 @@
     if (btn) { btn.disabled = false; btn.innerHTML = 'Guardar ficha'; }
   }
 
+  function renderFichaGrupoCampAdd(n) {
+    const sel = document.getElementById('fGrupoCampAdd');
+    if (!sel) return;
+    const yaEn = new Set(gruposCamp.filter(gc => (gc.alumnos||[]).includes(n)).map(gc => gc.id));
+    sel.innerHTML = '<option value="">+ Añadir a un grupo…</option>' +
+      gruposCamp.filter(gc => !yaEn.has(gc.id)).map(gc => `<option value="${gc.id}">${escHtml(gc.nombre)}</option>`).join('');
+  }
+
+  function renderFichaGruposCampInfo(n) {
+    const gruposDeEstealumno = gruposCamp.filter(gc => (gc.alumnos||[]).includes(n));
+    const infoDiv = document.getElementById('fichaGruposCampInfo');
+    if (!infoDiv) return;
+    infoDiv.innerHTML = gruposDeEstealumno.length
+      ? gruposDeEstealumno.map(gc => `
+          <span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:3px 6px 3px 10px;border-radius:20px;background:${gc.color}22;color:${gc.color};margin:2px 4px 2px 0;">
+            ${escHtml(gc.nombre)}
+            <span onclick="fichaQuitarDeGrupoCamp(${n},'${gc.id}')" style="cursor:pointer;font-weight:900;padding:0 3px;" title="Quitar de este grupo">✕</span>
+          </span>`).join('')
+      : '<span style="font-size:12px;opacity:.4;">No está en ningún grupo de campamento todavía.</span>';
+  }
+
+  function fichaAddAGrupoCamp(gcampId) {
+    if (!gcampId || !currentFichaP) return;
+    const g = gruposCamp.find(x => String(x.id) === String(gcampId));
+    if (!g) return;
+    if (!g.alumnos) g.alumnos = [];
+    if (!g.alumnos.includes(currentFichaP.n)) g.alumnos.push(currentFichaP.n);
+    saveGruposCampStorage();
+    renderFichaGruposCampInfo(currentFichaP.n);
+    renderFichaGrupoCampAdd(currentFichaP.n);
+    renderBanco();
+    renderGruposCamp();
+  }
+
+  function fichaQuitarDeGrupoCamp(n, gcampId) {
+    const g = gruposCamp.find(x => String(x.id) === String(gcampId));
+    if (g) g.alumnos = (g.alumnos||[]).filter(id => id !== n);
+    saveGruposCampStorage();
+    renderFichaGruposCampInfo(n);
+    renderFichaGrupoCampAdd(n);
+    renderBanco();
+    renderGruposCamp();
+  }
+
   async function saveFicha() {
     if (!currentFichaP) return;
     const n = currentFichaP.n;
@@ -3095,7 +3152,7 @@
     const newAp  = document.getElementById('fApellidos').value.trim();
     const newNm  = document.getElementById('fNombre').value.trim();
     const newGrupoClase = document.getElementById('fGrupoClase').value.trim().toUpperCase() || '❓';
-    const newGrupoCamp  = document.getElementById('fGrupoCamp').value.trim();
+    const newGrupoCamp  = gruposCamp.filter(g => (g.alumnos||[]).includes(n)).map(g => g.nombre).join(', ');
     const newMonitorId  = document.getElementById('fMonitor').value;
 
     // ── Actualizar datos del participante en gruposEdit y grupos ──
@@ -3348,12 +3405,18 @@
             justify-content:center;cursor:pointer;" title="Editar proyecto (ver/cambiar URL, PIN...)">✏️</div>`;
 
       card.innerHTML = `
-        <div style="width:50px;height:50px;border-radius:14px;background:#2C3A47;
-          display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="28" height="28" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 4L4 20H20L12 4Z" fill="#F2A65A"/>
-            <path d="M12 4L20 20H14.3L12 4Z" fill="#C97A3A"/>
-            <path d="M12 11.5L14.4 20H9.6L12 11.5Z" fill="#2C3A47"/>
+        <div style="width:50px;height:50px;border-radius:50%;background:#2EBFAE;
+          display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">
+          <svg width="50" height="50" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(40,50)">
+              <path d="M60 6L8 108H112L60 6Z" fill="#FF6B6B"/>
+              <path d="M60 6L100 108H60L60 6Z" fill="#F04B4B"/>
+              <path d="M60 20L92 104H60V20Z" fill="#FFFFFF"/>
+              <path d="M60 20L28 104H60V20Z" fill="#F5F5F5"/>
+              <rect x="58.5" y="18" width="3" height="88" fill="#FF6B6B"/>
+            </g>
+            <circle cx="146" cy="46" r="14" fill="white"/>
+            <circle cx="152" cy="41" r="12" fill="#2EBFAE"/>
           </svg>
         </div>
         <div style="flex:1;">
@@ -4037,7 +4100,6 @@
             style="padding:4px 8px;border-radius:6px;border:none;background:#e8f4fd;color:#1a6fa0;font-size:13px;cursor:pointer;margin-right:4px;">🩺</button>
           <button onclick="saveAllAlumnos()" title="Guardar cambios"
             style="padding:4px 8px;border-radius:6px;border:none;background:#f0f7eb;color:var(--verde-bosque);font-size:13px;cursor:pointer;margin-right:4px;">💾</button>
-          <button class="tbl-del-btn" onclick="deleteAlumno(${p.n},'${p.gid}')" title="Baja (desactivar, no borra del Sheet)">🗑</button>
           <button onclick="deleteAlumnoDefinitivo(${p.n},'${p.gid}')" title="Eliminar DEFINITIVAMENTE (borra la fila del Sheet, no se puede deshacer)"
             style="padding:4px 6px;border-radius:6px;border:none;background:#fdecea;color:#c0392b;font-size:12px;cursor:pointer;margin-left:2px;">💥</button>
         </td>
@@ -4080,17 +4142,6 @@
     setTimeout(() => el.remove(), 300);
     // Update hero count
     updateHeroStats();
-  }
-
-  async function deleteAlumno(n, gid) {
-    if (!(await mostrarConfirm('¿Eliminar este alumno/a del listado?', { danger:true, okText:'Eliminar' }))) return;
-    gruposEdit[gid].participantes = gruposEdit[gid].participantes.filter(x => x.n !== n);
-    grupos[gid].participantes = grupos[gid].participantes.filter(x => x.n !== n);
-    deleteParticipanteSheets(n);
-    renderEditTable();
-    renderMobEdicion();
-    updateHeroStats();
-    logCambio('alumno', 'Alumno eliminado (n=' + n + ')', '');
   }
 
   // Borrado DEFINITIVO: además de quitarlo de la app, elimina la fila real en el Sheet (Participantes y Fichas).
@@ -5299,7 +5350,7 @@ ${contenido}
     const cursoSel  = document.getElementById('fCurso');
     const cursoTxt  = cursoSel?.options[cursoSel.selectedIndex]?.text || '';
     const grupoClase= document.getElementById('fGrupoClase')?.value || '';
-    const grupoCamp = document.getElementById('fGrupoCamp')?.value  || '';
+    const grupoCamp = currentFichaP ? gruposCamp.filter(g => (g.alumnos||[]).includes(currentFichaP.n)).map(g => g.nombre).join(', ') : '';
     const monSel    = document.getElementById('fMonitor');
     const monTxt    = monSel?.options[monSel.selectedIndex]?.text   || 'Sin asignar';
     const contacto  = document.getElementById('fContacto')?.value   || '';
@@ -6657,16 +6708,6 @@ ${body}
     } catch(e) { console.error('Error guardando participante:', e); return false; }
   }
 
-  // Elimina un participante en Sheets (lo marca como BAJA)
-  async function deleteParticipanteSheets(n) {
-    if (!getActiveScriptUrl() || getActiveScriptUrl() === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') return true;
-    try {
-      const r = await fetch(getActiveScriptUrl() + '?action=deleteParticipante&pwd=' + PASSWORD + '&n=' + n);
-      const j = await r.json();
-      return j.ok;
-    } catch(e) { console.error('Error eliminando participante:', e); return false; }
-  }
-
   // Borrado DEFINITIVO: quita la fila real del Sheet (Participantes y Fichas). No se puede deshacer.
   async function deleteParticipanteHardSheets(n) {
     if (!getActiveScriptUrl() || getActiveScriptUrl() === 'PEGA_AQUI_TU_URL_DE_APPS_SCRIPT') return true;
@@ -7838,9 +7879,9 @@ ${body}
               font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;">
             🩺 Ver ficha completa
           </button>
-          <button onclick="deleteAlumno(${p.n},'${p.gid}')"
-            style="padding:10px 14px;border-radius:10px;border:1.5px solid #fdecea;background:white;
-              font-size:14px;cursor:pointer;">🗑</button>
+          <button onclick="deleteAlumnoDefinitivo(${p.n},'${p.gid}')"
+            style="padding:10px 14px;border-radius:10px;border:1.5px solid #fdecea;background:white;color:#c0392b;
+              font-size:14px;cursor:pointer;" title="Eliminar DEFINITIVAMENTE (borra la fila del Sheet, no se puede deshacer)">💥</button>
         </div>
       `;
       card.appendChild(panel);
@@ -9684,9 +9725,11 @@ ${body}
           <input type="text" id="fGrupoClase" placeholder="A / B / C / D" style="text-transform:uppercase"/>
         </div>
         <div class="ficha-field ficha-full">
-          <label>Grupo campamento (puede ser distinto al de clase)</label>
-          <input type="text" id="fGrupoCamp" placeholder="Ej. Lobos, Águilas, Grupo 1…"/>
-          <div id="fichaGruposCampInfo" style="margin-top:6px;"></div>
+          <label>Grupo campamento (puede ser distinto al de clase — un alumno puede estar en varios)</label>
+          <select id="fGrupoCampAdd" onchange="fichaAddAGrupoCamp(this.value); this.value='';">
+            <option value="">+ Añadir a un grupo…</option>
+          </select>
+          <div id="fichaGruposCampInfo" style="margin-top:8px;"></div>
         </div>
         <div class="ficha-field ficha-full">
           <label>Monitor/a asignado/a en el campamento</label>
